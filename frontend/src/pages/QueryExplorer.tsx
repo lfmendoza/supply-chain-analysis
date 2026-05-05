@@ -1,14 +1,18 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import {
   AlertTriangle,
   ArrowRight,
+  CheckCheck,
   ChevronDown,
   ChevronRight,
+  ClipboardCopy,
   Code2,
   Lock,
   Play,
   RotateCcw,
+  ShieldCheck,
   Unlock,
 } from "lucide-react";
 import {
@@ -20,6 +24,33 @@ import { CypherResult, SupplyChainApi, asErrorMessage } from "../api/client";
 import PageHeader from "../components/PageHeader";
 import ConfirmDialog from "../components/ConfirmDialog";
 
+const VALIDATION_CATEGORY = "Validación de rúbrica";
+
+/**
+ * Build a Cypher snippet with `:param` declarations followed by the query
+ * itself, ready to paste into Aura Console.
+ *
+ * Aura accepts `:param name => value` lines that bind parameters for the
+ * subsequent query. We use that instead of inlining literals so the result is
+ * still a single editable block.
+ */
+function buildCopyableCypher(cypher: string, params: Record<string, string>): string {
+  const lines: string[] = [];
+  for (const [name, raw] of Object.entries(params)) {
+    if (raw === "") continue;
+    const isNum = /^-?\d+(\.\d+)?$/.test(raw.trim());
+    const isBool = raw === "true" || raw === "false";
+    let literal: string;
+    if (isNum) literal = raw;
+    else if (isBool) literal = raw;
+    else literal = `'${raw.replace(/'/g, "\\'")}'`;
+    lines.push(`:param ${name} => ${literal};`);
+  }
+  if (lines.length > 0) lines.push("");
+  lines.push(cypher);
+  return lines.join("\n");
+}
+
 function formatCellValue(v: unknown): string {
   if (v === null || v === undefined) return "—";
   if (typeof v === "boolean") return v ? "sí" : "no";
@@ -29,31 +60,82 @@ function formatCellValue(v: unknown): string {
 }
 
 export default function QueryExplorer() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const initialId = searchParams.get("preset") ?? CYPHER_PRESETS[0].id;
+  const initialPreset =
+    CYPHER_PRESETS.find((p) => p.id === initialId) ?? CYPHER_PRESETS[0];
+
   const [openCategories, setOpenCategories] = useState<Set<string>>(
     new Set(CYPHER_CATEGORIES)
   );
-  const [selectedId, setSelectedId] = useState<string>(CYPHER_PRESETS[0].id);
-  const [cypher, setCypher] = useState<string>(CYPHER_PRESETS[0].cypher);
-  const [paramsForm, setParamsForm] = useState<Record<string, string>>({});
+  const [selectedId, setSelectedId] = useState<string>(initialPreset.id);
+  const [cypher, setCypher] = useState<string>(initialPreset.cypher);
+  const [paramsForm, setParamsForm] = useState<Record<string, string>>(() => {
+    const out: Record<string, string> = {};
+    for (const p of initialPreset.parameters ?? []) {
+      const fromUrl = searchParams.get(`p_${p.name}`);
+      out[p.name] = fromUrl ?? p.defaultValue;
+    }
+    return out;
+  });
   const [mode, setMode] = useState<"read" | "write">("read");
   const [pendingMode, setPendingMode] = useState<null | "write">(null);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<CypherResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [validationStep, setValidationStep] = useState<1 | 2>(() => {
+    const raw = searchParams.get("step");
+    return raw === "2" ? 2 : 1;
+  });
 
   const selectedPreset = useMemo(
     () => CYPHER_PRESETS.find((p) => p.id === selectedId) ?? null,
     [selectedId]
   );
 
+  // Sync the deep-link query params when the user picks a preset or switches
+  // step. Keeps URLs shareable (rubric matrix relies on this).
+  useEffect(() => {
+    if (!selectedPreset) return;
+    const next = new URLSearchParams(searchParams);
+    next.set("preset", selectedPreset.id);
+    if (selectedPreset.category === VALIDATION_CATEGORY) {
+      next.set("step", String(validationStep));
+    } else {
+      next.delete("step");
+    }
+    for (const p of selectedPreset.parameters ?? []) {
+      next.set(`p_${p.name}`, paramsForm[p.name] ?? p.defaultValue);
+    }
+    if (next.toString() !== searchParams.toString()) {
+      setSearchParams(next, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPreset?.id, paramsForm, validationStep]);
+
   const setPreset = (preset: CypherPreset) => {
     setSelectedId(preset.id);
     setCypher(preset.cypher);
     const initialParams: Record<string, string> = {};
-    for (const p of preset.parameters ?? []) initialParams[p.name] = p.defaultValue;
+    for (const p of preset.parameters ?? []) {
+      const fromUrl = searchParams.get(`p_${p.name}`);
+      initialParams[p.name] = fromUrl ?? p.defaultValue;
+    }
     setParamsForm(initialParams);
     setResult(null);
     setError(null);
+    setValidationStep(1);
+  };
+
+  const copyCypherWithParams = async () => {
+    const text = buildCopyableCypher(cypher, paramsForm);
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success("Cypher copiado (con :param) al portapapeles");
+    } catch {
+      toast.error("No se pudo copiar al portapapeles");
+    }
   };
 
   const buildParams = (): Record<string, unknown> => {
@@ -122,9 +204,34 @@ export default function QueryExplorer() {
         <div className="space-y-4">
           {selectedPreset && (
             <div className="card-pad">
-              <div className="text-xs uppercase tracking-wider text-slate-400">{selectedPreset.category}</div>
+              <div className="flex items-center justify-between">
+                <div className="text-xs uppercase tracking-wider text-slate-400">
+                  {selectedPreset.category}
+                </div>
+                {selectedPreset.category === VALIDATION_CATEGORY && (
+                  <ValidationStepSwitch
+                    step={validationStep}
+                    onChange={setValidationStep}
+                  />
+                )}
+              </div>
               <h2 className="text-base font-semibold text-slate-900">{selectedPreset.title}</h2>
               <p className="text-sm text-slate-600 mt-1">{selectedPreset.description}</p>
+              {selectedPreset.validationHint && (
+                <div className="mt-3 flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                  <ShieldCheck size={13} className="mt-0.5 shrink-0" />
+                  <span>{selectedPreset.validationHint}</span>
+                </div>
+              )}
+              {selectedPreset.rubricCriteria && selectedPreset.rubricCriteria.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {selectedPreset.rubricCriteria.map((cid) => (
+                    <span key={cid} className="pill-info text-[11px]">
+                      Rúbrica · ítem {cid}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -141,6 +248,14 @@ export default function QueryExplorer() {
                     else setMode(next);
                   }}
                 />
+                <button
+                  onClick={copyCypherWithParams}
+                  disabled={!cypher.trim()}
+                  className="btn-secondary text-xs"
+                  title="Copiar al portapapeles con :param prellenados (formato Aura Console)"
+                >
+                  <ClipboardCopy size={13} /> Copiar
+                </button>
                 <button
                   onClick={reset}
                   disabled={!selectedPreset}
@@ -209,6 +324,41 @@ export default function QueryExplorer() {
         }}
         onCancel={() => setPendingMode(null)}
       />
+    </div>
+  );
+}
+
+function ValidationStepSwitch({
+  step,
+  onChange,
+}: {
+  step: 1 | 2;
+  onChange: (s: 1 | 2) => void;
+}) {
+  return (
+    <div className="inline-flex rounded-md bg-slate-100 p-0.5 text-[11px]">
+      <button
+        onClick={() => onChange(1)}
+        className={`px-2 py-0.5 rounded ${
+          step === 1
+            ? "bg-white text-brand-600 shadow-sm font-medium"
+            : "text-slate-600"
+        }`}
+        title="Snapshot ANTES de la operación"
+      >
+        Paso 1 · Antes
+      </button>
+      <button
+        onClick={() => onChange(2)}
+        className={`px-2 py-0.5 rounded inline-flex items-center gap-1 ${
+          step === 2
+            ? "bg-white text-emerald-600 shadow-sm font-medium"
+            : "text-slate-600"
+        }`}
+        title="Snapshot DESPUÉS de la operación"
+      >
+        <CheckCheck size={11} /> Paso 2 · Después
+      </button>
     </div>
   );
 }
