@@ -70,6 +70,11 @@ SUPPLIERS: list[dict[str, Any]] = [
     {"id": "S8", "name": "Pacific Rim Plastics",   "country": "JP", "locationId": "LOC2",  "riskScore": 0.22, "capacityPerWeek": 4000},
 ]
 
+
+# Certification catalog used to demonstrate the `List<String>` Neo4j datatype
+# on Supplier nodes. Lower-risk suppliers get more certifications.
+CERTIFICATION_POOL = ["ISO9001", "ISO14001", "ISO45001", "FAIR-TRADE", "ECOVADIS", "RoHS"]
+
 # Materials: RM-A is intentionally single-sourced for the demo.
 RAW_MATERIALS: list[dict[str, Any]] = [
     {"id": "RM-A", "name": "Specialty Alloy",   "unit": "kg", "criticality": "high"},
@@ -368,6 +373,39 @@ def build_disruption_seeds() -> list[dict[str, Any]]:
 # Assembly
 # ---------------------------------------------------------------------------
 
+def _enrich_supplier(s: dict[str, Any]) -> dict[str, Any]:
+    """Add typed properties to a supplier so the rubric criterion "all data
+    types" is covered:
+      - certifications  : List<String>
+      - isCertified     : Boolean
+      - registeredOn    : Date         (ISO string, converted in seed)
+      - lastAuditAt     : DateTime     (ISO string, converted in seed)
+    """
+    risk = s["riskScore"]
+    # Lower risk -> more certifications. We sample deterministically.
+    cert_count = max(1, int(round((1.0 - risk) * 4)))
+    cert_count = min(cert_count, len(CERTIFICATION_POOL))
+    certifications = sorted(random.sample(CERTIFICATION_POOL, k=cert_count))
+    is_certified = len(certifications) >= 2
+
+    registered_year = random.randint(2008, 2022)
+    registered = date(registered_year, random.randint(1, 12), random.randint(1, 28))
+
+    audit = datetime(2026, 1, 1) - timedelta(
+        days=random.randint(15, 700),
+        hours=random.randint(0, 23),
+        minutes=random.randint(0, 59),
+    )
+    return {
+        **s,
+        "status": "active",
+        "certifications": certifications,
+        "isCertified": is_certified,
+        "registeredOn": _date_iso(registered),
+        "lastAuditAt": _ts_iso(audit),
+    }
+
+
 def main() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -377,9 +415,7 @@ def main() -> None:
     purchase_orders = generate_purchase_orders()
     shipments = generate_shipments(customer_orders)
 
-    suppliers = [
-        {**s, "status": "active"} for s in SUPPLIERS
-    ]
+    suppliers = [_enrich_supplier(s) for s in SUPPLIERS]
     routes_with_status = [
         {**r, "status": "open"} for r in ROUTES
     ]

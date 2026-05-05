@@ -25,6 +25,9 @@ dependencies = [
     "joblib>=1.4.2",
     "faker>=30.8.0",
     "httpx>=0.27.2",
+    "networkx>=3.3",
+    "python-louvain>=0.16",
+    "python-multipart>=0.0.9",
 ]
 
 [tool.setuptools.packages.find]

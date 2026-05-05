@@ -27,11 +27,11 @@ from app.simulation.scenarios import (
     GET_SCENARIO_IMPACTS,
     LIST_SCENARIOS,
     REVERT_DETACH_SCENARIO,
-    REVERT_INVENTORY,
-    REVERT_ORDERS,
-    REVERT_ROUTES_COST,
-    REVERT_ROUTES_STATUS,
-    REVERT_SUPPLIERS,
+    REVERT_INVENTORY_SCOPED,
+    REVERT_ORDERS_SCOPED,
+    REVERT_ROUTES_COST_SCOPED,
+    REVERT_ROUTES_STATUS_SCOPED,
+    REVERT_SUPPLIERS_SCOPED,
 )
 
 
@@ -76,14 +76,16 @@ class SimulationEngine:
         }
 
     def revert(self, scenario_id: str) -> dict:
-        # Idempotent: revert all baselines (cheap because the index sits on
-        # property existence) and detach the scenario node.
-        self._client.run_write(REVERT_SUPPLIERS)
-        self._client.run_write(REVERT_ROUTES_STATUS)
-        self._client.run_write(REVERT_ROUTES_COST)
-        self._client.run_write(REVERT_INVENTORY)
-        self._client.run_write(REVERT_ORDERS)
-        self._client.run_write(REVERT_DETACH_SCENARIO, {"scenarioId": scenario_id})
+        # Scenario-scoped: only restore baselines on entities reachable from
+        # this scenario via IMPACTS, then detach the scenario node. Multiple
+        # active scenarios can therefore coexist and be reverted independently.
+        params = {"scenarioId": scenario_id}
+        self._client.run_write(REVERT_SUPPLIERS_SCOPED, params)
+        self._client.run_write(REVERT_ROUTES_STATUS_SCOPED, params)
+        self._client.run_write(REVERT_ROUTES_COST_SCOPED, params)
+        self._client.run_write(REVERT_INVENTORY_SCOPED, params)
+        self._client.run_write(REVERT_ORDERS_SCOPED, params)
+        self._client.run_write(REVERT_DETACH_SCENARIO, params)
         return {"status": "reverted", "scenarioId": scenario_id}
 
     def list_scenarios(self) -> list[dict]:

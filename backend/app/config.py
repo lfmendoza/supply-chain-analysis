@@ -42,6 +42,14 @@ class Settings(BaseSettings):
 
     CORS_ORIGINS: str = Field(default="http://localhost:5173,http://127.0.0.1:5173")
 
+    ALLOW_CYPHER_WRITE: bool = Field(
+        default=True,
+        description=(
+            "Whether the public /cypher/execute endpoint accepts mode='write'. "
+            "Leave true for the academic demo; set false for shared deployments."
+        ),
+    )
+
     @field_validator("NEO4J_URI")
     @classmethod
     def _validate_uri(cls, value: str) -> str:

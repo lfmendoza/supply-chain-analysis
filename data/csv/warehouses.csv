@@ -1,0 +1,6 @@
+id,name,region,locationId,storageCapacity,dispatchCapacityPerWeek
+W1,LA Distribution Center,US-West,LOC5,25000,12000
+W2,Dallas Fulfillment,US-South,LOC6,18000,9000
+W3,Mexico City Warehouse,MX,LOC7,14000,7000
+W4,Sao Paulo Distribution,BR,LOC11,16000,8000
+W5,Houston Cross-Dock,US-South,LOC12,12000,6500

@@ -1,0 +1,19 @@
+id,name,region,tier,locationId
+CUST1,"Rodriguez, Figueroa and Sanchez",CL,gold,LOC9
+CUST2,Doyle Ltd,CL,silver,LOC9
+CUST3,"Mcclain, Miller and Henderson",US-East,gold,LOC4
+CUST4,Davis and Sons,US-West,bronze,LOC5
+CUST5,"Guzman, Hoffman and Baldwin",BR,gold,LOC11
+CUST6,"Gardner, Robinson and Lawrence",MX,gold,LOC7
+CUST7,Blake and Sons,US-West,silver,LOC5
+CUST8,"Henderson, Ramirez and Lewis",BR,bronze,LOC11
+CUST9,Garcia-James,BR,gold,LOC11
+CUST10,Abbott-Munoz,CL,bronze,LOC9
+CUST11,Blair PLC,MX,silver,LOC7
+CUST12,Dudley Group,BR,silver,LOC11
+CUST13,Arnold Ltd,US-West,bronze,LOC5
+CUST14,"Mcclure, Ward and Lee",US-East,bronze,LOC4
+CUST15,Williams and Sons,US-South,silver,LOC6
+CUST16,Galloway-Wyatt,US-East,bronze,LOC4
+CUST17,James Group,US-South,gold,LOC6
+CUST18,"Flowers, Martin and Kelly",MX,gold,LOC7

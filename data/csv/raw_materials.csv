@@ -1,0 +1,7 @@
+id,name,unit,criticality
+RM-A,Specialty Alloy,kg,high
+RM-B,Plastic Polymer,kg,med
+RM-C,Copper Wire,m,high
+RM-D,Cardboard,kg,low
+RM-E,Silicon Chip,u,high
+RM-F,Lithium Cell,u,med

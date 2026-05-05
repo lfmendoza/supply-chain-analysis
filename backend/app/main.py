@@ -13,7 +13,18 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import graph, health, ml, optimization, simulation
+from app.api import (
+    algorithms,
+    analysis_meta,
+    csv_upload,
+    cypher_exec,
+    graph,
+    health,
+    ml,
+    operations,
+    optimization,
+    simulation,
+)
 from app.config import get_settings
 from app.db.neo4j_client import Neo4jClientError, get_neo4j_client, reset_neo4j_client
 
@@ -65,6 +76,11 @@ def create_app() -> FastAPI:
     app.include_router(simulation.router)
     app.include_router(optimization.router)
     app.include_router(ml.router)
+    app.include_router(operations.router)
+    app.include_router(cypher_exec.router)
+    app.include_router(analysis_meta.router)
+    app.include_router(algorithms.router)
+    app.include_router(csv_upload.router)
 
     return app
 

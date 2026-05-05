@@ -36,7 +36,7 @@ flowchart LR
 
 | Label | Propiedad clave | Otras propiedades | Propósito |
 |---|---|---|---|
-| `Supplier` | `id` | `name`, `country`, `riskScore` (0..1), `status` (`active`/`inactive`), `capacityPerWeek`, `_baselineStatus` (opcional) | Quién provee materias primas |
+| `Supplier` | `id` | `name`, `country`, `riskScore` (0..1), `status` (`active`/`inactive`), `capacityPerWeek`, `isCertified` (Boolean), `certifications` (List<String>), `registeredOn` (Date), `lastAuditAt` (DateTime), `_baselineStatus` (opcional) | Quién provee materias primas |
 | `RawMaterial` | `id` | `name`, `unit`, `criticality` (`low`/`med`/`high`) | Insumo que entra en productos |
 | `Product` | `id` | `sku`, `name`, `category`, `unitCost` | Producto terminado |
 | `Warehouse` | `id` | `name`, `region`, `storageCapacity`, `dispatchCapacityPerWeek` | Centro de distribución |
@@ -46,7 +46,7 @@ flowchart LR
 | `Shipment` | `id` | `dispatchedAt`, `status`, `delayDays` | Envío físico |
 | `Route` | `id` | `mode` (`road`/`sea`/`air`), `distanceKm`, `status` | Tramo lógico (la propiedad de costo vive en `CONNECTED_TO`) |
 | `Carrier` | `id` | `name`, `reliabilityScore` (0..1) | Transportista |
-| `Location` | `id` | `name`, `country`, `latitude`, `longitude`, `type` (`port`/`city`/`hub`) | Punto geográfico |
+| `Location` | `id` | `name`, `country`, `latitude`, `longitude`, `coords` (`Point` WGS-84), `type` (`port`/`city`/`hub`) | Punto geográfico |
 | `Customer` | `id` | `name`, `region`, `tier` (`gold`/`silver`/`bronze`) | Cliente final |
 | `DisruptionScenario` | `id` | `type`, `description`, `createdAt`, `status` (`active`/`resolved`), `params` (JSON string) | Snapshot de una disrupción simulada |
 | `OptimizedAssignment` | `id` | `scenarioId`, `objectiveValue`, `solvedAt`, `runtimeMs` | Resultado del optimizador |
@@ -91,9 +91,24 @@ flowchart LR
 
 ## Convenciones de tipos
 
-- Numéricos: `int` para cantidades y días, `float` para scores y costos.
-- Booleanos: se usa `status` con strings enumerados en lugar de booleans para extensibilidad.
-- Fechas: ISO 8601 strings (`YYYY-MM-DD`); para timestamps `YYYY-MM-DDTHH:MM:SSZ`.
+- Numéricos: `Integer` para cantidades y días, `Float` para scores y costos.
+- Booleanos: `status` se mantiene como `String` enumerado para extensibilidad; los flags binarios reales (p.ej. `Supplier.isCertified`) usan `Boolean`.
+- Fechas y horas: usamos los tipos nativos de Neo4j `Date` (p.ej. `Supplier.registeredOn`) y `DateTime` (p.ej. `Supplier.lastAuditAt`). En los JSON intermedios viajan como strings ISO y el seed los convierte con `date(...)` y `datetime(...)`.
+- Listas: `Supplier.certifications` es un `List<String>`.
+- Coordenadas: `Location.coords` es un `Point` WGS-84 (`point({latitude, longitude, srid: 4326})`).
+
+### Cobertura de tipos de datos Neo4j (rúbrica criterio 3)
+
+| Tipo Neo4j | Dónde se usa | Ejemplo |
+|---|---|---|
+| `String` | `Supplier.name`, `Product.sku`, `Route.mode`, etc. | `"Pacific Components Ltd"` |
+| `Integer` | `Warehouse.storageCapacity`, `CustomerOrder.priority` | `25000` |
+| `Float` | `Supplier.riskScore`, `CONNECTED_TO.baseCost` | `0.62` |
+| `Boolean` | `Supplier.isCertified` | `true` |
+| `Date` | `Supplier.registeredOn` | `date("2014-08-22")` |
+| `DateTime` | `Supplier.lastAuditAt` | `datetime("2025-09-12T10:42:00Z")` |
+| `List` | `Supplier.certifications` | `["ISO9001", "ISO14001"]` |
+| `Point` | `Location.coords` | `point({latitude: 35.68, longitude: 139.69, srid: 4326})` |
 
 ## Volumen objetivo del dataset MVP
 

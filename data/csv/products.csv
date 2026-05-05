@@ -1,0 +1,16 @@
+id,sku,name,category,unitCost
+P1,ELEC-001,Smart Sensor v2,electronics,45.0
+P2,ELEC-002,Power Module,electronics,62.0
+P3,ELEC-003,Wireless Router R5,electronics,89.0
+P4,ELEC-004,IoT Gateway,electronics,110.0
+P5,ELEC-005,Battery Pack 5kWh,electronics,230.0
+P6,MECH-001,Industrial Bearing,mechanical,25.0
+P7,MECH-002,Precision Gearbox,mechanical,180.0
+P8,MECH-003,Hydraulic Pump,mechanical,320.0
+P9,PCKG-001,Reinforced Box L,packaging,3.5
+P10,PCKG-002,Protective Foam,packaging,2.1
+P11,ELEC-006,Solar Inverter 3kW,electronics,410.0
+P12,ELEC-007,Smart Thermostat,electronics,75.0
+P13,MECH-004,Compressor Unit,mechanical,540.0
+P14,ELEC-008,EV Charger 7kW,electronics,690.0
+P15,PCKG-003,Pallet Wrap Roll,packaging,0.8

@@ -8,6 +8,62 @@ body,
   height: 100%;
 }
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reusable utility classes for the app shell */
+@layer components {
+  .card {
+    @apply bg-white border border-slate-200 rounded-xl shadow-sm;
+  }
+  .card-pad {
+    @apply card p-5;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md text-sm font-medium px-3.5 py-1.5 transition disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand-600 text-white hover:bg-brand-500;
+  }
+  .btn-success {
+    @apply btn bg-emerald-600 text-white hover:bg-emerald-500;
+  }
+  .btn-danger {
+    @apply btn bg-rose-600 text-white hover:bg-rose-500;
+  }
+  .btn-secondary {
+    @apply btn bg-white border border-slate-200 text-slate-700 hover:bg-slate-50;
+  }
+  .btn-ghost {
+    @apply btn text-slate-600 hover:bg-slate-100;
+  }
+  .input {
+    @apply rounded-md border border-slate-300 px-2 py-1 text-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500;
+  }
+  .label {
+    @apply text-xs font-medium uppercase tracking-wider text-slate-500;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium;
+  }
+  .pill-ok {
+    @apply pill bg-emerald-50 text-emerald-700;
+  }
+  .pill-warn {
+    @apply pill bg-amber-50 text-amber-700;
+  }
+  .pill-bad {
+    @apply pill bg-rose-50 text-rose-700;
+  }
+  .pill-info {
+    @apply pill bg-sky-50 text-sky-700;
+  }
+}
+
 .kpi-positive {
   color: #16a34a;
 }

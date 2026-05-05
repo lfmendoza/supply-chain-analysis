@@ -1,42 +1,117 @@
-import { useEffect, useState } from "react";
-import Graph2D from "../components/Graph2D";
-import KpiCard from "../components/KpiCard";
-import { GraphSummary, SupplyChainApi } from "../api/client";
+import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import { GraphSummary, SupplyChainApi, asErrorMessage } from "../api/client";
+import GraphCytoscape, {
+  type ElementSelection,
+  type Highlights,
+} from "../components/graph/GraphCytoscape";
+import FilterPanel from "../components/graph/FilterPanel";
+import PropertyPanel from "../components/graph/PropertyPanel";
+import PageHeader from "../components/PageHeader";
+import { ALL_LABELS } from "../components/graph/graphStyles";
+
+const DEFAULT_LABELS = new Set([
+  "Supplier",
+  "RawMaterial",
+  "Product",
+  "Warehouse",
+  "Customer",
+  "Location",
+  "Carrier",
+  "Route",
+]);
 
 export default function Topology() {
   const [summary, setSummary] = useState<GraphSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [enabledLabels, setEnabledLabels] = useState<Set<string>>(DEFAULT_LABELS);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showEdgeLabels, setShowEdgeLabels] = useState(false);
+  const [selection, setSelection] = useState<ElementSelection>(null);
+  const [highlights] = useState<Highlights>({});
 
   useEffect(() => {
     SupplyChainApi.graphSummary()
       .then(setSummary)
-      .catch((e) => setError(e.message ?? "Failed to load topology"));
+      .catch((e) => {
+        const msg = asErrorMessage(e, "Failed to load topology");
+        setError(msg);
+        toast.error(msg);
+      });
   }, []);
 
-  if (error) {
-    return (
-      <div className="bg-rose-50 border border-rose-200 text-rose-700 rounded p-4">
-        Failed to load graph: {error}. Check that the backend is running and Neo4j is reachable.
-      </div>
+  const labelsPresent = useMemo(() => {
+    if (!summary) return ALL_LABELS;
+    const present = new Set<string>();
+    for (const n of summary.nodes) present.add(n.label);
+    return ALL_LABELS.filter((l) => present.has(l)).concat(
+      [...present].filter((l) => !ALL_LABELS.includes(l))
     );
-  }
-  if (!summary) {
-    return <div className="text-slate-500">Loading topology...</div>;
-  }
+  }, [summary]);
 
-  const cardOrder = ["Supplier", "RawMaterial", "Product", "Warehouse", "Customer", "CustomerOrder", "Route", "DisruptionScenario"];
+  const counts = summary?.counts ?? {};
+  const totalNodes = Object.values(counts).reduce((a, b) => a + b, 0);
+  const totalEdges = summary?.edges.length ?? 0;
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        {cardOrder.map((label) => (
-          <KpiCard key={label} title={label} value={summary.counts[label] ?? 0} />
-        ))}
+    <div>
+      <PageHeader
+        title="Graph Topology"
+        description="Interactive Cytoscape view of the entire Neo4j graph. Filter by label, search, and click any node or edge to inspect its properties."
+        badge={
+          summary ? (
+            <span className="pill-info">
+              {totalNodes.toLocaleString()} nodes · {totalEdges.toLocaleString()} edges
+            </span>
+          ) : null
+        }
+      />
+
+      {error && (
+        <div className="card-pad mb-4 border border-rose-200 bg-rose-50 text-rose-700 text-sm">
+          Failed to load graph: {error}. Check that the backend is running and Neo4j is reachable.
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_280px] gap-4">
+        <FilterPanel
+          availableLabels={labelsPresent}
+          enabledLabels={enabledLabels}
+          searchTerm={searchTerm}
+          showEdgeLabels={showEdgeLabels}
+          onToggleLabel={(label) => {
+            setEnabledLabels((prev) => {
+              const next = new Set(prev);
+              if (next.has(label)) next.delete(label);
+              else next.add(label);
+              return next;
+            });
+          }}
+          onSearchChange={setSearchTerm}
+          onSelectAll={() => setEnabledLabels(new Set(labelsPresent))}
+          onSelectNone={() => setEnabledLabels(new Set())}
+          onToggleEdgeLabels={() => setShowEdgeLabels((v) => !v)}
+        />
+
+        {!summary ? (
+          <div className="card flex items-center justify-center text-slate-500 text-sm" style={{ height: 620 }}>
+            Loading topology...
+          </div>
+        ) : (
+          <GraphCytoscape
+            nodes={summary.nodes}
+            edges={summary.edges}
+            enabledLabels={enabledLabels}
+            searchTerm={searchTerm}
+            highlights={highlights}
+            showEdgeLabels={showEdgeLabels}
+            onSelect={setSelection}
+            height={620}
+          />
+        )}
+
+        <PropertyPanel selection={selection} />
       </div>
-      <Graph2D nodes={summary.nodes} edges={summary.edges} height={620} />
-      <p className="text-xs text-slate-500">
-        Nodes coloured by label. Inactive suppliers and blocked routes are greyed. Click + drag to navigate.
-      </p>
     </div>
   );
 }

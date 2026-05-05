@@ -1,0 +1,13 @@
+id,name,country,type,latitude,longitude
+LOC1,Tokyo Hub,JP,hub,35.68,139.69
+LOC2,Yokohama Port,JP,port,35.44,139.64
+LOC3,Shanghai Port,CN,port,31.23,121.47
+LOC4,Long Beach Port,US,port,33.77,-118.19
+LOC5,Los Angeles Hub,US,hub,34.05,-118.24
+LOC6,Dallas Hub,US,hub,32.78,-96.8
+LOC7,Mexico City Hub,MX,hub,19.43,-99.13
+LOC8,Veracruz Port,MX,port,19.2,-96.14
+LOC9,Santiago Hub,CL,hub,-33.45,-70.66
+LOC10,Valparaiso Port,CL,port,-33.05,-71.62
+LOC11,Sao Paulo Hub,BR,hub,-23.55,-46.63
+LOC12,Houston Hub,US,hub,29.76,-95.37

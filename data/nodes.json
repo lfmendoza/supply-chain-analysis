@@ -127,7 +127,15 @@
       "locationId": "LOC1",
       "riskScore": 0.15,
       "capacityPerWeek": 5000,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "ECOVADIS",
+        "ISO45001",
+        "ISO9001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2021-04-10",
+      "lastAuditAt": "2025-04-28T12:49:00Z"
     },
     {
       "id": "S2",
@@ -136,7 +144,15 @@
       "locationId": "LOC3",
       "riskScore": 0.32,
       "capacityPerWeek": 8000,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "ISO14001",
+        "ISO45001",
+        "ISO9001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2012-01-02",
+      "lastAuditAt": "2024-05-29T14:16:00Z"
     },
     {
       "id": "S3",
@@ -145,7 +161,14 @@
       "locationId": "LOC9",
       "riskScore": 0.62,
       "capacityPerWeek": 2000,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "FAIR-TRADE",
+        "ISO14001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2009-01-19",
+      "lastAuditAt": "2025-02-28T08:30:00Z"
     },
     {
       "id": "S4",
@@ -154,7 +177,15 @@
       "locationId": "LOC7",
       "riskScore": 0.28,
       "capacityPerWeek": 3500,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "FAIR-TRADE",
+        "ISO14001",
+        "ISO45001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2008-05-28",
+      "lastAuditAt": "2024-08-14T20:08:00Z"
     },
     {
       "id": "S5",
@@ -163,7 +194,15 @@
       "locationId": "LOC6",
       "riskScore": 0.18,
       "capacityPerWeek": 4500,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "ECOVADIS",
+        "FAIR-TRADE",
+        "ISO9001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2009-10-21",
+      "lastAuditAt": "2025-10-23T19:51:00Z"
     },
     {
       "id": "S6",
@@ -172,7 +211,14 @@
       "locationId": "LOC12",
       "riskScore": 0.41,
       "capacityPerWeek": 6000,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "ECOVADIS",
+        "ISO45001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2009-04-04",
+      "lastAuditAt": "2024-05-24T10:22:00Z"
     },
     {
       "id": "S7",
@@ -181,7 +227,14 @@
       "locationId": "LOC11",
       "riskScore": 0.55,
       "capacityPerWeek": 2800,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "ECOVADIS",
+        "RoHS"
+      ],
+      "isCertified": true,
+      "registeredOn": "2011-09-13",
+      "lastAuditAt": "2024-09-11T09:41:00Z"
     },
     {
       "id": "S8",
@@ -190,7 +243,15 @@
       "locationId": "LOC2",
       "riskScore": 0.22,
       "capacityPerWeek": 4000,
-      "status": "active"
+      "status": "active",
+      "certifications": [
+        "ECOVADIS",
+        "FAIR-TRADE",
+        "ISO45001"
+      ],
+      "isCertified": true,
+      "registeredOn": "2017-10-02",
+      "lastAuditAt": "2024-04-01T00:54:00Z"
     }
   ],
   "RawMaterial": [

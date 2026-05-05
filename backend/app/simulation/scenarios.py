@@ -102,47 +102,56 @@ RETURN count(rid) AS affectedRoutes
 """
 
 # ---------------------------------------------------------------------------
-# Revert blocks
+# Revert blocks (scenario-scoped)
+#
+# Each REVERT_* block walks the IMPACTS edges of the supplied scenario id and
+# only restores baselines on entities tied to that scenario. This prevents a
+# revert from clobbering a different active scenario's mutations.
 # ---------------------------------------------------------------------------
 
-REVERT_SUPPLIERS = """
-MATCH (s:Supplier)
+REVERT_SUPPLIERS_SCOPED = """
+MATCH (ds:DisruptionScenario {id: $scenarioId})-[:IMPACTS]->(s:Supplier)
 WHERE s._baselineStatus IS NOT NULL
 SET s.status = s._baselineStatus
 REMOVE s._baselineStatus
 """
 
-REVERT_ROUTES_STATUS = """
-MATCH ()-[r:CONNECTED_TO]-()
+REVERT_ROUTES_STATUS_SCOPED = """
+MATCH (ds:DisruptionScenario {id: $scenarioId})-[i:IMPACTS]->(rt:Route)
+WITH DISTINCT rt
+MATCH ()-[r:CONNECTED_TO {routeId: rt.id}]-()
 WHERE r._baselineStatus IS NOT NULL
 SET r.status = r._baselineStatus
 REMOVE r._baselineStatus
 """
 
-REVERT_ROUTES_COST = """
-MATCH ()-[r:CONNECTED_TO]-()
+REVERT_ROUTES_COST_SCOPED = """
+MATCH (ds:DisruptionScenario {id: $scenarioId})-[i:IMPACTS]->(rt:Route)
+WITH DISTINCT rt
+MATCH ()-[r:CONNECTED_TO {routeId: rt.id}]-()
 WHERE r._baselineCost IS NOT NULL
 SET r.baseCost = r._baselineCost
 REMOVE r._baselineCost
 """
 
-REVERT_INVENTORY = """
-MATCH (inv:Inventory)
+REVERT_INVENTORY_SCOPED = """
+MATCH (ds:DisruptionScenario {id: $scenarioId})-[:IMPACTS]->(inv:Inventory)
 WHERE inv._baselineQuantity IS NOT NULL
 SET inv.quantity = inv._baselineQuantity
 REMOVE inv._baselineQuantity
 """
 
-REVERT_ORDERS = """
-MATCH (co:CustomerOrder)
-WHERE co._baselineQuantity IS NOT NULL
-SET co.quantity = co._baselineQuantity
-REMOVE co._baselineQuantity
-WITH co
-MATCH (co)-[fp:FOR_PRODUCT]->()
-WHERE fp._baselineQuantity IS NOT NULL
-SET fp.quantity = fp._baselineQuantity
-REMOVE fp._baselineQuantity
+REVERT_ORDERS_SCOPED = """
+MATCH (ds:DisruptionScenario {id: $scenarioId})-[:IMPACTS]->(p:Product)
+MATCH (co:CustomerOrder)-[fp:FOR_PRODUCT]->(p)
+WHERE co._baselineQuantity IS NOT NULL OR fp._baselineQuantity IS NOT NULL
+WITH co, fp
+FOREACH (_ IN CASE WHEN co._baselineQuantity IS NOT NULL THEN [1] ELSE [] END |
+    SET co.quantity = co._baselineQuantity
+    REMOVE co._baselineQuantity)
+FOREACH (_ IN CASE WHEN fp._baselineQuantity IS NOT NULL THEN [1] ELSE [] END |
+    SET fp.quantity = fp._baselineQuantity
+    REMOVE fp._baselineQuantity)
 """
 
 REVERT_DETACH_SCENARIO = """
