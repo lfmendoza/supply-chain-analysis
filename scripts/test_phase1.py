@@ -36,8 +36,8 @@ def main() -> int:
     _check("status 200", r.status_code == 200, r.text)
     if r.status_code == 200:
         b = r.json()
-        print(f"    nodes={b['totalNodes']} rels={b['totalRelationships']} "
-              f"components={b['componentCount']} largestRatio={b['largestComponentRatio']} "
+        print(f"    nodes={b['nodes']} rels={b['relationships']} "
+              f"components={b['components']} largestRatio={b['largestComponentRatio']} "
               f"isConnected={b['isConnected']}")
 
     print("\nSTEP 3 - /analysis/data-types")
