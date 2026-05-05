@@ -2,15 +2,22 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AlertTriangle,
+  ArrowRight,
   Boxes,
+  Brain,
   CheckCircle2,
+  Cpu,
   Database,
+  Eye,
+  GitBranch,
   Layers,
   ListChecks,
   Network,
   Sparkles,
+  Target,
   TrendingUp,
   Workflow,
+  Zap,
 } from "lucide-react";
 import {
   ConnectivityReport,
@@ -69,6 +76,8 @@ export default function Dashboard() {
           ) : null
         }
       />
+
+      <SystemFlowCard />
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <BigKpi
@@ -224,6 +233,104 @@ function ShortcutsCard() {
         ))}
       </ul>
     </div>
+  );
+}
+
+function SystemFlowCard() {
+  const stages = [
+    {
+      icon: <Database size={16} />,
+      title: "1 · Modelar",
+      detail: "12 etiquetas, 18 tipos de relaciones, 8 tipos nativos en Neo4j AuraDB.",
+      to: "/topology",
+    },
+    {
+      icon: <Boxes size={16} />,
+      title: "2 · Operar",
+      detail: "CRUD individual y masivo, importación CSV, ejecución Cypher.",
+      to: "/operations",
+    },
+    {
+      icon: <Brain size={16} />,
+      title: "3 · Analizar",
+      detail: "PageRank, betweenness, Louvain, Dijkstra y ML de riesgo.",
+      to: "/algorithms",
+    },
+    {
+      icon: <Zap size={16} />,
+      title: "4 · Simular",
+      detail: "Disrupciones reversibles (proveedor caído, ruta bloqueada, demanda spike).",
+      to: "/simulation",
+    },
+    {
+      icon: <Target size={16} />,
+      title: "5 · Optimizar",
+      detail: "Reasignación pedido→bodega con OR-Tools (CP-SAT) multi-criterio.",
+      to: "/optimization",
+    },
+    {
+      icon: <Eye size={16} />,
+      title: "6 · Comparar",
+      detail: "Métricas base vs. disruptivo vs. optimizado lado a lado.",
+      to: "/comparison",
+    },
+  ];
+
+  return (
+    <section className="card-pad">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
+          <Workflow size={14} /> Flujo del sistema
+        </h2>
+        <Link
+          to="/rubric"
+          className="text-xs text-brand-600 hover:underline inline-flex items-center gap-1"
+        >
+          Ver matriz de rúbrica <ArrowRight size={11} />
+        </Link>
+      </div>
+      <p className="text-xs text-slate-500 mb-4">
+        Seis etapas: el grafo se modela en Neo4j, se opera con CRUD y CSV, se
+        analiza con algoritmos de grafos y ML, se exponen disrupciones, se
+        optimiza la respuesta combinatoriamente y se compara contra el estado
+        original.
+      </p>
+      <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+        {stages.map((s, i) => (
+          <li key={s.to} className="relative">
+            <Link
+              to={s.to}
+              className="block rounded-md border border-slate-200 bg-white px-3 py-2.5 hover:border-brand-300 hover:shadow-sm transition"
+            >
+              <div className="flex items-center gap-2 text-brand-600">
+                {s.icon}
+                <span className="text-xs font-semibold">{s.title}</span>
+              </div>
+              <div className="mt-1 text-[11px] text-slate-600 leading-snug">
+                {s.detail}
+              </div>
+            </Link>
+            {i < stages.length - 1 && (
+              <span className="hidden lg:block absolute -right-3 top-1/2 -translate-y-1/2 text-slate-300">
+                <GitBranch size={12} className="rotate-90" />
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+      <div className="mt-3 flex flex-wrap gap-1.5 text-[11px] text-slate-500">
+        <span className="inline-flex items-center gap-1">
+          <Cpu size={11} /> Tecnologías:
+        </span>
+        <span className="pill-info">Neo4j AuraDB</span>
+        <span className="pill-info">FastAPI</span>
+        <span className="pill-info">NetworkX</span>
+        <span className="pill-info">scikit-learn</span>
+        <span className="pill-info">OR-Tools (CP-SAT)</span>
+        <span className="pill-info">React + Vite</span>
+        <span className="pill-info">Cytoscape.js</span>
+      </div>
+    </section>
   );
 }
 
