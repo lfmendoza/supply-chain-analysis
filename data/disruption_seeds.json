@@ -1,0 +1,45 @@
+[
+  {
+    "id": "DS-DEMO-1",
+    "type": "supplier_down",
+    "description": "Andes Metals SA (S3) goes offline; RM-A is the single-source dependency.",
+    "params": {
+      "supplierId": "S3"
+    }
+  },
+  {
+    "id": "DS-DEMO-2",
+    "type": "route_blocked",
+    "description": "R-MAIN (Yokohama -> Long Beach) blocked by port closure.",
+    "params": {
+      "routeId": "R-MAIN"
+    }
+  },
+  {
+    "id": "DS-DEMO-3",
+    "type": "demand_spike",
+    "description": "Demand for P5 (Battery Pack 5kWh) spikes by 60%.",
+    "params": {
+      "productId": "P5",
+      "factor": 1.6
+    }
+  },
+  {
+    "id": "DS-DEMO-4",
+    "type": "inventory_drop",
+    "description": "Inventory for high-priority products drops 50%.",
+    "params": {
+      "factor": 0.5,
+      "criteria": "priority<=2"
+    }
+  },
+  {
+    "id": "DS-DEMO-5",
+    "type": "cost_increase",
+    "description": "Sea routes cost increases 35% (fuel surge).",
+    "params": {
+      "factor": 1.35,
+      "mode": "sea"
+    }
+  }
+]

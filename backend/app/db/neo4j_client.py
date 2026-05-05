@@ -11,9 +11,11 @@ callers a single exception class to handle.
 from __future__ import annotations
 
 import logging
+import ssl
 from collections.abc import Iterable
 from typing import Any
 
+import certifi
 from neo4j import GraphDatabase, Record, Result
 from neo4j.exceptions import (
     AuthError,
@@ -25,6 +27,39 @@ from neo4j.exceptions import (
 from app.config import Settings, get_settings
 
 logger = logging.getLogger(__name__)
+
+
+_SECURE_SCHEMES = ("neo4j+s://", "bolt+s://")
+_RELAXED_SCHEMES = ("neo4j+ssc://", "bolt+ssc://")
+
+
+def _strip_scheme(uri: str) -> tuple[str, str]:
+    for scheme in (*_SECURE_SCHEMES, *_RELAXED_SCHEMES, "neo4j://", "bolt://"):
+        if uri.startswith(scheme):
+            return scheme, uri[len(scheme):]
+    raise ValueError(f"Unsupported URI scheme: {uri}")
+
+
+def _build_driver_kwargs(uri: str) -> tuple[str, dict[str, Any]]:
+    """Translate the configured URI into driver kwargs that work even when
+    the OS certificate store is missing the root used by AuraDB.
+
+    For `neo4j+s://` and `bolt+s://` we strip the `+s` variant and pass an
+    explicit `ssl_context` built from the certifi root bundle. That way the
+    same driver works on Windows machines whose system cert store does not
+    include SSL.com's roots (which AuraDB now uses).
+
+    For `+ssc` variants we keep the URI as-is (the driver builds a relaxed
+    context internally).
+
+    For plain `neo4j://` / `bolt://` we leave it untouched (no TLS).
+    """
+    scheme, rest = _strip_scheme(uri)
+    if scheme in _SECURE_SCHEMES:
+        downgraded = ("neo4j://" if scheme == "neo4j+s://" else "bolt://") + rest
+        ctx = ssl.create_default_context(cafile=certifi.where())
+        return downgraded, {"encrypted": True, "ssl_context": ctx}
+    return uri, {}
 
 
 class Neo4jClientError(RuntimeError):
@@ -56,24 +91,38 @@ class Neo4jClient:
     def _ensure_driver(self):  # noqa: ANN202 - driver type is internal
         if self._driver is None:
             try:
+                effective_uri, extra_kwargs = _build_driver_kwargs(self._settings.NEO4J_URI)
+                # Silence routine 'unrecognized property/relationship' warnings: they are
+                # expected in our flow because _baseline* properties only exist after a
+                # disruption is applied, and IMPACTS only exists after the first scenario.
                 self._driver = GraphDatabase.driver(
-                    self._settings.NEO4J_URI,
+                    effective_uri,
                     auth=(
                         self._settings.NEO4J_USERNAME,
                         self._settings.NEO4J_PASSWORD.get_secret_value(),
                     ),
+                    notifications_min_severity="OFF",
+                    **extra_kwargs,
                 )
                 self._driver.verify_connectivity()
                 logger.info(
-                    "Neo4j driver connected (uri=%s, db=%s)",
+                    "Neo4j driver connected (uri=%s effective=%s db=%s)",
                     self._settings.NEO4J_URI,
+                    effective_uri,
                     self._settings.NEO4J_DATABASE,
                 )
             except AuthError as exc:
-                raise Neo4jClientError("Invalid Neo4j credentials") from exc
+                raise Neo4jClientError(
+                    "Invalid Neo4j credentials. Verify NEO4J_USERNAME and NEO4J_PASSWORD against "
+                    "the credentials file Aura gave you when the instance was created. Note that "
+                    "in some Aura versions the username is the AURA_INSTANCEID, not 'neo4j'."
+                ) from exc
             except ServiceUnavailable as exc:
                 raise Neo4jClientError(
-                    "Cannot reach Neo4j AuraDB. Check URI, network, and instance status."
+                    "Cannot reach Neo4j AuraDB. Likely causes: instance paused (resume it from "
+                    "console.neo4j.io), wrong NEO4J_URI, wrong username/password (auth manifests "
+                    "as a routing failure in newer drivers), or a firewall blocking Bolt+TLS. "
+                    f"Underlying driver message: {exc}"
                 ) from exc
             except ConfigurationError as exc:
                 raise Neo4jClientError(f"Neo4j driver configuration error: {exc}") from exc

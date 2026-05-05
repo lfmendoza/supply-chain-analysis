@@ -34,12 +34,13 @@ from ortools.sat.python import cp_model
 from app.optimization.data_loader import OptimizationData
 
 
-# Default weights, tunable per request.
-DEFAULT_ALPHA = 1.0     # cost
-DEFAULT_BETA = 10.0     # leadTime (days)
-DEFAULT_GAMMA = 50.0    # risk (0..1)
-DEFAULT_DELTA = 5.0     # unfulfilled penalty multiplier on revenue
-SCALE = 1000            # float -> int scaling factor
+# Default weights, tunable per request. Coefficients are calibrated so every
+# term is in roughly the same order of magnitude as `cost` (USD).
+DEFAULT_ALPHA = 1.0      # cost in USD passes through directly
+DEFAULT_BETA = 15.0      # each lead-time day adds 15 USD-equivalent
+DEFAULT_GAMMA = 250.0    # risk in [0, 1] -> up to 250 USD added
+DEFAULT_DELTA = 10.0     # unfulfilled penalty = 10 * revenue * priorityWeight
+SCALE = 100              # float -> int scaling factor (2 decimal places of precision)
 
 
 @dataclass
@@ -117,7 +118,8 @@ def solve(data: OptimizationData, weights: SolverWeights | None = None, time_lim
         if total:
             model.Add(sum(total) <= int(w.capacity))
 
-    # Objective (everything scaled to integer).
+    # Objective. Every term is computed as float in USD-equivalent magnitude
+    # and then scaled to int (CP-SAT requires integer coefficients).
     obj_terms: list[cp_model.IntVar] = []
     for o in orders:
         for w in warehouses:
@@ -126,15 +128,15 @@ def solve(data: OptimizationData, weights: SolverWeights | None = None, time_lim
             risk_w = data.risk.get((w.warehouse_id, o.order_id), 0.0)
             if cost_w == float("inf"):
                 continue
-            coeff = (
+            coeff_usd = (
                 weights.alpha * cost_w
                 + weights.beta * lt_w
-                + weights.gamma * risk_w * SCALE  # risk in 0..1 -> bring up to similar magnitude
+                + weights.gamma * risk_w
             )
-            obj_terms.append(int(coeff) * x[(o.order_id, w.warehouse_id)])
-        # Unfulfilled penalty.
-        unfulfilled_pen = int(weights.delta * (o.revenue or 0) * _priority_weight(o.priority))
-        obj_terms.append(unfulfilled_pen * u[o.order_id])
+            obj_terms.append(int(round(coeff_usd * SCALE)) * x[(o.order_id, w.warehouse_id)])
+        # Unfulfilled penalty (also in USD-equivalent, then scaled).
+        unfulfilled_pen = weights.delta * (o.revenue or 0) * _priority_weight(o.priority)
+        obj_terms.append(int(round(unfulfilled_pen * SCALE)) * u[o.order_id])
 
     model.Minimize(sum(obj_terms))
 

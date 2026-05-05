@@ -17,6 +17,7 @@ dependencies = [
     "pydantic-settings>=2.6.0",
     "neo4j>=5.26.0",
     "python-dotenv>=1.0.1",
+    "certifi>=2024.8.30",
     "ortools>=9.11.4210",
     "pandas>=2.2.3",
     "numpy>=2.1.0",

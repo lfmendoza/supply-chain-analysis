@@ -1,0 +1,1835 @@
+{
+  "Location": [
+    {
+      "id": "LOC1",
+      "name": "Tokyo Hub",
+      "country": "JP",
+      "type": "hub",
+      "latitude": 35.68,
+      "longitude": 139.69
+    },
+    {
+      "id": "LOC2",
+      "name": "Yokohama Port",
+      "country": "JP",
+      "type": "port",
+      "latitude": 35.44,
+      "longitude": 139.64
+    },
+    {
+      "id": "LOC3",
+      "name": "Shanghai Port",
+      "country": "CN",
+      "type": "port",
+      "latitude": 31.23,
+      "longitude": 121.47
+    },
+    {
+      "id": "LOC4",
+      "name": "Long Beach Port",
+      "country": "US",
+      "type": "port",
+      "latitude": 33.77,
+      "longitude": -118.19
+    },
+    {
+      "id": "LOC5",
+      "name": "Los Angeles Hub",
+      "country": "US",
+      "type": "hub",
+      "latitude": 34.05,
+      "longitude": -118.24
+    },
+    {
+      "id": "LOC6",
+      "name": "Dallas Hub",
+      "country": "US",
+      "type": "hub",
+      "latitude": 32.78,
+      "longitude": -96.8
+    },
+    {
+      "id": "LOC7",
+      "name": "Mexico City Hub",
+      "country": "MX",
+      "type": "hub",
+      "latitude": 19.43,
+      "longitude": -99.13
+    },
+    {
+      "id": "LOC8",
+      "name": "Veracruz Port",
+      "country": "MX",
+      "type": "port",
+      "latitude": 19.2,
+      "longitude": -96.14
+    },
+    {
+      "id": "LOC9",
+      "name": "Santiago Hub",
+      "country": "CL",
+      "type": "hub",
+      "latitude": -33.45,
+      "longitude": -70.66
+    },
+    {
+      "id": "LOC10",
+      "name": "Valparaiso Port",
+      "country": "CL",
+      "type": "port",
+      "latitude": -33.05,
+      "longitude": -71.62
+    },
+    {
+      "id": "LOC11",
+      "name": "Sao Paulo Hub",
+      "country": "BR",
+      "type": "hub",
+      "latitude": -23.55,
+      "longitude": -46.63
+    },
+    {
+      "id": "LOC12",
+      "name": "Houston Hub",
+      "country": "US",
+      "type": "hub",
+      "latitude": 29.76,
+      "longitude": -95.37
+    }
+  ],
+  "Carrier": [
+    {
+      "id": "CAR1",
+      "name": "OceanLink Global",
+      "reliabilityScore": 0.92
+    },
+    {
+      "id": "CAR2",
+      "name": "AeroFreight Express",
+      "reliabilityScore": 0.85
+    },
+    {
+      "id": "CAR3",
+      "name": "Continental Trucking",
+      "reliabilityScore": 0.78
+    },
+    {
+      "id": "CAR4",
+      "name": "Andes Logistics",
+      "reliabilityScore": 0.65
+    }
+  ],
+  "Supplier": [
+    {
+      "id": "S1",
+      "name": "Pacific Components Ltd",
+      "country": "JP",
+      "locationId": "LOC1",
+      "riskScore": 0.15,
+      "capacityPerWeek": 5000,
+      "status": "active"
+    },
+    {
+      "id": "S2",
+      "name": "Yangtze Industrial",
+      "country": "CN",
+      "locationId": "LOC3",
+      "riskScore": 0.32,
+      "capacityPerWeek": 8000,
+      "status": "active"
+    },
+    {
+      "id": "S3",
+      "name": "Andes Metals SA",
+      "country": "CL",
+      "locationId": "LOC9",
+      "riskScore": 0.62,
+      "capacityPerWeek": 2000,
+      "status": "active"
+    },
+    {
+      "id": "S4",
+      "name": "Sierra Polymers",
+      "country": "MX",
+      "locationId": "LOC7",
+      "riskScore": 0.28,
+      "capacityPerWeek": 3500,
+      "status": "active"
+    },
+    {
+      "id": "S5",
+      "name": "Texas Hardware Co",
+      "country": "US",
+      "locationId": "LOC6",
+      "riskScore": 0.18,
+      "capacityPerWeek": 4500,
+      "status": "active"
+    },
+    {
+      "id": "S6",
+      "name": "Gulf Petrochem",
+      "country": "US",
+      "locationId": "LOC12",
+      "riskScore": 0.41,
+      "capacityPerWeek": 6000,
+      "status": "active"
+    },
+    {
+      "id": "S7",
+      "name": "AmazonOre Brasil",
+      "country": "BR",
+      "locationId": "LOC11",
+      "riskScore": 0.55,
+      "capacityPerWeek": 2800,
+      "status": "active"
+    },
+    {
+      "id": "S8",
+      "name": "Pacific Rim Plastics",
+      "country": "JP",
+      "locationId": "LOC2",
+      "riskScore": 0.22,
+      "capacityPerWeek": 4000,
+      "status": "active"
+    }
+  ],
+  "RawMaterial": [
+    {
+      "id": "RM-A",
+      "name": "Specialty Alloy",
+      "unit": "kg",
+      "criticality": "high"
+    },
+    {
+      "id": "RM-B",
+      "name": "Plastic Polymer",
+      "unit": "kg",
+      "criticality": "med"
+    },
+    {
+      "id": "RM-C",
+      "name": "Copper Wire",
+      "unit": "m",
+      "criticality": "high"
+    },
+    {
+      "id": "RM-D",
+      "name": "Cardboard",
+      "unit": "kg",
+      "criticality": "low"
+    },
+    {
+      "id": "RM-E",
+      "name": "Silicon Chip",
+      "unit": "u",
+      "criticality": "high"
+    },
+    {
+      "id": "RM-F",
+      "name": "Lithium Cell",
+      "unit": "u",
+      "criticality": "med"
+    }
+  ],
+  "Product": [
+    {
+      "id": "P1",
+      "sku": "ELEC-001",
+      "name": "Smart Sensor v2",
+      "category": "electronics",
+      "unitCost": 45.0
+    },
+    {
+      "id": "P2",
+      "sku": "ELEC-002",
+      "name": "Power Module",
+      "category": "electronics",
+      "unitCost": 62.0
+    },
+    {
+      "id": "P3",
+      "sku": "ELEC-003",
+      "name": "Wireless Router R5",
+      "category": "electronics",
+      "unitCost": 89.0
+    },
+    {
+      "id": "P4",
+      "sku": "ELEC-004",
+      "name": "IoT Gateway",
+      "category": "electronics",
+      "unitCost": 110.0
+    },
+    {
+      "id": "P5",
+      "sku": "ELEC-005",
+      "name": "Battery Pack 5kWh",
+      "category": "electronics",
+      "unitCost": 230.0
+    },
+    {
+      "id": "P6",
+      "sku": "MECH-001",
+      "name": "Industrial Bearing",
+      "category": "mechanical",
+      "unitCost": 25.0
+    },
+    {
+      "id": "P7",
+      "sku": "MECH-002",
+      "name": "Precision Gearbox",
+      "category": "mechanical",
+      "unitCost": 180.0
+    },
+    {
+      "id": "P8",
+      "sku": "MECH-003",
+      "name": "Hydraulic Pump",
+      "category": "mechanical",
+      "unitCost": 320.0
+    },
+    {
+      "id": "P9",
+      "sku": "PCKG-001",
+      "name": "Reinforced Box L",
+      "category": "packaging",
+      "unitCost": 3.5
+    },
+    {
+      "id": "P10",
+      "sku": "PCKG-002",
+      "name": "Protective Foam",
+      "category": "packaging",
+      "unitCost": 2.1
+    },
+    {
+      "id": "P11",
+      "sku": "ELEC-006",
+      "name": "Solar Inverter 3kW",
+      "category": "electronics",
+      "unitCost": 410.0
+    },
+    {
+      "id": "P12",
+      "sku": "ELEC-007",
+      "name": "Smart Thermostat",
+      "category": "electronics",
+      "unitCost": 75.0
+    },
+    {
+      "id": "P13",
+      "sku": "MECH-004",
+      "name": "Compressor Unit",
+      "category": "mechanical",
+      "unitCost": 540.0
+    },
+    {
+      "id": "P14",
+      "sku": "ELEC-008",
+      "name": "EV Charger 7kW",
+      "category": "electronics",
+      "unitCost": 690.0
+    },
+    {
+      "id": "P15",
+      "sku": "PCKG-003",
+      "name": "Pallet Wrap Roll",
+      "category": "packaging",
+      "unitCost": 0.8
+    }
+  ],
+  "Warehouse": [
+    {
+      "id": "W1",
+      "name": "LA Distribution Center",
+      "region": "US-West",
+      "locationId": "LOC5",
+      "storageCapacity": 25000,
+      "dispatchCapacityPerWeek": 12000
+    },
+    {
+      "id": "W2",
+      "name": "Dallas Fulfillment",
+      "region": "US-South",
+      "locationId": "LOC6",
+      "storageCapacity": 18000,
+      "dispatchCapacityPerWeek": 9000
+    },
+    {
+      "id": "W3",
+      "name": "Mexico City Warehouse",
+      "region": "MX",
+      "locationId": "LOC7",
+      "storageCapacity": 14000,
+      "dispatchCapacityPerWeek": 7000
+    },
+    {
+      "id": "W4",
+      "name": "Sao Paulo Distribution",
+      "region": "BR",
+      "locationId": "LOC11",
+      "storageCapacity": 16000,
+      "dispatchCapacityPerWeek": 8000
+    },
+    {
+      "id": "W5",
+      "name": "Houston Cross-Dock",
+      "region": "US-South",
+      "locationId": "LOC12",
+      "storageCapacity": 12000,
+      "dispatchCapacityPerWeek": 6500
+    }
+  ],
+  "Inventory": [
+    {
+      "id": "INV1",
+      "quantity": 81,
+      "safetyStock": 146,
+      "reorderPoint": 189
+    },
+    {
+      "id": "INV2",
+      "quantity": 257,
+      "safetyStock": 125,
+      "reorderPoint": 162
+    },
+    {
+      "id": "INV3",
+      "quantity": 220,
+      "safetyStock": 142,
+      "reorderPoint": 184
+    },
+    {
+      "id": "INV4",
+      "quantity": 32,
+      "safetyStock": 67,
+      "reorderPoint": 87
+    },
+    {
+      "id": "INV5",
+      "quantity": 210,
+      "safetyStock": 108,
+      "reorderPoint": 140
+    },
+    {
+      "id": "INV6",
+      "quantity": 147,
+      "safetyStock": 70,
+      "reorderPoint": 91
+    },
+    {
+      "id": "INV7",
+      "quantity": 87,
+      "safetyStock": 75,
+      "reorderPoint": 97
+    },
+    {
+      "id": "INV8",
+      "quantity": 212,
+      "safetyStock": 118,
+      "reorderPoint": 153
+    },
+    {
+      "id": "INV9",
+      "quantity": 110,
+      "safetyStock": 68,
+      "reorderPoint": 88
+    },
+    {
+      "id": "INV10",
+      "quantity": 136,
+      "safetyStock": 93,
+      "reorderPoint": 120
+    },
+    {
+      "id": "INV11",
+      "quantity": 81,
+      "safetyStock": 112,
+      "reorderPoint": 145
+    },
+    {
+      "id": "INV12",
+      "quantity": 138,
+      "safetyStock": 147,
+      "reorderPoint": 191
+    },
+    {
+      "id": "INV13",
+      "quantity": 161,
+      "safetyStock": 192,
+      "reorderPoint": 249
+    },
+    {
+      "id": "INV14",
+      "quantity": 277,
+      "safetyStock": 133,
+      "reorderPoint": 172
+    },
+    {
+      "id": "INV15",
+      "quantity": 54,
+      "safetyStock": 66,
+      "reorderPoint": 85
+    },
+    {
+      "id": "INV16",
+      "quantity": 419,
+      "safetyStock": 195,
+      "reorderPoint": 253
+    },
+    {
+      "id": "INV17",
+      "quantity": 107,
+      "safetyStock": 130,
+      "reorderPoint": 169
+    },
+    {
+      "id": "INV18",
+      "quantity": 210,
+      "safetyStock": 177,
+      "reorderPoint": 230
+    },
+    {
+      "id": "INV19",
+      "quantity": 114,
+      "safetyStock": 167,
+      "reorderPoint": 217
+    },
+    {
+      "id": "INV20",
+      "quantity": 75,
+      "safetyStock": 85,
+      "reorderPoint": 110
+    },
+    {
+      "id": "INV21",
+      "quantity": 253,
+      "safetyStock": 106,
+      "reorderPoint": 137
+    },
+    {
+      "id": "INV22",
+      "quantity": 120,
+      "safetyStock": 85,
+      "reorderPoint": 110
+    },
+    {
+      "id": "INV23",
+      "quantity": 139,
+      "safetyStock": 73,
+      "reorderPoint": 94
+    },
+    {
+      "id": "INV24",
+      "quantity": 55,
+      "safetyStock": 78,
+      "reorderPoint": 101
+    },
+    {
+      "id": "INV25",
+      "quantity": 178,
+      "safetyStock": 90,
+      "reorderPoint": 117
+    },
+    {
+      "id": "INV26",
+      "quantity": 251,
+      "safetyStock": 158,
+      "reorderPoint": 205
+    },
+    {
+      "id": "INV27",
+      "quantity": 172,
+      "safetyStock": 148,
+      "reorderPoint": 192
+    },
+    {
+      "id": "INV28",
+      "quantity": 246,
+      "safetyStock": 169,
+      "reorderPoint": 219
+    },
+    {
+      "id": "INV29",
+      "quantity": 76,
+      "safetyStock": 78,
+      "reorderPoint": 101
+    },
+    {
+      "id": "INV30",
+      "quantity": 117,
+      "safetyStock": 90,
+      "reorderPoint": 117
+    },
+    {
+      "id": "INV31",
+      "quantity": 274,
+      "safetyStock": 117,
+      "reorderPoint": 152
+    },
+    {
+      "id": "INV32",
+      "quantity": 134,
+      "safetyStock": 95,
+      "reorderPoint": 123
+    },
+    {
+      "id": "INV33",
+      "quantity": 164,
+      "safetyStock": 77,
+      "reorderPoint": 100
+    },
+    {
+      "id": "INV34",
+      "quantity": 262,
+      "safetyStock": 126,
+      "reorderPoint": 163
+    },
+    {
+      "id": "INV35",
+      "quantity": 289,
+      "safetyStock": 179,
+      "reorderPoint": 232
+    },
+    {
+      "id": "INV36",
+      "quantity": 102,
+      "safetyStock": 89,
+      "reorderPoint": 115
+    }
+  ],
+  "Customer": [
+    {
+      "id": "CUST1",
+      "name": "Rodriguez, Figueroa and Sanchez",
+      "region": "CL",
+      "tier": "gold",
+      "locationId": "LOC9"
+    },
+    {
+      "id": "CUST2",
+      "name": "Doyle Ltd",
+      "region": "CL",
+      "tier": "silver",
+      "locationId": "LOC9"
+    },
+    {
+      "id": "CUST3",
+      "name": "Mcclain, Miller and Henderson",
+      "region": "US-East",
+      "tier": "gold",
+      "locationId": "LOC4"
+    },
+    {
+      "id": "CUST4",
+      "name": "Davis and Sons",
+      "region": "US-West",
+      "tier": "bronze",
+      "locationId": "LOC5"
+    },
+    {
+      "id": "CUST5",
+      "name": "Guzman, Hoffman and Baldwin",
+      "region": "BR",
+      "tier": "gold",
+      "locationId": "LOC11"
+    },
+    {
+      "id": "CUST6",
+      "name": "Gardner, Robinson and Lawrence",
+      "region": "MX",
+      "tier": "gold",
+      "locationId": "LOC7"
+    },
+    {
+      "id": "CUST7",
+      "name": "Blake and Sons",
+      "region": "US-West",
+      "tier": "silver",
+      "locationId": "LOC5"
+    },
+    {
+      "id": "CUST8",
+      "name": "Henderson, Ramirez and Lewis",
+      "region": "BR",
+      "tier": "bronze",
+      "locationId": "LOC11"
+    },
+    {
+      "id": "CUST9",
+      "name": "Garcia-James",
+      "region": "BR",
+      "tier": "gold",
+      "locationId": "LOC11"
+    },
+    {
+      "id": "CUST10",
+      "name": "Abbott-Munoz",
+      "region": "CL",
+      "tier": "bronze",
+      "locationId": "LOC9"
+    },
+    {
+      "id": "CUST11",
+      "name": "Blair PLC",
+      "region": "MX",
+      "tier": "silver",
+      "locationId": "LOC7"
+    },
+    {
+      "id": "CUST12",
+      "name": "Dudley Group",
+      "region": "BR",
+      "tier": "silver",
+      "locationId": "LOC11"
+    },
+    {
+      "id": "CUST13",
+      "name": "Arnold Ltd",
+      "region": "US-West",
+      "tier": "bronze",
+      "locationId": "LOC5"
+    },
+    {
+      "id": "CUST14",
+      "name": "Mcclure, Ward and Lee",
+      "region": "US-East",
+      "tier": "bronze",
+      "locationId": "LOC4"
+    },
+    {
+      "id": "CUST15",
+      "name": "Williams and Sons",
+      "region": "US-South",
+      "tier": "silver",
+      "locationId": "LOC6"
+    },
+    {
+      "id": "CUST16",
+      "name": "Galloway-Wyatt",
+      "region": "US-East",
+      "tier": "bronze",
+      "locationId": "LOC4"
+    },
+    {
+      "id": "CUST17",
+      "name": "James Group",
+      "region": "US-South",
+      "tier": "gold",
+      "locationId": "LOC6"
+    },
+    {
+      "id": "CUST18",
+      "name": "Flowers, Martin and Kelly",
+      "region": "MX",
+      "tier": "gold",
+      "locationId": "LOC7"
+    }
+  ],
+  "CustomerOrder": [
+    {
+      "id": "CO1",
+      "quantity": 72,
+      "dueDate": "2026-05-19",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 370.32
+    },
+    {
+      "id": "CO2",
+      "quantity": 51,
+      "dueDate": "2026-05-13",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 4977.78
+    },
+    {
+      "id": "CO3",
+      "quantity": 35,
+      "dueDate": "2026-05-06",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 2561.15
+    },
+    {
+      "id": "CO4",
+      "quantity": 13,
+      "dueDate": "2026-05-08",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 12914.27
+    },
+    {
+      "id": "CO5",
+      "quantity": 65,
+      "dueDate": "2026-05-20",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 33960.29
+    },
+    {
+      "id": "CO6",
+      "quantity": 74,
+      "dueDate": "2026-05-26",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 12294.99
+    },
+    {
+      "id": "CO7",
+      "quantity": 52,
+      "dueDate": "2026-05-07",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 13412.03
+    },
+    {
+      "id": "CO8",
+      "quantity": 13,
+      "dueDate": "2026-05-11",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 2094.58
+    },
+    {
+      "id": "CO9",
+      "quantity": 14,
+      "dueDate": "2026-05-06",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 772.69
+    },
+    {
+      "id": "CO10",
+      "quantity": 47,
+      "dueDate": "2026-05-25",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 42389.32
+    },
+    {
+      "id": "CO11",
+      "quantity": 74,
+      "dueDate": "2026-05-22",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 13194.79
+    },
+    {
+      "id": "CO12",
+      "quantity": 65,
+      "dueDate": "2026-05-07",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 9192.64
+    },
+    {
+      "id": "CO13",
+      "quantity": 59,
+      "dueDate": "2026-05-05",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 2343.37
+    },
+    {
+      "id": "CO14",
+      "quantity": 56,
+      "dueDate": "2026-05-07",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 3931.87
+    },
+    {
+      "id": "CO15",
+      "quantity": 29,
+      "dueDate": "2026-05-09",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 4029.23
+    },
+    {
+      "id": "CO16",
+      "quantity": 36,
+      "dueDate": "2026-05-29",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 14214.8
+    },
+    {
+      "id": "CO17",
+      "quantity": 11,
+      "dueDate": "2026-05-04",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 984.31
+    },
+    {
+      "id": "CO18",
+      "quantity": 35,
+      "dueDate": "2026-05-10",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 39.72
+    },
+    {
+      "id": "CO19",
+      "quantity": 12,
+      "dueDate": "2026-05-16",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 11.53
+    },
+    {
+      "id": "CO20",
+      "quantity": 63,
+      "dueDate": "2026-05-27",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 76.28
+    },
+    {
+      "id": "CO21",
+      "quantity": 67,
+      "dueDate": "2026-05-05",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 36631.75
+    },
+    {
+      "id": "CO22",
+      "quantity": 45,
+      "dueDate": "2026-05-20",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 2962.33
+    },
+    {
+      "id": "CO23",
+      "quantity": 12,
+      "dueDate": "2026-05-09",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 1320.1
+    },
+    {
+      "id": "CO24",
+      "quantity": 13,
+      "dueDate": "2026-05-07",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 35.65
+    },
+    {
+      "id": "CO25",
+      "quantity": 10,
+      "dueDate": "2026-05-22",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 29.16
+    },
+    {
+      "id": "CO26",
+      "quantity": 38,
+      "dueDate": "2026-05-11",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 1446.17
+    },
+    {
+      "id": "CO27",
+      "quantity": 21,
+      "dueDate": "2026-05-14",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 5046.3
+    },
+    {
+      "id": "CO28",
+      "quantity": 63,
+      "dueDate": "2026-05-07",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 4120.24
+    },
+    {
+      "id": "CO29",
+      "quantity": 32,
+      "dueDate": "2026-05-15",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 141.08
+    },
+    {
+      "id": "CO30",
+      "quantity": 36,
+      "dueDate": "2026-05-21",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 36.6
+    },
+    {
+      "id": "CO31",
+      "quantity": 72,
+      "dueDate": "2026-05-13",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 237.04
+    },
+    {
+      "id": "CO32",
+      "quantity": 22,
+      "dueDate": "2026-05-27",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 28.17
+    },
+    {
+      "id": "CO33",
+      "quantity": 39,
+      "dueDate": "2026-05-14",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 4494.19
+    },
+    {
+      "id": "CO34",
+      "quantity": 38,
+      "dueDate": "2026-05-05",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 20456.61
+    },
+    {
+      "id": "CO35",
+      "quantity": 59,
+      "dueDate": "2026-05-14",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 29507.91
+    },
+    {
+      "id": "CO36",
+      "quantity": 38,
+      "dueDate": "2026-05-26",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 21793.71
+    },
+    {
+      "id": "CO37",
+      "quantity": 6,
+      "dueDate": "2026-05-26",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 34.13
+    },
+    {
+      "id": "CO38",
+      "quantity": 9,
+      "dueDate": "2026-05-08",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 46.06
+    },
+    {
+      "id": "CO39",
+      "quantity": 10,
+      "dueDate": "2026-05-29",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 1428.04
+    },
+    {
+      "id": "CO40",
+      "quantity": 50,
+      "dueDate": "2026-05-07",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 52.49
+    },
+    {
+      "id": "CO41",
+      "quantity": 76,
+      "dueDate": "2026-05-23",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 56752.98
+    },
+    {
+      "id": "CO42",
+      "quantity": 35,
+      "dueDate": "2026-05-29",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 45.9
+    },
+    {
+      "id": "CO43",
+      "quantity": 57,
+      "dueDate": "2026-05-14",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 69.83
+    },
+    {
+      "id": "CO44",
+      "quantity": 36,
+      "dueDate": "2026-05-07",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 30215.95
+    },
+    {
+      "id": "CO45",
+      "quantity": 9,
+      "dueDate": "2026-05-18",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 8073.59
+    },
+    {
+      "id": "CO46",
+      "quantity": 34,
+      "dueDate": "2026-05-16",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 11706.66
+    },
+    {
+      "id": "CO47",
+      "quantity": 13,
+      "dueDate": "2026-05-24",
+      "priority": 3,
+      "status": "pending",
+      "revenue": 3963.56
+    },
+    {
+      "id": "CO48",
+      "quantity": 73,
+      "dueDate": "2026-05-12",
+      "priority": 2,
+      "status": "pending",
+      "revenue": 15931.2
+    },
+    {
+      "id": "CO49",
+      "quantity": 38,
+      "dueDate": "2026-05-15",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 117.18
+    },
+    {
+      "id": "CO50",
+      "quantity": 70,
+      "dueDate": "2026-05-10",
+      "priority": 1,
+      "status": "pending",
+      "revenue": 20220.19
+    }
+  ],
+  "PurchaseOrder": [
+    {
+      "id": "PO1",
+      "quantity": 61,
+      "placedAt": "2026-04-08",
+      "expectedAt": "2026-04-29",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO2",
+      "quantity": 366,
+      "placedAt": "2026-04-13",
+      "expectedAt": "2026-04-27",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO3",
+      "quantity": 1059,
+      "placedAt": "2026-04-07",
+      "expectedAt": "2026-04-29",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO4",
+      "quantity": 2491,
+      "placedAt": "2026-04-17",
+      "expectedAt": "2026-05-03",
+      "status": "pending"
+    },
+    {
+      "id": "PO5",
+      "quantity": 1176,
+      "placedAt": "2026-04-11",
+      "expectedAt": "2026-04-21",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO6",
+      "quantity": 755,
+      "placedAt": "2026-04-07",
+      "expectedAt": "2026-04-17",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO7",
+      "quantity": 566,
+      "placedAt": "2026-04-09",
+      "expectedAt": "2026-04-15",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO8",
+      "quantity": 712,
+      "placedAt": "2026-04-08",
+      "expectedAt": "2026-04-27",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO9",
+      "quantity": 380,
+      "placedAt": "2026-04-24",
+      "expectedAt": "2026-04-30",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO10",
+      "quantity": 1276,
+      "placedAt": "2026-04-09",
+      "expectedAt": "2026-04-19",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO11",
+      "quantity": 1760,
+      "placedAt": "2026-04-12",
+      "expectedAt": "2026-04-30",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO12",
+      "quantity": 1522,
+      "placedAt": "2026-04-30",
+      "expectedAt": "2026-05-09",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO13",
+      "quantity": 103,
+      "placedAt": "2026-04-17",
+      "expectedAt": "2026-05-08",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO14",
+      "quantity": 264,
+      "placedAt": "2026-04-16",
+      "expectedAt": "2026-04-24",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO15",
+      "quantity": 1675,
+      "placedAt": "2026-04-14",
+      "expectedAt": "2026-04-21",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO16",
+      "quantity": 373,
+      "placedAt": "2026-04-09",
+      "expectedAt": "2026-04-22",
+      "status": "pending"
+    },
+    {
+      "id": "PO17",
+      "quantity": 181,
+      "placedAt": "2026-04-09",
+      "expectedAt": "2026-04-30",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO18",
+      "quantity": 271,
+      "placedAt": "2026-04-28",
+      "expectedAt": "2026-05-06",
+      "status": "pending"
+    },
+    {
+      "id": "PO19",
+      "quantity": 1135,
+      "placedAt": "2026-04-23",
+      "expectedAt": "2026-05-03",
+      "status": "pending"
+    },
+    {
+      "id": "PO20",
+      "quantity": 550,
+      "placedAt": "2026-04-29",
+      "expectedAt": "2026-05-17",
+      "status": "pending"
+    },
+    {
+      "id": "PO21",
+      "quantity": 1098,
+      "placedAt": "2026-04-16",
+      "expectedAt": "2026-04-23",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO22",
+      "quantity": 1678,
+      "placedAt": "2026-04-24",
+      "expectedAt": "2026-05-04",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO23",
+      "quantity": 693,
+      "placedAt": "2026-04-15",
+      "expectedAt": "2026-05-07",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO24",
+      "quantity": 1604,
+      "placedAt": "2026-04-10",
+      "expectedAt": "2026-04-26",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO25",
+      "quantity": 154,
+      "placedAt": "2026-04-06",
+      "expectedAt": "2026-04-20",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO26",
+      "quantity": 1720,
+      "placedAt": "2026-04-08",
+      "expectedAt": "2026-04-24",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO27",
+      "quantity": 1005,
+      "placedAt": "2026-04-13",
+      "expectedAt": "2026-04-20",
+      "status": "pending"
+    },
+    {
+      "id": "PO28",
+      "quantity": 667,
+      "placedAt": "2026-04-26",
+      "expectedAt": "2026-05-08",
+      "status": "fulfilled"
+    },
+    {
+      "id": "PO29",
+      "quantity": 1587,
+      "placedAt": "2026-04-13",
+      "expectedAt": "2026-04-23",
+      "status": "in_transit"
+    },
+    {
+      "id": "PO30",
+      "quantity": 1073,
+      "placedAt": "2026-04-16",
+      "expectedAt": "2026-05-05",
+      "status": "in_transit"
+    }
+  ],
+  "Shipment": [
+    {
+      "id": "SH1",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 0,
+      "actualLeadTime": 4,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH2",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 0,
+      "actualLeadTime": 1,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH3",
+      "dispatchedAt": "2026-04-24T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 2,
+      "actualLeadTime": 27,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH4",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 1,
+      "actualLeadTime": 4,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH5",
+      "dispatchedAt": "2026-04-20T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 2,
+      "actualLeadTime": 7,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH6",
+      "dispatchedAt": "2026-04-23T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 7,
+      "actualLeadTime": 11,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH7",
+      "dispatchedAt": "2026-04-30T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 1,
+      "actualLeadTime": 2,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH8",
+      "dispatchedAt": "2026-04-29T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 7,
+      "actualLeadTime": 11,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH9",
+      "dispatchedAt": "2026-04-26T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 0,
+      "actualLeadTime": 22,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH10",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 7,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH11",
+      "dispatchedAt": "2026-05-01T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 0,
+      "actualLeadTime": 2,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH12",
+      "dispatchedAt": "2026-05-01T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 0,
+      "actualLeadTime": 21,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH13",
+      "dispatchedAt": "2026-04-22T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 9,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH14",
+      "dispatchedAt": "2026-04-22T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 1,
+      "actualLeadTime": 5,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH15",
+      "dispatchedAt": "2026-04-29T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 2,
+      "actualLeadTime": 4,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH16",
+      "dispatchedAt": "2026-04-19T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 26,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH17",
+      "dispatchedAt": "2026-04-22T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 2,
+      "actualLeadTime": 3,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH18",
+      "dispatchedAt": "2026-04-28T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 7,
+      "actualLeadTime": 29,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH19",
+      "dispatchedAt": "2026-04-28T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 8,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH20",
+      "dispatchedAt": "2026-04-19T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 2,
+      "actualLeadTime": 4,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH21",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 0,
+      "actualLeadTime": 25,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH22",
+      "dispatchedAt": "2026-05-01T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 1,
+      "actualLeadTime": 24,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH23",
+      "dispatchedAt": "2026-04-21T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 1,
+      "actualLeadTime": 2,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH24",
+      "dispatchedAt": "2026-04-21T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 0,
+      "actualLeadTime": 14,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH25",
+      "dispatchedAt": "2026-04-19T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 7,
+      "actualLeadTime": 32,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH26",
+      "dispatchedAt": "2026-04-22T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 18,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH27",
+      "dispatchedAt": "2026-04-27T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 0,
+      "actualLeadTime": 2,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH28",
+      "dispatchedAt": "2026-04-22T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 6,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH29",
+      "dispatchedAt": "2026-04-29T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 0,
+      "actualLeadTime": 6,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH30",
+      "dispatchedAt": "2026-04-26T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 5,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH31",
+      "dispatchedAt": "2026-04-23T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 7,
+      "actualLeadTime": 11,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH32",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 0,
+      "actualLeadTime": 5,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH33",
+      "dispatchedAt": "2026-04-21T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 0,
+      "actualLeadTime": 27,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH34",
+      "dispatchedAt": "2026-04-30T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 4,
+      "actualLeadTime": 6,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH35",
+      "dispatchedAt": "2026-04-21T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 2,
+      "actualLeadTime": 24,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH36",
+      "dispatchedAt": "2026-04-25T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 1,
+      "actualLeadTime": 3,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH37",
+      "dispatchedAt": "2026-04-27T09:00:00Z",
+      "status": "in_transit",
+      "delayDays": 0,
+      "actualLeadTime": 6,
+      "fulfillmentPct": 75
+    },
+    {
+      "id": "SH38",
+      "dispatchedAt": "2026-04-26T09:00:00Z",
+      "status": "delivered",
+      "delayDays": 0,
+      "actualLeadTime": 2,
+      "fulfillmentPct": 100
+    },
+    {
+      "id": "SH39",
+      "dispatchedAt": "2026-04-29T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 1,
+      "actualLeadTime": 23,
+      "fulfillmentPct": 50
+    },
+    {
+      "id": "SH40",
+      "dispatchedAt": "2026-04-22T09:00:00Z",
+      "status": "delayed",
+      "delayDays": 1,
+      "actualLeadTime": 23,
+      "fulfillmentPct": 100
+    }
+  ],
+  "Route": [
+    {
+      "id": "R-MAIN",
+      "mode": "sea",
+      "distanceKm": 9100,
+      "status": "open"
+    },
+    {
+      "id": "R02",
+      "mode": "sea",
+      "distanceKm": 10400,
+      "status": "open"
+    },
+    {
+      "id": "R03",
+      "mode": "sea",
+      "distanceKm": 12500,
+      "status": "open"
+    },
+    {
+      "id": "R04",
+      "mode": "road",
+      "distanceKm": 35,
+      "status": "open"
+    },
+    {
+      "id": "R05",
+      "mode": "road",
+      "distanceKm": 2280,
+      "status": "open"
+    },
+    {
+      "id": "R06",
+      "mode": "road",
+      "distanceKm": 380,
+      "status": "open"
+    },
+    {
+      "id": "R07",
+      "mode": "road",
+      "distanceKm": 2450,
+      "status": "open"
+    },
+    {
+      "id": "R08",
+      "mode": "road",
+      "distanceKm": 400,
+      "status": "open"
+    },
+    {
+      "id": "R09",
+      "mode": "road",
+      "distanceKm": 1280,
+      "status": "open"
+    },
+    {
+      "id": "R10",
+      "mode": "road",
+      "distanceKm": 1380,
+      "status": "open"
+    },
+    {
+      "id": "R11",
+      "mode": "road",
+      "distanceKm": 2800,
+      "status": "open"
+    },
+    {
+      "id": "R12",
+      "mode": "road",
+      "distanceKm": 110,
+      "status": "open"
+    },
+    {
+      "id": "R13",
+      "mode": "sea",
+      "distanceKm": 9700,
+      "status": "open"
+    },
+    {
+      "id": "R14",
+      "mode": "sea",
+      "distanceKm": 5600,
+      "status": "open"
+    },
+    {
+      "id": "R15",
+      "mode": "air",
+      "distanceKm": 8800,
+      "status": "open"
+    },
+    {
+      "id": "R16",
+      "mode": "air",
+      "distanceKm": 10200,
+      "status": "open"
+    },
+    {
+      "id": "R17",
+      "mode": "air",
+      "distanceKm": 7900,
+      "status": "open"
+    },
+    {
+      "id": "R18",
+      "mode": "road",
+      "distanceKm": 30,
+      "status": "open"
+    },
+    {
+      "id": "R19",
+      "mode": "air",
+      "distanceKm": 2700,
+      "status": "open"
+    },
+    {
+      "id": "R20",
+      "mode": "sea",
+      "distanceKm": 8400,
+      "status": "open"
+    },
+    {
+      "id": "R21",
+      "mode": "sea",
+      "distanceKm": 11200,
+      "status": "open"
+    },
+    {
+      "id": "R22",
+      "mode": "road",
+      "distanceKm": 2500,
+      "status": "open"
+    },
+    {
+      "id": "R23",
+      "mode": "sea",
+      "distanceKm": 1100,
+      "status": "open"
+    },
+    {
+      "id": "R24",
+      "mode": "sea",
+      "distanceKm": 11300,
+      "status": "open"
+    },
+    {
+      "id": "R25",
+      "mode": "sea",
+      "distanceKm": 16500,
+      "status": "open"
+    },
+    {
+      "id": "R26",
+      "mode": "sea",
+      "distanceKm": 13800,
+      "status": "open"
+    },
+    {
+      "id": "R27",
+      "mode": "air",
+      "distanceKm": 2000,
+      "status": "open"
+    },
+    {
+      "id": "R28",
+      "mode": "air",
+      "distanceKm": 7400,
+      "status": "open"
+    }
+  ]
+}

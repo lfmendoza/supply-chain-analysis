@@ -57,9 +57,11 @@ combination of cost, lead time and risk.
 + Σ_o u[o] · (δ · revenue[o] · priorityWeight(priority[o]))
 ```
 
-Defaults: α = 1.0 (cost in currency), β = 10.0 (one day = 10 currency units),
-γ = 50.0 · 1000 (risk in `[0, 1]` scaled to similar magnitude as cost),
-δ = 5.0 (penalty multiplier on revenue when an order is dropped).
+Defaults: α = 1.0 (cost passes through in USD), β = 15.0 (each day adds 15 USD-equivalent),
+γ = 250.0 (a fully risky route adds 250 USD), δ = 10.0 (penalty when dropping an order
+= 10 · revenue · priorityWeight). Coefficients are calibrated so every term is in the
+same order of magnitude as `cost` (USD), and the whole objective is multiplied by
+SCALE = 100 at the end to convert to integers (CP-SAT requires int coefficients).
 
 `priorityWeight(p)` = `4 - p`, so high-priority orders carry a larger
 penalty when left unfulfilled.

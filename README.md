@@ -87,6 +87,16 @@ Expected output:
 OK -> Neo4j AuraDB connection successful
 ```
 
+> **Windows TLS gotcha**: AuraDB's TLS certificate is currently issued by
+> SSL.com, whose roots are not always in the Windows certificate store. The
+> Neo4j driver therefore fails with a generic
+> `ServiceUnavailable: Unable to retrieve routing information`. The
+> `Neo4jClient` works around this by injecting an `SSLContext` built from
+> the [`certifi`](https://pypi.org/project/certifi/) bundle, so things just
+> work. If you want to debug TLS directly, run
+> `python -m scripts.tls_probe`. If you want a deeper diagnostic with the
+> driver itself, run `python -m scripts.diagnose_connection`.
+
 Seed the graph with synthetic data (idempotent):
 
 ```bash

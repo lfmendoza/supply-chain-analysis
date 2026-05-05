@@ -1,0 +1,2487 @@
+{
+  "LOCATED_AT_SUPPLIER": [
+    {
+      "from": "S1",
+      "to": "LOC1"
+    },
+    {
+      "from": "S2",
+      "to": "LOC3"
+    },
+    {
+      "from": "S3",
+      "to": "LOC9"
+    },
+    {
+      "from": "S4",
+      "to": "LOC7"
+    },
+    {
+      "from": "S5",
+      "to": "LOC6"
+    },
+    {
+      "from": "S6",
+      "to": "LOC12"
+    },
+    {
+      "from": "S7",
+      "to": "LOC11"
+    },
+    {
+      "from": "S8",
+      "to": "LOC2"
+    }
+  ],
+  "LOCATED_AT_WAREHOUSE": [
+    {
+      "from": "W1",
+      "to": "LOC5"
+    },
+    {
+      "from": "W2",
+      "to": "LOC6"
+    },
+    {
+      "from": "W3",
+      "to": "LOC7"
+    },
+    {
+      "from": "W4",
+      "to": "LOC11"
+    },
+    {
+      "from": "W5",
+      "to": "LOC12"
+    }
+  ],
+  "LOCATED_AT_CUSTOMER": [
+    {
+      "from": "CUST1",
+      "to": "LOC9"
+    },
+    {
+      "from": "CUST2",
+      "to": "LOC9"
+    },
+    {
+      "from": "CUST3",
+      "to": "LOC4"
+    },
+    {
+      "from": "CUST4",
+      "to": "LOC5"
+    },
+    {
+      "from": "CUST5",
+      "to": "LOC11"
+    },
+    {
+      "from": "CUST6",
+      "to": "LOC7"
+    },
+    {
+      "from": "CUST7",
+      "to": "LOC5"
+    },
+    {
+      "from": "CUST8",
+      "to": "LOC11"
+    },
+    {
+      "from": "CUST9",
+      "to": "LOC11"
+    },
+    {
+      "from": "CUST10",
+      "to": "LOC9"
+    },
+    {
+      "from": "CUST11",
+      "to": "LOC7"
+    },
+    {
+      "from": "CUST12",
+      "to": "LOC11"
+    },
+    {
+      "from": "CUST13",
+      "to": "LOC5"
+    },
+    {
+      "from": "CUST14",
+      "to": "LOC4"
+    },
+    {
+      "from": "CUST15",
+      "to": "LOC6"
+    },
+    {
+      "from": "CUST16",
+      "to": "LOC4"
+    },
+    {
+      "from": "CUST17",
+      "to": "LOC6"
+    },
+    {
+      "from": "CUST18",
+      "to": "LOC7"
+    }
+  ],
+  "SUPPLIES": [
+    {
+      "supplierId": "S1",
+      "rawMaterialId": "RM-E",
+      "unitCost": 12.5,
+      "leadTimeDays": 14,
+      "minOrderQty": 100
+    },
+    {
+      "supplierId": "S1",
+      "rawMaterialId": "RM-F",
+      "unitCost": 8.75,
+      "leadTimeDays": 12,
+      "minOrderQty": 200
+    },
+    {
+      "supplierId": "S2",
+      "rawMaterialId": "RM-B",
+      "unitCost": 4.2,
+      "leadTimeDays": 18,
+      "minOrderQty": 500
+    },
+    {
+      "supplierId": "S2",
+      "rawMaterialId": "RM-D",
+      "unitCost": 1.1,
+      "leadTimeDays": 16,
+      "minOrderQty": 1000
+    },
+    {
+      "supplierId": "S3",
+      "rawMaterialId": "RM-A",
+      "unitCost": 22.4,
+      "leadTimeDays": 21,
+      "minOrderQty": 50
+    },
+    {
+      "supplierId": "S3",
+      "rawMaterialId": "RM-C",
+      "unitCost": 6.3,
+      "leadTimeDays": 19,
+      "minOrderQty": 300
+    },
+    {
+      "supplierId": "S4",
+      "rawMaterialId": "RM-B",
+      "unitCost": 4.8,
+      "leadTimeDays": 9,
+      "minOrderQty": 400
+    },
+    {
+      "supplierId": "S4",
+      "rawMaterialId": "RM-D",
+      "unitCost": 1.25,
+      "leadTimeDays": 7,
+      "minOrderQty": 800
+    },
+    {
+      "supplierId": "S5",
+      "rawMaterialId": "RM-C",
+      "unitCost": 6.8,
+      "leadTimeDays": 6,
+      "minOrderQty": 250
+    },
+    {
+      "supplierId": "S5",
+      "rawMaterialId": "RM-E",
+      "unitCost": 13.1,
+      "leadTimeDays": 8,
+      "minOrderQty": 100
+    },
+    {
+      "supplierId": "S6",
+      "rawMaterialId": "RM-B",
+      "unitCost": 4.55,
+      "leadTimeDays": 10,
+      "minOrderQty": 500
+    },
+    {
+      "supplierId": "S7",
+      "rawMaterialId": "RM-C",
+      "unitCost": 5.95,
+      "leadTimeDays": 22,
+      "minOrderQty": 300
+    },
+    {
+      "supplierId": "S8",
+      "rawMaterialId": "RM-F",
+      "unitCost": 9.1,
+      "leadTimeDays": 13,
+      "minOrderQty": 200
+    }
+  ],
+  "USED_IN": [
+    {
+      "rawMaterialId": "RM-E",
+      "productId": "P1",
+      "quantityPerUnit": 2
+    },
+    {
+      "rawMaterialId": "RM-C",
+      "productId": "P1",
+      "quantityPerUnit": 0.5
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P2",
+      "quantityPerUnit": 0.4
+    },
+    {
+      "rawMaterialId": "RM-F",
+      "productId": "P2",
+      "quantityPerUnit": 1
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P3",
+      "quantityPerUnit": 0.2
+    },
+    {
+      "rawMaterialId": "RM-E",
+      "productId": "P3",
+      "quantityPerUnit": 1
+    },
+    {
+      "rawMaterialId": "RM-C",
+      "productId": "P4",
+      "quantityPerUnit": 1.2
+    },
+    {
+      "rawMaterialId": "RM-E",
+      "productId": "P4",
+      "quantityPerUnit": 3
+    },
+    {
+      "rawMaterialId": "RM-F",
+      "productId": "P5",
+      "quantityPerUnit": 12
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P5",
+      "quantityPerUnit": 1.0
+    },
+    {
+      "rawMaterialId": "RM-C",
+      "productId": "P6",
+      "quantityPerUnit": 0.3
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P7",
+      "quantityPerUnit": 0.6
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P8",
+      "quantityPerUnit": 2.0
+    },
+    {
+      "rawMaterialId": "RM-D",
+      "productId": "P9",
+      "quantityPerUnit": 1.5
+    },
+    {
+      "rawMaterialId": "RM-B",
+      "productId": "P10",
+      "quantityPerUnit": 0.8
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P11",
+      "quantityPerUnit": 0.9
+    },
+    {
+      "rawMaterialId": "RM-E",
+      "productId": "P11",
+      "quantityPerUnit": 4
+    },
+    {
+      "rawMaterialId": "RM-E",
+      "productId": "P12",
+      "quantityPerUnit": 2
+    },
+    {
+      "rawMaterialId": "RM-B",
+      "productId": "P12",
+      "quantityPerUnit": 0.3
+    },
+    {
+      "rawMaterialId": "RM-A",
+      "productId": "P13",
+      "quantityPerUnit": 1.6
+    },
+    {
+      "rawMaterialId": "RM-C",
+      "productId": "P13",
+      "quantityPerUnit": 2.5
+    },
+    {
+      "rawMaterialId": "RM-E",
+      "productId": "P14",
+      "quantityPerUnit": 5
+    },
+    {
+      "rawMaterialId": "RM-F",
+      "productId": "P14",
+      "quantityPerUnit": 8
+    },
+    {
+      "rawMaterialId": "RM-D",
+      "productId": "P15",
+      "quantityPerUnit": 0.2
+    }
+  ],
+  "CONNECTED_TO": [
+    {
+      "from": "LOC2",
+      "to": "LOC4",
+      "routeId": "R-MAIN",
+      "distanceKm": 9100,
+      "baseCost": 1800,
+      "leadTimeDays": 18,
+      "status": "open"
+    },
+    {
+      "from": "LOC3",
+      "to": "LOC4",
+      "routeId": "R02",
+      "distanceKm": 10400,
+      "baseCost": 1950,
+      "leadTimeDays": 20,
+      "status": "open"
+    },
+    {
+      "from": "LOC2",
+      "to": "LOC8",
+      "routeId": "R03",
+      "distanceKm": 12500,
+      "baseCost": 2300,
+      "leadTimeDays": 23,
+      "status": "open"
+    },
+    {
+      "from": "LOC4",
+      "to": "LOC5",
+      "routeId": "R04",
+      "distanceKm": 35,
+      "baseCost": 80,
+      "leadTimeDays": 1,
+      "status": "open"
+    },
+    {
+      "from": "LOC5",
+      "to": "LOC6",
+      "routeId": "R05",
+      "distanceKm": 2280,
+      "baseCost": 950,
+      "leadTimeDays": 4,
+      "status": "open"
+    },
+    {
+      "from": "LOC6",
+      "to": "LOC12",
+      "routeId": "R06",
+      "distanceKm": 380,
+      "baseCost": 220,
+      "leadTimeDays": 1,
+      "status": "open"
+    },
+    {
+      "from": "LOC4",
+      "to": "LOC12",
+      "routeId": "R07",
+      "distanceKm": 2450,
+      "baseCost": 1100,
+      "leadTimeDays": 5,
+      "status": "open"
+    },
+    {
+      "from": "LOC8",
+      "to": "LOC7",
+      "routeId": "R08",
+      "distanceKm": 400,
+      "baseCost": 240,
+      "leadTimeDays": 2,
+      "status": "open"
+    },
+    {
+      "from": "LOC7",
+      "to": "LOC12",
+      "routeId": "R09",
+      "distanceKm": 1280,
+      "baseCost": 620,
+      "leadTimeDays": 3,
+      "status": "open"
+    },
+    {
+      "from": "LOC6",
+      "to": "LOC7",
+      "routeId": "R10",
+      "distanceKm": 1380,
+      "baseCost": 700,
+      "leadTimeDays": 3,
+      "status": "open"
+    },
+    {
+      "from": "LOC10",
+      "to": "LOC11",
+      "routeId": "R11",
+      "distanceKm": 2800,
+      "baseCost": 1300,
+      "leadTimeDays": 6,
+      "status": "open"
+    },
+    {
+      "from": "LOC9",
+      "to": "LOC10",
+      "routeId": "R12",
+      "distanceKm": 110,
+      "baseCost": 120,
+      "leadTimeDays": 1,
+      "status": "open"
+    },
+    {
+      "from": "LOC10",
+      "to": "LOC4",
+      "routeId": "R13",
+      "distanceKm": 9700,
+      "baseCost": 2050,
+      "leadTimeDays": 22,
+      "status": "open"
+    },
+    {
+      "from": "LOC10",
+      "to": "LOC8",
+      "routeId": "R14",
+      "distanceKm": 5600,
+      "baseCost": 1450,
+      "leadTimeDays": 14,
+      "status": "open"
+    },
+    {
+      "from": "LOC1",
+      "to": "LOC5",
+      "routeId": "R15",
+      "distanceKm": 8800,
+      "baseCost": 4200,
+      "leadTimeDays": 2,
+      "status": "open"
+    },
+    {
+      "from": "LOC1",
+      "to": "LOC6",
+      "routeId": "R16",
+      "distanceKm": 10200,
+      "baseCost": 4800,
+      "leadTimeDays": 2,
+      "status": "open"
+    },
+    {
+      "from": "LOC9",
+      "to": "LOC12",
+      "routeId": "R17",
+      "distanceKm": 7900,
+      "baseCost": 4500,
+      "leadTimeDays": 2,
+      "status": "open"
+    },
+    {
+      "from": "LOC1",
+      "to": "LOC2",
+      "routeId": "R18",
+      "distanceKm": 30,
+      "baseCost": 60,
+      "leadTimeDays": 1,
+      "status": "open"
+    },
+    {
+      "from": "LOC9",
+      "to": "LOC11",
+      "routeId": "R19",
+      "distanceKm": 2700,
+      "baseCost": 2200,
+      "leadTimeDays": 1,
+      "status": "open"
+    },
+    {
+      "from": "LOC11",
+      "to": "LOC12",
+      "routeId": "R20",
+      "distanceKm": 8400,
+      "baseCost": 1800,
+      "leadTimeDays": 17,
+      "status": "open"
+    },
+    {
+      "from": "LOC11",
+      "to": "LOC4",
+      "routeId": "R21",
+      "distanceKm": 11200,
+      "baseCost": 2100,
+      "leadTimeDays": 21,
+      "status": "open"
+    },
+    {
+      "from": "LOC5",
+      "to": "LOC12",
+      "routeId": "R22",
+      "distanceKm": 2500,
+      "baseCost": 1180,
+      "leadTimeDays": 5,
+      "status": "open"
+    },
+    {
+      "from": "LOC8",
+      "to": "LOC12",
+      "routeId": "R23",
+      "distanceKm": 1100,
+      "baseCost": 380,
+      "leadTimeDays": 4,
+      "status": "open"
+    },
+    {
+      "from": "LOC4",
+      "to": "LOC11",
+      "routeId": "R24",
+      "distanceKm": 11300,
+      "baseCost": 2150,
+      "leadTimeDays": 22,
+      "status": "open"
+    },
+    {
+      "from": "LOC2",
+      "to": "LOC10",
+      "routeId": "R25",
+      "distanceKm": 16500,
+      "baseCost": 2700,
+      "leadTimeDays": 27,
+      "status": "open"
+    },
+    {
+      "from": "LOC3",
+      "to": "LOC8",
+      "routeId": "R26",
+      "distanceKm": 13800,
+      "baseCost": 2480,
+      "leadTimeDays": 25,
+      "status": "open"
+    },
+    {
+      "from": "LOC6",
+      "to": "LOC5",
+      "routeId": "R27",
+      "distanceKm": 2000,
+      "baseCost": 1900,
+      "leadTimeDays": 1,
+      "status": "open"
+    },
+    {
+      "from": "LOC7",
+      "to": "LOC11",
+      "routeId": "R28",
+      "distanceKm": 7400,
+      "baseCost": 4100,
+      "leadTimeDays": 2,
+      "status": "open"
+    }
+  ],
+  "CARRIED_BY": [
+    {
+      "routeId": "R-MAIN",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R02",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R03",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R04",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R05",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R06",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R07",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R08",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R09",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R10",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R11",
+      "carrierId": "CAR4",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R12",
+      "carrierId": "CAR4",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R13",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R14",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R15",
+      "carrierId": "CAR2",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R16",
+      "carrierId": "CAR2",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R17",
+      "carrierId": "CAR2",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R18",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R19",
+      "carrierId": "CAR2",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R20",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R21",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R22",
+      "carrierId": "CAR3",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R23",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R24",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R25",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R26",
+      "carrierId": "CAR1",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R27",
+      "carrierId": "CAR2",
+      "costMultiplier": 1.0
+    },
+    {
+      "routeId": "R28",
+      "carrierId": "CAR2",
+      "costMultiplier": 1.0
+    }
+  ],
+  "ALTERNATIVE_TO": [
+    {
+      "from": "S1",
+      "to": "S5",
+      "costDelta": 0.6,
+      "leadTimeDelta": -6
+    },
+    {
+      "from": "S2",
+      "to": "S4",
+      "costDelta": 0.6,
+      "leadTimeDelta": -9
+    },
+    {
+      "from": "S3",
+      "to": "S7",
+      "costDelta": -0.35,
+      "leadTimeDelta": 1
+    },
+    {
+      "from": "S5",
+      "to": "S3",
+      "costDelta": -0.5,
+      "leadTimeDelta": 13
+    }
+  ],
+  "HAS_INVENTORY": [
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV1"
+    },
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV2"
+    },
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV3"
+    },
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV4"
+    },
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV5"
+    },
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV6"
+    },
+    {
+      "warehouseId": "W1",
+      "inventoryId": "INV7"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV8"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV9"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV10"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV11"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV12"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV13"
+    },
+    {
+      "warehouseId": "W2",
+      "inventoryId": "INV14"
+    },
+    {
+      "warehouseId": "W3",
+      "inventoryId": "INV15"
+    },
+    {
+      "warehouseId": "W3",
+      "inventoryId": "INV16"
+    },
+    {
+      "warehouseId": "W3",
+      "inventoryId": "INV17"
+    },
+    {
+      "warehouseId": "W3",
+      "inventoryId": "INV18"
+    },
+    {
+      "warehouseId": "W3",
+      "inventoryId": "INV19"
+    },
+    {
+      "warehouseId": "W3",
+      "inventoryId": "INV20"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV21"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV22"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV23"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV24"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV25"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV26"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV27"
+    },
+    {
+      "warehouseId": "W4",
+      "inventoryId": "INV28"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV29"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV30"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV31"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV32"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV33"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV34"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV35"
+    },
+    {
+      "warehouseId": "W5",
+      "inventoryId": "INV36"
+    }
+  ],
+  "OF_PRODUCT": [
+    {
+      "inventoryId": "INV1",
+      "productId": "P10"
+    },
+    {
+      "inventoryId": "INV2",
+      "productId": "P5"
+    },
+    {
+      "inventoryId": "INV3",
+      "productId": "P13"
+    },
+    {
+      "inventoryId": "INV4",
+      "productId": "P1"
+    },
+    {
+      "inventoryId": "INV5",
+      "productId": "P8"
+    },
+    {
+      "inventoryId": "INV6",
+      "productId": "P9"
+    },
+    {
+      "inventoryId": "INV7",
+      "productId": "P2"
+    },
+    {
+      "inventoryId": "INV8",
+      "productId": "P11"
+    },
+    {
+      "inventoryId": "INV9",
+      "productId": "P14"
+    },
+    {
+      "inventoryId": "INV10",
+      "productId": "P6"
+    },
+    {
+      "inventoryId": "INV11",
+      "productId": "P3"
+    },
+    {
+      "inventoryId": "INV12",
+      "productId": "P13"
+    },
+    {
+      "inventoryId": "INV13",
+      "productId": "P15"
+    },
+    {
+      "inventoryId": "INV14",
+      "productId": "P4"
+    },
+    {
+      "inventoryId": "INV15",
+      "productId": "P4"
+    },
+    {
+      "inventoryId": "INV16",
+      "productId": "P14"
+    },
+    {
+      "inventoryId": "INV17",
+      "productId": "P1"
+    },
+    {
+      "inventoryId": "INV18",
+      "productId": "P6"
+    },
+    {
+      "inventoryId": "INV19",
+      "productId": "P7"
+    },
+    {
+      "inventoryId": "INV20",
+      "productId": "P5"
+    },
+    {
+      "inventoryId": "INV21",
+      "productId": "P9"
+    },
+    {
+      "inventoryId": "INV22",
+      "productId": "P5"
+    },
+    {
+      "inventoryId": "INV23",
+      "productId": "P12"
+    },
+    {
+      "inventoryId": "INV24",
+      "productId": "P10"
+    },
+    {
+      "inventoryId": "INV25",
+      "productId": "P7"
+    },
+    {
+      "inventoryId": "INV26",
+      "productId": "P13"
+    },
+    {
+      "inventoryId": "INV27",
+      "productId": "P11"
+    },
+    {
+      "inventoryId": "INV28",
+      "productId": "P6"
+    },
+    {
+      "inventoryId": "INV29",
+      "productId": "P14"
+    },
+    {
+      "inventoryId": "INV30",
+      "productId": "P1"
+    },
+    {
+      "inventoryId": "INV31",
+      "productId": "P11"
+    },
+    {
+      "inventoryId": "INV32",
+      "productId": "P12"
+    },
+    {
+      "inventoryId": "INV33",
+      "productId": "P2"
+    },
+    {
+      "inventoryId": "INV34",
+      "productId": "P9"
+    },
+    {
+      "inventoryId": "INV35",
+      "productId": "P5"
+    },
+    {
+      "inventoryId": "INV36",
+      "productId": "P6"
+    }
+  ],
+  "PLACED_BY": [
+    {
+      "orderId": "CO1",
+      "customerId": "CUST6"
+    },
+    {
+      "orderId": "CO2",
+      "customerId": "CUST1"
+    },
+    {
+      "orderId": "CO3",
+      "customerId": "CUST8"
+    },
+    {
+      "orderId": "CO4",
+      "customerId": "CUST16"
+    },
+    {
+      "orderId": "CO5",
+      "customerId": "CUST5"
+    },
+    {
+      "orderId": "CO6",
+      "customerId": "CUST14"
+    },
+    {
+      "orderId": "CO7",
+      "customerId": "CUST10"
+    },
+    {
+      "orderId": "CO8",
+      "customerId": "CUST8"
+    },
+    {
+      "orderId": "CO9",
+      "customerId": "CUST8"
+    },
+    {
+      "orderId": "CO10",
+      "customerId": "CUST2"
+    },
+    {
+      "orderId": "CO11",
+      "customerId": "CUST16"
+    },
+    {
+      "orderId": "CO12",
+      "customerId": "CUST16"
+    },
+    {
+      "orderId": "CO13",
+      "customerId": "CUST14"
+    },
+    {
+      "orderId": "CO14",
+      "customerId": "CUST4"
+    },
+    {
+      "orderId": "CO15",
+      "customerId": "CUST8"
+    },
+    {
+      "orderId": "CO16",
+      "customerId": "CUST9"
+    },
+    {
+      "orderId": "CO17",
+      "customerId": "CUST18"
+    },
+    {
+      "orderId": "CO18",
+      "customerId": "CUST3"
+    },
+    {
+      "orderId": "CO19",
+      "customerId": "CUST13"
+    },
+    {
+      "orderId": "CO20",
+      "customerId": "CUST9"
+    },
+    {
+      "orderId": "CO21",
+      "customerId": "CUST18"
+    },
+    {
+      "orderId": "CO22",
+      "customerId": "CUST18"
+    },
+    {
+      "orderId": "CO23",
+      "customerId": "CUST17"
+    },
+    {
+      "orderId": "CO24",
+      "customerId": "CUST3"
+    },
+    {
+      "orderId": "CO25",
+      "customerId": "CUST8"
+    },
+    {
+      "orderId": "CO26",
+      "customerId": "CUST17"
+    },
+    {
+      "orderId": "CO27",
+      "customerId": "CUST9"
+    },
+    {
+      "orderId": "CO28",
+      "customerId": "CUST3"
+    },
+    {
+      "orderId": "CO29",
+      "customerId": "CUST3"
+    },
+    {
+      "orderId": "CO30",
+      "customerId": "CUST3"
+    },
+    {
+      "orderId": "CO31",
+      "customerId": "CUST10"
+    },
+    {
+      "orderId": "CO32",
+      "customerId": "CUST4"
+    },
+    {
+      "orderId": "CO33",
+      "customerId": "CUST18"
+    },
+    {
+      "orderId": "CO34",
+      "customerId": "CUST7"
+    },
+    {
+      "orderId": "CO35",
+      "customerId": "CUST3"
+    },
+    {
+      "orderId": "CO36",
+      "customerId": "CUST5"
+    },
+    {
+      "orderId": "CO37",
+      "customerId": "CUST14"
+    },
+    {
+      "orderId": "CO38",
+      "customerId": "CUST5"
+    },
+    {
+      "orderId": "CO39",
+      "customerId": "CUST14"
+    },
+    {
+      "orderId": "CO40",
+      "customerId": "CUST2"
+    },
+    {
+      "orderId": "CO41",
+      "customerId": "CUST12"
+    },
+    {
+      "orderId": "CO42",
+      "customerId": "CUST5"
+    },
+    {
+      "orderId": "CO43",
+      "customerId": "CUST6"
+    },
+    {
+      "orderId": "CO44",
+      "customerId": "CUST14"
+    },
+    {
+      "orderId": "CO45",
+      "customerId": "CUST13"
+    },
+    {
+      "orderId": "CO46",
+      "customerId": "CUST12"
+    },
+    {
+      "orderId": "CO47",
+      "customerId": "CUST11"
+    },
+    {
+      "orderId": "CO48",
+      "customerId": "CUST17"
+    },
+    {
+      "orderId": "CO49",
+      "customerId": "CUST6"
+    },
+    {
+      "orderId": "CO50",
+      "customerId": "CUST11"
+    }
+  ],
+  "FOR_PRODUCT": [
+    {
+      "orderId": "CO1",
+      "productId": "P9",
+      "quantity": 72
+    },
+    {
+      "orderId": "CO2",
+      "productId": "P2",
+      "quantity": 51
+    },
+    {
+      "orderId": "CO3",
+      "productId": "P1",
+      "quantity": 35
+    },
+    {
+      "orderId": "CO4",
+      "productId": "P14",
+      "quantity": 13
+    },
+    {
+      "orderId": "CO5",
+      "productId": "P11",
+      "quantity": 65
+    },
+    {
+      "orderId": "CO6",
+      "productId": "P4",
+      "quantity": 74
+    },
+    {
+      "orderId": "CO7",
+      "productId": "P7",
+      "quantity": 52
+    },
+    {
+      "orderId": "CO8",
+      "productId": "P4",
+      "quantity": 13
+    },
+    {
+      "orderId": "CO9",
+      "productId": "P1",
+      "quantity": 14
+    },
+    {
+      "orderId": "CO10",
+      "productId": "P14",
+      "quantity": 47
+    },
+    {
+      "orderId": "CO11",
+      "productId": "P4",
+      "quantity": 74
+    },
+    {
+      "orderId": "CO12",
+      "productId": "P4",
+      "quantity": 65
+    },
+    {
+      "orderId": "CO13",
+      "productId": "P6",
+      "quantity": 59
+    },
+    {
+      "orderId": "CO14",
+      "productId": "P1",
+      "quantity": 56
+    },
+    {
+      "orderId": "CO15",
+      "productId": "P4",
+      "quantity": 29
+    },
+    {
+      "orderId": "CO16",
+      "productId": "P8",
+      "quantity": 36
+    },
+    {
+      "orderId": "CO17",
+      "productId": "P2",
+      "quantity": 11
+    },
+    {
+      "orderId": "CO18",
+      "productId": "P15",
+      "quantity": 35
+    },
+    {
+      "orderId": "CO19",
+      "productId": "P15",
+      "quantity": 12
+    },
+    {
+      "orderId": "CO20",
+      "productId": "P15",
+      "quantity": 63
+    },
+    {
+      "orderId": "CO21",
+      "productId": "P11",
+      "quantity": 67
+    },
+    {
+      "orderId": "CO22",
+      "productId": "P1",
+      "quantity": 45
+    },
+    {
+      "orderId": "CO23",
+      "productId": "P3",
+      "quantity": 12
+    },
+    {
+      "orderId": "CO24",
+      "productId": "P10",
+      "quantity": 13
+    },
+    {
+      "orderId": "CO25",
+      "productId": "P10",
+      "quantity": 10
+    },
+    {
+      "orderId": "CO26",
+      "productId": "P6",
+      "quantity": 38
+    },
+    {
+      "orderId": "CO27",
+      "productId": "P7",
+      "quantity": 21
+    },
+    {
+      "orderId": "CO28",
+      "productId": "P1",
+      "quantity": 63
+    },
+    {
+      "orderId": "CO29",
+      "productId": "P9",
+      "quantity": 32
+    },
+    {
+      "orderId": "CO30",
+      "productId": "P15",
+      "quantity": 36
+    },
+    {
+      "orderId": "CO31",
+      "productId": "P10",
+      "quantity": 72
+    },
+    {
+      "orderId": "CO32",
+      "productId": "P15",
+      "quantity": 22
+    },
+    {
+      "orderId": "CO33",
+      "productId": "P3",
+      "quantity": 39
+    },
+    {
+      "orderId": "CO34",
+      "productId": "P11",
+      "quantity": 38
+    },
+    {
+      "orderId": "CO35",
+      "productId": "P11",
+      "quantity": 59
+    },
+    {
+      "orderId": "CO36",
+      "productId": "P11",
+      "quantity": 38
+    },
+    {
+      "orderId": "CO37",
+      "productId": "P9",
+      "quantity": 6
+    },
+    {
+      "orderId": "CO38",
+      "productId": "P9",
+      "quantity": 9
+    },
+    {
+      "orderId": "CO39",
+      "productId": "P3",
+      "quantity": 10
+    },
+    {
+      "orderId": "CO40",
+      "productId": "P15",
+      "quantity": 50
+    },
+    {
+      "orderId": "CO41",
+      "productId": "P13",
+      "quantity": 76
+    },
+    {
+      "orderId": "CO42",
+      "productId": "P15",
+      "quantity": 35
+    },
+    {
+      "orderId": "CO43",
+      "productId": "P15",
+      "quantity": 57
+    },
+    {
+      "orderId": "CO44",
+      "productId": "P13",
+      "quantity": 36
+    },
+    {
+      "orderId": "CO45",
+      "productId": "P14",
+      "quantity": 9
+    },
+    {
+      "orderId": "CO46",
+      "productId": "P5",
+      "quantity": 34
+    },
+    {
+      "orderId": "CO47",
+      "productId": "P5",
+      "quantity": 13
+    },
+    {
+      "orderId": "CO48",
+      "productId": "P7",
+      "quantity": 73
+    },
+    {
+      "orderId": "CO49",
+      "productId": "P10",
+      "quantity": 38
+    },
+    {
+      "orderId": "CO50",
+      "productId": "P7",
+      "quantity": 70
+    }
+  ],
+  "SOURCED_FROM": [
+    {
+      "orderId": "PO1",
+      "supplierId": "S3"
+    },
+    {
+      "orderId": "PO2",
+      "supplierId": "S1"
+    },
+    {
+      "orderId": "PO3",
+      "supplierId": "S7"
+    },
+    {
+      "orderId": "PO4",
+      "supplierId": "S2"
+    },
+    {
+      "orderId": "PO5",
+      "supplierId": "S6"
+    },
+    {
+      "orderId": "PO6",
+      "supplierId": "S6"
+    },
+    {
+      "orderId": "PO7",
+      "supplierId": "S5"
+    },
+    {
+      "orderId": "PO8",
+      "supplierId": "S3"
+    },
+    {
+      "orderId": "PO9",
+      "supplierId": "S5"
+    },
+    {
+      "orderId": "PO10",
+      "supplierId": "S6"
+    },
+    {
+      "orderId": "PO11",
+      "supplierId": "S2"
+    },
+    {
+      "orderId": "PO12",
+      "supplierId": "S4"
+    },
+    {
+      "orderId": "PO13",
+      "supplierId": "S3"
+    },
+    {
+      "orderId": "PO14",
+      "supplierId": "S5"
+    },
+    {
+      "orderId": "PO15",
+      "supplierId": "S4"
+    },
+    {
+      "orderId": "PO16",
+      "supplierId": "S8"
+    },
+    {
+      "orderId": "PO17",
+      "supplierId": "S3"
+    },
+    {
+      "orderId": "PO18",
+      "supplierId": "S5"
+    },
+    {
+      "orderId": "PO19",
+      "supplierId": "S6"
+    },
+    {
+      "orderId": "PO20",
+      "supplierId": "S2"
+    },
+    {
+      "orderId": "PO21",
+      "supplierId": "S4"
+    },
+    {
+      "orderId": "PO22",
+      "supplierId": "S6"
+    },
+    {
+      "orderId": "PO23",
+      "supplierId": "S7"
+    },
+    {
+      "orderId": "PO24",
+      "supplierId": "S2"
+    },
+    {
+      "orderId": "PO25",
+      "supplierId": "S1"
+    },
+    {
+      "orderId": "PO26",
+      "supplierId": "S2"
+    },
+    {
+      "orderId": "PO27",
+      "supplierId": "S4"
+    },
+    {
+      "orderId": "PO28",
+      "supplierId": "S1"
+    },
+    {
+      "orderId": "PO29",
+      "supplierId": "S6"
+    },
+    {
+      "orderId": "PO30",
+      "supplierId": "S3"
+    }
+  ],
+  "FOR_MATERIAL": [
+    {
+      "orderId": "PO1",
+      "rawMaterialId": "RM-A"
+    },
+    {
+      "orderId": "PO2",
+      "rawMaterialId": "RM-E"
+    },
+    {
+      "orderId": "PO3",
+      "rawMaterialId": "RM-C"
+    },
+    {
+      "orderId": "PO4",
+      "rawMaterialId": "RM-D"
+    },
+    {
+      "orderId": "PO5",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO6",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO7",
+      "rawMaterialId": "RM-C"
+    },
+    {
+      "orderId": "PO8",
+      "rawMaterialId": "RM-C"
+    },
+    {
+      "orderId": "PO9",
+      "rawMaterialId": "RM-C"
+    },
+    {
+      "orderId": "PO10",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO11",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO12",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO13",
+      "rawMaterialId": "RM-A"
+    },
+    {
+      "orderId": "PO14",
+      "rawMaterialId": "RM-E"
+    },
+    {
+      "orderId": "PO15",
+      "rawMaterialId": "RM-D"
+    },
+    {
+      "orderId": "PO16",
+      "rawMaterialId": "RM-F"
+    },
+    {
+      "orderId": "PO17",
+      "rawMaterialId": "RM-A"
+    },
+    {
+      "orderId": "PO18",
+      "rawMaterialId": "RM-E"
+    },
+    {
+      "orderId": "PO19",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO20",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO21",
+      "rawMaterialId": "RM-D"
+    },
+    {
+      "orderId": "PO22",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO23",
+      "rawMaterialId": "RM-C"
+    },
+    {
+      "orderId": "PO24",
+      "rawMaterialId": "RM-D"
+    },
+    {
+      "orderId": "PO25",
+      "rawMaterialId": "RM-E"
+    },
+    {
+      "orderId": "PO26",
+      "rawMaterialId": "RM-D"
+    },
+    {
+      "orderId": "PO27",
+      "rawMaterialId": "RM-D"
+    },
+    {
+      "orderId": "PO28",
+      "rawMaterialId": "RM-F"
+    },
+    {
+      "orderId": "PO29",
+      "rawMaterialId": "RM-B"
+    },
+    {
+      "orderId": "PO30",
+      "rawMaterialId": "RM-C"
+    }
+  ],
+  "FULFILLS": [
+    {
+      "shipmentId": "SH1",
+      "orderId": "CO47",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH2",
+      "orderId": "CO33",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH3",
+      "orderId": "CO28",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH4",
+      "orderId": "CO36",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH5",
+      "orderId": "CO29",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH6",
+      "orderId": "CO11",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH7",
+      "orderId": "CO31",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH8",
+      "orderId": "CO46",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH9",
+      "orderId": "CO17",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH10",
+      "orderId": "CO16",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH11",
+      "orderId": "CO18",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH12",
+      "orderId": "CO34",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH13",
+      "orderId": "CO32",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH14",
+      "orderId": "CO41",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH15",
+      "orderId": "CO40",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH16",
+      "orderId": "CO43",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH17",
+      "orderId": "CO5",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH18",
+      "orderId": "CO19",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH19",
+      "orderId": "CO37",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH20",
+      "orderId": "CO9",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH21",
+      "orderId": "CO45",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH22",
+      "orderId": "CO30",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH23",
+      "orderId": "CO50",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH24",
+      "orderId": "CO3",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH25",
+      "orderId": "CO39",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH26",
+      "orderId": "CO26",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH27",
+      "orderId": "CO8",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH28",
+      "orderId": "CO13",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH29",
+      "orderId": "CO25",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH30",
+      "orderId": "CO7",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH31",
+      "orderId": "CO27",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH32",
+      "orderId": "CO14",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH33",
+      "orderId": "CO49",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH34",
+      "orderId": "CO35",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH35",
+      "orderId": "CO15",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH36",
+      "orderId": "CO21",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH37",
+      "orderId": "CO1",
+      "fulfillmentPct": 75
+    },
+    {
+      "shipmentId": "SH38",
+      "orderId": "CO4",
+      "fulfillmentPct": 100
+    },
+    {
+      "shipmentId": "SH39",
+      "orderId": "CO38",
+      "fulfillmentPct": 50
+    },
+    {
+      "shipmentId": "SH40",
+      "orderId": "CO12",
+      "fulfillmentPct": 100
+    }
+  ],
+  "SHIPS_FROM": [
+    {
+      "shipmentId": "SH1",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH2",
+      "warehouseId": "W1"
+    },
+    {
+      "shipmentId": "SH3",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH4",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH5",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH6",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH7",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH8",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH9",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH10",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH11",
+      "warehouseId": "W1"
+    },
+    {
+      "shipmentId": "SH12",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH13",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH14",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH15",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH16",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH17",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH18",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH19",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH20",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH21",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH22",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH23",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH24",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH25",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH26",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH27",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH28",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH29",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH30",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH31",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH32",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH33",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH34",
+      "warehouseId": "W4"
+    },
+    {
+      "shipmentId": "SH35",
+      "warehouseId": "W2"
+    },
+    {
+      "shipmentId": "SH36",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH37",
+      "warehouseId": "W5"
+    },
+    {
+      "shipmentId": "SH38",
+      "warehouseId": "W3"
+    },
+    {
+      "shipmentId": "SH39",
+      "warehouseId": "W1"
+    },
+    {
+      "shipmentId": "SH40",
+      "warehouseId": "W2"
+    }
+  ],
+  "DELIVERS_TO": [
+    {
+      "shipmentId": "SH1",
+      "customerId": "CUST11"
+    },
+    {
+      "shipmentId": "SH2",
+      "customerId": "CUST18"
+    },
+    {
+      "shipmentId": "SH3",
+      "customerId": "CUST3"
+    },
+    {
+      "shipmentId": "SH4",
+      "customerId": "CUST5"
+    },
+    {
+      "shipmentId": "SH5",
+      "customerId": "CUST3"
+    },
+    {
+      "shipmentId": "SH6",
+      "customerId": "CUST16"
+    },
+    {
+      "shipmentId": "SH7",
+      "customerId": "CUST10"
+    },
+    {
+      "shipmentId": "SH8",
+      "customerId": "CUST12"
+    },
+    {
+      "shipmentId": "SH9",
+      "customerId": "CUST18"
+    },
+    {
+      "shipmentId": "SH10",
+      "customerId": "CUST9"
+    },
+    {
+      "shipmentId": "SH11",
+      "customerId": "CUST3"
+    },
+    {
+      "shipmentId": "SH12",
+      "customerId": "CUST7"
+    },
+    {
+      "shipmentId": "SH13",
+      "customerId": "CUST4"
+    },
+    {
+      "shipmentId": "SH14",
+      "customerId": "CUST12"
+    },
+    {
+      "shipmentId": "SH15",
+      "customerId": "CUST2"
+    },
+    {
+      "shipmentId": "SH16",
+      "customerId": "CUST6"
+    },
+    {
+      "shipmentId": "SH17",
+      "customerId": "CUST5"
+    },
+    {
+      "shipmentId": "SH18",
+      "customerId": "CUST13"
+    },
+    {
+      "shipmentId": "SH19",
+      "customerId": "CUST14"
+    },
+    {
+      "shipmentId": "SH20",
+      "customerId": "CUST8"
+    },
+    {
+      "shipmentId": "SH21",
+      "customerId": "CUST13"
+    },
+    {
+      "shipmentId": "SH22",
+      "customerId": "CUST3"
+    },
+    {
+      "shipmentId": "SH23",
+      "customerId": "CUST11"
+    },
+    {
+      "shipmentId": "SH24",
+      "customerId": "CUST8"
+    },
+    {
+      "shipmentId": "SH25",
+      "customerId": "CUST14"
+    },
+    {
+      "shipmentId": "SH26",
+      "customerId": "CUST17"
+    },
+    {
+      "shipmentId": "SH27",
+      "customerId": "CUST8"
+    },
+    {
+      "shipmentId": "SH28",
+      "customerId": "CUST14"
+    },
+    {
+      "shipmentId": "SH29",
+      "customerId": "CUST8"
+    },
+    {
+      "shipmentId": "SH30",
+      "customerId": "CUST10"
+    },
+    {
+      "shipmentId": "SH31",
+      "customerId": "CUST9"
+    },
+    {
+      "shipmentId": "SH32",
+      "customerId": "CUST4"
+    },
+    {
+      "shipmentId": "SH33",
+      "customerId": "CUST6"
+    },
+    {
+      "shipmentId": "SH34",
+      "customerId": "CUST3"
+    },
+    {
+      "shipmentId": "SH35",
+      "customerId": "CUST8"
+    },
+    {
+      "shipmentId": "SH36",
+      "customerId": "CUST18"
+    },
+    {
+      "shipmentId": "SH37",
+      "customerId": "CUST6"
+    },
+    {
+      "shipmentId": "SH38",
+      "customerId": "CUST16"
+    },
+    {
+      "shipmentId": "SH39",
+      "customerId": "CUST5"
+    },
+    {
+      "shipmentId": "SH40",
+      "customerId": "CUST16"
+    }
+  ],
+  "USES_ROUTE": [
+    {
+      "shipmentId": "SH1",
+      "routeId": "R23",
+      "actualLeadTime": 4
+    },
+    {
+      "shipmentId": "SH2",
+      "routeId": "R12",
+      "actualLeadTime": 1
+    },
+    {
+      "shipmentId": "SH3",
+      "routeId": "R26",
+      "actualLeadTime": 27
+    },
+    {
+      "shipmentId": "SH4",
+      "routeId": "R09",
+      "actualLeadTime": 4
+    },
+    {
+      "shipmentId": "SH5",
+      "routeId": "R22",
+      "actualLeadTime": 7
+    },
+    {
+      "shipmentId": "SH6",
+      "routeId": "R05",
+      "actualLeadTime": 11
+    },
+    {
+      "shipmentId": "SH7",
+      "routeId": "R19",
+      "actualLeadTime": 2
+    },
+    {
+      "shipmentId": "SH8",
+      "routeId": "R05",
+      "actualLeadTime": 11
+    },
+    {
+      "shipmentId": "SH9",
+      "routeId": "R13",
+      "actualLeadTime": 22
+    },
+    {
+      "shipmentId": "SH10",
+      "routeId": "R09",
+      "actualLeadTime": 7
+    },
+    {
+      "shipmentId": "SH11",
+      "routeId": "R16",
+      "actualLeadTime": 2
+    },
+    {
+      "shipmentId": "SH12",
+      "routeId": "R21",
+      "actualLeadTime": 21
+    },
+    {
+      "shipmentId": "SH13",
+      "routeId": "R07",
+      "actualLeadTime": 9
+    },
+    {
+      "shipmentId": "SH14",
+      "routeId": "R05",
+      "actualLeadTime": 5
+    },
+    {
+      "shipmentId": "SH15",
+      "routeId": "R15",
+      "actualLeadTime": 4
+    },
+    {
+      "shipmentId": "SH16",
+      "routeId": "R24",
+      "actualLeadTime": 26
+    },
+    {
+      "shipmentId": "SH17",
+      "routeId": "R04",
+      "actualLeadTime": 3
+    },
+    {
+      "shipmentId": "SH18",
+      "routeId": "R13",
+      "actualLeadTime": 29
+    },
+    {
+      "shipmentId": "SH19",
+      "routeId": "R23",
+      "actualLeadTime": 8
+    },
+    {
+      "shipmentId": "SH20",
+      "routeId": "R28",
+      "actualLeadTime": 4
+    },
+    {
+      "shipmentId": "SH21",
+      "routeId": "R26",
+      "actualLeadTime": 25
+    },
+    {
+      "shipmentId": "SH22",
+      "routeId": "R03",
+      "actualLeadTime": 24
+    },
+    {
+      "shipmentId": "SH23",
+      "routeId": "R04",
+      "actualLeadTime": 2
+    },
+    {
+      "shipmentId": "SH24",
+      "routeId": "R14",
+      "actualLeadTime": 14
+    },
+    {
+      "shipmentId": "SH25",
+      "routeId": "R26",
+      "actualLeadTime": 32
+    },
+    {
+      "shipmentId": "SH26",
+      "routeId": "R14",
+      "actualLeadTime": 18
+    },
+    {
+      "shipmentId": "SH27",
+      "routeId": "R28",
+      "actualLeadTime": 2
+    },
+    {
+      "shipmentId": "SH28",
+      "routeId": "R08",
+      "actualLeadTime": 6
+    },
+    {
+      "shipmentId": "SH29",
+      "routeId": "R11",
+      "actualLeadTime": 6
+    },
+    {
+      "shipmentId": "SH30",
+      "routeId": "R12",
+      "actualLeadTime": 5
+    },
+    {
+      "shipmentId": "SH31",
+      "routeId": "R23",
+      "actualLeadTime": 11
+    },
+    {
+      "shipmentId": "SH32",
+      "routeId": "R07",
+      "actualLeadTime": 5
+    },
+    {
+      "shipmentId": "SH33",
+      "routeId": "R25",
+      "actualLeadTime": 27
+    },
+    {
+      "shipmentId": "SH34",
+      "routeId": "R15",
+      "actualLeadTime": 6
+    },
+    {
+      "shipmentId": "SH35",
+      "routeId": "R13",
+      "actualLeadTime": 24
+    },
+    {
+      "shipmentId": "SH36",
+      "routeId": "R16",
+      "actualLeadTime": 3
+    },
+    {
+      "shipmentId": "SH37",
+      "routeId": "R11",
+      "actualLeadTime": 6
+    },
+    {
+      "shipmentId": "SH38",
+      "routeId": "R08",
+      "actualLeadTime": 2
+    },
+    {
+      "shipmentId": "SH39",
+      "routeId": "R24",
+      "actualLeadTime": 23
+    },
+    {
+      "shipmentId": "SH40",
+      "routeId": "R24",
+      "actualLeadTime": 23
+    }
+  ]
+}
