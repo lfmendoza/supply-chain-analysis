@@ -27,44 +27,44 @@ type Section = {
 
 const sections: Section[] = [
   {
-    title: "Visualization",
+    title: "Visualización",
     items: [
-      { to: "/", label: "Dashboard", Icon: Activity },
-      { to: "/topology", label: "Graph Topology", Icon: Network },
-      { to: "/algorithms", label: "Graph Algorithms", Icon: Sparkles },
+      { to: "/", label: "Panel", Icon: Activity },
+      { to: "/topology", label: "Topología", Icon: Network },
+      { to: "/algorithms", label: "Algoritmos", Icon: Sparkles },
     ],
   },
   {
-    title: "Operations",
+    title: "Operaciones",
     items: [
-      { to: "/operations", label: "Operations Lab", Icon: Boxes },
-      { to: "/queries", label: "Cypher Explorer", Icon: Code2 },
-      { to: "/traceability", label: "Traceability", Icon: Search },
+      { to: "/operations", label: "Laboratorio", Icon: Boxes },
+      { to: "/queries", label: "Cypher", Icon: Code2 },
+      { to: "/traceability", label: "Trazabilidad", Icon: Search },
     ],
   },
   {
-    title: "Analysis",
+    title: "Análisis",
     items: [
-      { to: "/simulation", label: "Disruption Simulation", Icon: AlertTriangle },
-      { to: "/optimization", label: "Optimization", Icon: PlayCircle },
-      { to: "/comparison", label: "Before / After", Icon: GitBranch },
+      { to: "/simulation", label: "Simulación", Icon: AlertTriangle },
+      { to: "/optimization", label: "Optimización", Icon: PlayCircle },
+      { to: "/comparison", label: "Antes / Después", Icon: GitBranch },
     ],
   },
   {
-    title: "Quality",
-    items: [{ to: "/rubric", label: "Rubric Matrix", Icon: ListChecks }],
+    title: "Calidad",
+    items: [{ to: "/rubric", label: "Rúbrica", Icon: ListChecks }],
   },
 ];
 
 type Health = { ok: boolean; label: string };
 
 function useNeo4jHealth(): Health {
-  const [state, setState] = useState<Health>({ ok: false, label: "Checking..." });
+  const [state, setState] = useState<Health>({ ok: false, label: "Comprobando…" });
   useEffect(() => {
     const check = () => {
       SupplyChainApi.healthNeo4j()
-        .then((r) => setState({ ok: r.status === "ok", label: r.message ?? "Reachable" }))
-        .catch(() => setState({ ok: false, label: "Unreachable" }));
+        .then((r) => setState({ ok: r.status === "ok", label: r.message ?? "Accesible" }))
+        .catch(() => setState({ ok: false, label: "No accesible" }));
     };
     check();
     const t = window.setInterval(check, 30000);
@@ -84,8 +84,8 @@ export default function Layout() {
               <Hexagon size={20} />
             </div>
             <div>
-              <div className="text-sm font-semibold text-slate-900 leading-tight">Supply Chain</div>
-              <div className="text-xs text-slate-500 leading-tight">Network Analysis & Optimization</div>
+              <div className="text-sm font-semibold text-slate-900 leading-tight">Cadena de suministro</div>
+              <div className="text-xs text-slate-500 leading-tight">Análisis y optimización de red</div>
             </div>
           </div>
           <HealthBadge ok={health.ok} label={health.label} />
@@ -122,10 +122,10 @@ export default function Layout() {
         <div className="px-4 py-3 border-t border-slate-200 text-[11px] text-slate-500 leading-snug">
           <div className="flex items-center gap-1.5 text-slate-700 font-medium">
             <Workflow size={13} />
-            Stack
+            Tecnología
           </div>
           <div className="mt-1">Neo4j AuraDB · OR-Tools · NetworkX · scikit-learn</div>
-          <div className="mt-1">Database 2 academic project</div>
+          <div className="mt-1">Bases de datos 2 · grafo de cadena de suministro</div>
         </div>
       </aside>
       <main className="overflow-y-auto">
@@ -150,7 +150,7 @@ function HealthBadge({ ok, label }: { ok: boolean; label: string }) {
       ) : (
         <Database size={13} />
       )}
-      <span>Neo4j {ok ? "online" : "offline"}</span>
+      <span>Neo4j {ok ? "en línea" : "fuera de línea"}</span>
       {ok && (
         <span className="ml-1 inline-flex items-center gap-1 text-emerald-600/80">
           <ShieldCheck size={12} />

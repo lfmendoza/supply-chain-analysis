@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PageHeader from "../components/PageHeader";
 import { OptimizationResult, Scenario, SupplyChainApi } from "../api/client";
 
 export default function Optimization() {
@@ -21,8 +22,9 @@ export default function Optimization() {
     try {
       const res = await SupplyChainApi.runOptimization({ scenarioId: scenarioId || null });
       setResult(res);
-    } catch (e: any) {
-      setError(e?.response?.data?.detail ?? e.message ?? "Solve failed");
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { detail?: string } }; message?: string };
+      setError(err?.response?.data?.detail ?? err.message ?? "Fallo al resolver");
     } finally {
       setBusy(false);
     }
@@ -33,7 +35,7 @@ export default function Optimization() {
     try {
       await SupplyChainApi.refreshSupplierRisk();
     } catch {
-      /* the endpoint may not be ready until ML is trained */
+      /* el endpoint puede no estar listo hasta entrenar el modelo */
     } finally {
       setBusy(false);
     }
@@ -41,27 +43,31 @@ export default function Optimization() {
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        title="Optimización"
+        description="Asignación pedido–almacén con OR-Tools (CP-SAT) bajo el escenario seleccionado."
+      />
       <section className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
-        <h2 className="text-lg font-semibold mb-3">Solve order-to-warehouse assignment</h2>
+        <h2 className="text-lg font-semibold mb-3">Resolver asignación pedido–almacén</h2>
         <div className="flex flex-wrap gap-3 items-center">
           <label className="text-sm">
-            <span className="text-slate-600 mr-2">Scenario</span>
+            <span className="text-slate-600 mr-2">Escenario</span>
             <select
               value={scenarioId}
               onChange={(e) => setScenarioId(e.target.value)}
               className="border rounded px-2 py-1 text-sm"
             >
-              <option value="">(baseline / no scenario)</option>
+              <option value="">(línea base / sin escenario)</option>
               {scenarios.map((s) => (
                 <option key={s.id} value={s.id}>{s.id} · {s.type}</option>
               ))}
             </select>
           </label>
           <button onClick={runOpt} disabled={busy} className="px-4 py-2 rounded bg-emerald-600 text-white text-sm hover:bg-emerald-500 disabled:opacity-60">
-            {busy ? "Solving..." : "Run optimization"}
+            {busy ? "Resolviendo…" : "Ejecutar optimización"}
           </button>
           <button onClick={refreshRisk} disabled={busy} className="px-4 py-2 rounded bg-slate-700 text-white text-sm hover:bg-slate-600 disabled:opacity-60">
-            Re-score supplier risk (ML)
+            Recalcular riesgo proveedor (ML)
           </button>
         </div>
         {error && <div className="mt-3 text-rose-600 text-sm">{error}</div>}
@@ -70,19 +76,19 @@ export default function Optimization() {
       {result && (
         <>
           <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <Stat label="Solver status" value={result.status} />
-            <Stat label="Objective" value={result.objectiveValue.toLocaleString()} />
-            <Stat label="Runtime" value={`${result.runtimeMs} ms`} />
-            <Stat label="Assigned / Unfulfilled" value={`${result.assignments.length} / ${result.unfulfilledOrderIds.length}`} />
+            <Stat label="Estado del solver" value={result.status} />
+            <Stat label="Objetivo" value={result.objectiveValue.toLocaleString("es")} />
+            <Stat label="Tiempo" value={`${result.runtimeMs} ms`} />
+            <Stat label="Asignados / sin cubrir" value={`${result.assignments.length} / ${result.unfulfilledOrderIds.length}`} />
           </section>
 
           <section className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
-            <h3 className="font-semibold text-slate-700 mb-3">Assignments</h3>
+            <h3 className="font-semibold text-slate-700 mb-3">Asignaciones</h3>
             <div className="overflow-auto max-h-[420px]">
               <table className="min-w-full text-sm">
                 <thead className="bg-slate-50 sticky top-0">
                   <tr>
-                    {["Order", "Warehouse", "Cost", "Lead time", "Risk"].map((h) => (
+                    {["Pedido", "Almacén", "Coste", "Plazo", "Riesgo"].map((h) => (
                       <th key={h} className="px-2 py-1 text-left font-medium text-slate-600">{h}</th>
                     ))}
                   </tr>
@@ -103,10 +109,10 @@ export default function Optimization() {
           </section>
 
           <section className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
-            <h3 className="font-semibold text-slate-700 mb-3">Unfulfilled orders</h3>
+            <h3 className="font-semibold text-slate-700 mb-3">Pedidos sin cubrir</h3>
             <p className="text-sm text-slate-700">
               {result.unfulfilledOrderIds.length === 0
-                ? "All orders assigned"
+                ? "Todos los pedidos tienen asignación"
                 : result.unfulfilledOrderIds.join(", ")}
             </p>
           </section>

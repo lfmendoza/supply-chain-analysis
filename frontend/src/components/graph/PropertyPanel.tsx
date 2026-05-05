@@ -4,7 +4,7 @@ import { LABEL_COLORS } from "./graphStyles";
 
 function formatValue(v: unknown): string {
   if (v === null || v === undefined) return "—";
-  if (typeof v === "boolean") return v ? "true" : "false";
+  if (typeof v === "boolean") return v ? "sí" : "no";
   if (Array.isArray(v)) return v.join(", ");
   if (typeof v === "object") return JSON.stringify(v);
   return String(v);
@@ -18,11 +18,11 @@ export default function PropertyPanel({ selection }: Props) {
   return (
     <div className="card-pad">
       <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-        <Info size={14} /> Selection
+        <Info size={14} /> Selección
       </h3>
       {!selection && (
         <p className="text-xs text-slate-500 mt-2">
-          Click a node or relationship in the graph to inspect its properties.
+          Haz clic en un nodo o una relación del grafo para ver sus propiedades.
         </p>
       )}
       {selection?.kind === "node" && (
@@ -50,7 +50,7 @@ export default function PropertyPanel({ selection }: Props) {
       {selection?.kind === "edge" && (
         <div className="mt-2 space-y-2">
           <div>
-            <div className="text-xs uppercase tracking-wider text-slate-400">Relationship</div>
+            <div className="text-xs uppercase tracking-wider text-slate-400">Relación</div>
             <div className="text-base font-semibold text-slate-900 leading-tight">
               {selection.data.relType}
             </div>
@@ -77,7 +77,7 @@ function PropertyTable({
 }) {
   const entries = Object.entries(data).filter(([key]) => !skip.includes(key));
   if (entries.length === 0) {
-    return <p className="text-xs text-slate-500">No additional properties.</p>;
+    return <p className="text-xs text-slate-500">No hay propiedades adicionales.</p>;
   }
   return (
     <table className="w-full text-xs">

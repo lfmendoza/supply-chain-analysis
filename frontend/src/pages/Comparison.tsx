@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Plot from "react-plotly.js";
 import ComparisonTable from "../components/ComparisonTable";
+import PageHeader from "../components/PageHeader";
 import { Comparison as ComparisonT, Scenario, SupplyChainApi } from "../api/client";
 
 export default function Comparison() {
@@ -24,8 +25,9 @@ export default function Comparison() {
     try {
       const c = await SupplyChainApi.comparison(id);
       setComparison(c);
-    } catch (e: any) {
-      setError(e?.response?.data?.detail ?? e.message ?? "Failed");
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { detail?: string } }; message?: string };
+      setError(err?.response?.data?.detail ?? err.message ?? "Error desconocido");
     } finally {
       setBusy(false);
     }
@@ -38,7 +40,7 @@ export default function Comparison() {
         data={[
           {
             type: "bar",
-            x: ["Base", "Disrupted", "Optimized"],
+            x: ["Base", "Disrupción", "Optimizado"],
             y: [
               comparison.base.fulfillmentPct,
               comparison.disrupted.fulfillmentPct,
@@ -48,13 +50,13 @@ export default function Comparison() {
           }
         ]}
         layout={{
-          title: "Fulfillment % by state",
+          title: "Cumplimiento % por estado",
           height: 320,
           yaxis: { range: [0, 100], title: "%" },
           margin: { l: 50, r: 30, t: 50, b: 40 }
         }}
         style={{ width: "100%" }}
-        config={{ displayModeBar: false }}
+        config={{ displayModeBar: false, locale: "es" }}
       />
     );
   }, [comparison]);
@@ -66,18 +68,18 @@ export default function Comparison() {
         data={[
           {
             type: "bar",
-            x: ["Base", "Disrupted", "Optimized"],
+            x: ["Base", "Disrupción", "Optimizado"],
             y: [comparison.base.totalCost, comparison.disrupted.totalCost, comparison.optimized.totalCost],
             marker: { color: ["#0f172a", "#dc2626", "#16a34a"] }
           }
         ]}
         layout={{
-          title: "Total cost by state (USD)",
+          title: "Coste total por estado (USD)",
           height: 320,
           margin: { l: 60, r: 30, t: 50, b: 40 }
         }}
         style={{ width: "100%" }}
-        config={{ displayModeBar: false }}
+        config={{ displayModeBar: false, locale: "es" }}
       />
     );
   }, [comparison]);
@@ -93,39 +95,43 @@ export default function Comparison() {
             type: "bar",
             x: ids,
             y: ids.map((id) => usage[id].used),
-            name: "Used"
+            name: "Ocupado"
           },
           {
             type: "bar",
             x: ids,
             y: ids.map((id) => Math.max(0, usage[id].capacity - usage[id].used)),
-            name: "Free capacity"
+            name: "Libre"
           }
         ]}
         layout={{
-          title: "Warehouse usage (optimized)",
+          title: "Uso de almacenes (optimizado)",
           height: 320,
           barmode: "stack",
           margin: { l: 50, r: 30, t: 50, b: 40 }
         }}
         style={{ width: "100%" }}
-        config={{ displayModeBar: false }}
+        config={{ displayModeBar: false, locale: "es" }}
       />
     );
   }, [comparison]);
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        title="Antes / Después"
+        description="Comparación de KPI entre estado base, con disrupción y optimizado."
+      />
       <section className="bg-white border border-slate-200 rounded-lg shadow-sm p-4">
         <div className="flex flex-wrap gap-3 items-center">
           <label className="text-sm">
-            <span className="text-slate-600 mr-2">Scenario</span>
+            <span className="text-slate-600 mr-2">Escenario</span>
             <select
               value={scenarioId}
               onChange={(e) => setScenarioId(e.target.value)}
               className="border rounded px-2 py-1 text-sm"
             >
-              <option value="">Pick a scenario</option>
+              <option value="">Elegir escenario</option>
               {scenarios.map((s) => (
                 <option key={s.id} value={s.id}>{s.id} · {s.type}</option>
               ))}
@@ -136,7 +142,7 @@ export default function Comparison() {
             disabled={busy || !scenarioId}
             className="px-4 py-2 rounded bg-brand-600 text-white text-sm hover:bg-brand-500 disabled:opacity-60"
           >
-            {busy ? "Computing..." : "Compute comparison"}
+            {busy ? "Calculando…" : "Calcular comparación"}
           </button>
         </div>
         {error && <div className="mt-3 text-rose-600 text-sm">{error}</div>}

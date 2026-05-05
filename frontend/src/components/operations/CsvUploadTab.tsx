@@ -23,6 +23,17 @@ const TYPES: PropertyType[] = [
   "point",
 ];
 
+const TYPE_LABELS: Record<PropertyType, string> = {
+  string: "texto",
+  integer: "entero",
+  float: "decimal",
+  boolean: "booleano",
+  date: "fecha",
+  datetime: "fecha y hora",
+  list: "lista",
+  point: "punto",
+};
+
 export default function CsvUploadTab() {
   const [templates, setTemplates] = useState<{ nodes: CsvTemplate[]; relationships: CsvTemplate[] } | null>(
     null
@@ -99,13 +110,13 @@ export default function CsvUploadTab() {
           return next;
         });
       },
-      error: (err) => toast.error(`CSV parse error: ${err.message}`),
+      error: (err) => toast.error(`Error al leer CSV: ${err.message}`),
     });
   };
 
   const submit = async () => {
     if (!csvFile) {
-      toast.error("Pick a CSV file first");
+      toast.error("Elige un archivo CSV");
       return;
     }
     const form = new FormData();
@@ -113,7 +124,7 @@ export default function CsvUploadTab() {
     form.append("columnTypes", JSON.stringify(columnTypes));
     if (kind === "nodes") {
       if (!label.trim()) {
-        toast.error("Label is required");
+        toast.error("La etiqueta del nodo es obligatoria");
         return;
       }
       form.append("label", label.trim());
@@ -121,7 +132,7 @@ export default function CsvUploadTab() {
       form.append("pointColumns", JSON.stringify(pointMappings));
     } else {
       if (!relType.trim()) {
-        toast.error("Relationship type is required");
+        toast.error("El tipo de relación es obligatorio");
         return;
       }
       form.append("type", relType.trim());
@@ -138,7 +149,7 @@ export default function CsvUploadTab() {
           ? await SupplyChainApi.uploadNodesCsv(form)
           : await SupplyChainApi.uploadRelationshipsCsv(form);
       setResult(res);
-      toast.success(`Wrote ${res.written} of ${res.processed} rows`);
+      toast.success(`Se importaron ${res.written} de ${res.processed} filas`);
     } catch (err) {
       toast.error(asErrorMessage(err));
     } finally {
@@ -151,14 +162,14 @@ export default function CsvUploadTab() {
       <div className="card-pad">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-            <UploadCloud size={14} /> Upload CSV
+            <UploadCloud size={14} /> Subir CSV
           </h3>
           <KindSwitch kind={kind} onChange={setKind} />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
           <div className="md:col-span-2">
-            <div className="label mb-1">CSV file</div>
+            <div className="label mb-1">Archivo CSV</div>
             <input
               type="file"
               accept=".csv,text/csv"
@@ -167,7 +178,7 @@ export default function CsvUploadTab() {
             />
           </div>
           <div>
-            <div className="label mb-1">Quick template</div>
+            <div className="label mb-1">Plantilla rápida</div>
             <select
               value={selectedTemplate?.name ?? ""}
               onChange={(e) => {
@@ -176,7 +187,7 @@ export default function CsvUploadTab() {
               }}
               className="input w-full"
             >
-              <option value="">Pick a template (optional)</option>
+              <option value="">Elegir plantilla (opcional)</option>
               {allTemplates.map((t) => (
                 <option key={t.name} value={t.name}>
                   {t.name}
@@ -190,7 +201,7 @@ export default function CsvUploadTab() {
                 rel="noreferrer"
                 className="mt-1 inline-flex items-center gap-1 text-[11px] text-brand-600 hover:underline"
               >
-                <Download size={11} /> Open example file
+                <Download size={11} /> Abrir ejemplo
               </a>
             )}
           </div>
@@ -198,28 +209,28 @@ export default function CsvUploadTab() {
 
         {kind === "nodes" ? (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
-            <Field label="Node label *">
-              <input value={label} onChange={(e) => setLabel(e.target.value)} className="input w-full" placeholder="Supplier" />
+            <Field label="Etiqueta del nodo *">
+              <input value={label} onChange={(e) => setLabel(e.target.value)} className="input w-full" placeholder="Proveedor" />
             </Field>
-            <Field label="Id column">
+            <Field label="Columna id">
               <input value={idColumn} onChange={(e) => setIdColumn(e.target.value)} className="input w-full" />
             </Field>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
-            <Field label="Relationship type *">
-              <input value={relType} onChange={(e) => setRelType(e.target.value)} className="input w-full" placeholder="SUPPLIES" />
+            <Field label="Tipo de relación *">
+              <input value={relType} onChange={(e) => setRelType(e.target.value)} className="input w-full" placeholder="SUMINISTRA" />
             </Field>
-            <Field label="From column">
+            <Field label="Columna origen">
               <input value={fromColumn} onChange={(e) => setFromColumn(e.target.value)} className="input w-full" />
             </Field>
-            <Field label="To column">
+            <Field label="Columna destino">
               <input value={toColumn} onChange={(e) => setToColumn(e.target.value)} className="input w-full" />
             </Field>
-            <Field label="From label (optional)">
+            <Field label="Etiqueta origen (opcional)">
               <input value={fromLabel} onChange={(e) => setFromLabel(e.target.value)} className="input w-full" />
             </Field>
-            <Field label="To label (optional)">
+            <Field label="Etiqueta destino (opcional)">
               <input value={toLabel} onChange={(e) => setToLabel(e.target.value)} className="input w-full" />
             </Field>
           </div>
@@ -236,17 +247,17 @@ export default function CsvUploadTab() {
         {kind === "nodes" && pointMappings.length > 0 && (
           <div className="mt-3 p-2.5 rounded bg-sky-50 border border-sky-200 text-xs text-sky-800 flex items-center gap-2">
             <Sparkles size={13} />
-            Point properties detected: {pointMappings.map((p) => `${p.key}=(${p.latitudeColumn}, ${p.longitudeColumn})`).join(", ")}
+            Punto geográfico detectado: {pointMappings.map((p) => `${p.key}=(${p.latitudeColumn}, ${p.longitudeColumn})`).join(", ")}
           </div>
         )}
 
         <div className="mt-4 flex items-center justify-between">
           <p className="text-[11px] text-slate-500">
-            Rows are sent in one transactional UNWIND batch. List values use <code>;</code>.
+            Las filas se envían en un lote UNWIND transaccional. Valores de lista separados con <code>;</code>.
           </p>
           <button onClick={submit} disabled={busy || !csvFile} className="btn-primary text-sm">
             <FileUp size={14} />
-            {busy ? "Uploading..." : "Upload to Neo4j"}
+            {busy ? "Subiendo…" : "Subir a Neo4j"}
           </button>
         </div>
       </div>
@@ -263,13 +274,13 @@ function KindSwitch({ kind, onChange }: { kind: CsvKind; onChange: (k: CsvKind) 
         onClick={() => onChange("nodes")}
         className={`px-2.5 py-1 rounded ${kind === "nodes" ? "bg-white text-brand-600 shadow-sm" : "text-slate-600"}`}
       >
-        Nodes
+        Nodos
       </button>
       <button
         onClick={() => onChange("relationships")}
         className={`px-2.5 py-1 rounded ${kind === "relationships" ? "bg-white text-brand-600 shadow-sm" : "text-slate-600"}`}
       >
-        Relationships
+        Relaciones
       </button>
     </div>
   );
@@ -300,7 +311,7 @@ function PreviewTable({
                   >
                     {TYPES.map((t) => (
                       <option key={t} value={t}>
-                        {t}
+                        {TYPE_LABELS[t]}
                       </option>
                     ))}
                   </select>
@@ -328,19 +339,19 @@ function PreviewTable({
 function ResultCard({ result }: { result: CsvUploadResult }) {
   return (
     <div className="card-pad">
-      <h3 className="text-sm font-semibold text-slate-700">Upload result</h3>
+      <h3 className="text-sm font-semibold text-slate-700">Resultado de la subida</h3>
       <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
-        <Stat label="Processed" value={result.processed} />
-        <Stat label="Written" value={result.written} />
-        <Stat label="Elapsed" value={`${result.elapsedMs.toFixed(0)} ms`} />
+        <Stat label="Procesadas" value={result.processed} />
+        <Stat label="Importadas" value={result.written} />
+        <Stat label="Tiempo" value={`${result.elapsedMs.toFixed(0)} ms`} />
       </div>
       {result.errors.length > 0 && (
         <div className="mt-3 max-h-[160px] overflow-auto">
-          <div className="text-xs font-semibold text-rose-700 mb-1">Errors ({result.errors.length})</div>
+          <div className="text-xs font-semibold text-rose-700 mb-1">Errores ({result.errors.length})</div>
           <ul className="text-xs text-rose-700 space-y-0.5">
             {result.errors.slice(0, 25).map((e, i) => (
               <li key={i}>
-                {e.row ? `row ${e.row}` : ""} {e.column ? `· ${e.column}` : ""}: {e.error}
+                {e.row ? `fila ${e.row}` : ""} {e.column ? `· ${e.column}` : ""}: {e.error}
               </li>
             ))}
           </ul>
@@ -348,7 +359,7 @@ function ResultCard({ result }: { result: CsvUploadResult }) {
       )}
       {result.sampleRow && (
         <div className="mt-3 text-xs">
-          <div className="text-slate-500 mb-1">Sample converted row sent to Neo4j:</div>
+          <div className="text-slate-500 mb-1">Fila de ejemplo enviada a Neo4j:</div>
           <pre className="bg-slate-50 rounded p-2 overflow-auto max-h-[160px] text-[11px]">
             {JSON.stringify(result.sampleRow, null, 2)}
           </pre>

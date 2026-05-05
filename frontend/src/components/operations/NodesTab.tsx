@@ -47,7 +47,7 @@ export default function NodesTab({ labels }: Props) {
       } else {
         await SupplyChainApi.deleteNode(node.elementId, "elementId", true);
       }
-      toast.success("Node deleted");
+      toast.success("Nodo eliminado");
       refresh();
     } catch (err) {
       toast.error(asErrorMessage(err));
@@ -64,12 +64,12 @@ export default function NodesTab({ labels }: Props) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && refresh()}
-              placeholder="Search by id or name (Enter to search)"
+              placeholder="Buscar por id o nombre (Enter)"
               className="input pl-8 w-full"
             />
           </div>
           <select value={label} onChange={(e) => setLabel(e.target.value)} className="input">
-            <option value="">All labels</option>
+            <option value="">Todas las etiquetas</option>
             {labels.map((l) => (
               <option key={l} value={l}>
                 {l}
@@ -77,10 +77,10 @@ export default function NodesTab({ labels }: Props) {
             ))}
           </select>
           <button onClick={refresh} className="btn-secondary text-xs" disabled={busy}>
-            <RefreshCw size={13} /> Refresh
+            <RefreshCw size={13} /> Actualizar
           </button>
           <button onClick={() => setShowForm(true)} className="btn-primary text-xs ml-auto">
-            <Plus size={13} /> Create node
+            <Plus size={13} /> Crear nodo
           </button>
         </div>
         {error && (
@@ -92,16 +92,16 @@ export default function NodesTab({ labels }: Props) {
 
       <div className="card overflow-hidden">
         <div className="px-4 py-2 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600 flex items-center justify-between">
-          <span>{busy ? "Loading..." : `${items.length} nodes`}</span>
+          <span>{busy ? "Cargando…" : `${items.length} nodos`}</span>
         </div>
         <div className="max-h-[520px] overflow-auto">
           <table className="min-w-full text-sm">
             <thead className="bg-white sticky top-0 z-10">
               <tr className="border-b border-slate-200">
-                <Th>Labels</Th>
-                <Th>id / name</Th>
-                <Th>Properties</Th>
-                <Th>Actions</Th>
+                <Th>Etiquetas</Th>
+                <Th>id / nombre</Th>
+                <Th>Propiedades</Th>
+                <Th>Acciones</Th>
               </tr>
             </thead>
             <tbody>
@@ -126,7 +126,7 @@ export default function NodesTab({ labels }: Props) {
                       <button
                         onClick={() => setPendingDelete(n)}
                         className="text-rose-600 hover:text-rose-700"
-                        title="Delete with relationships"
+                        title="Eliminar con relaciones"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -137,7 +137,7 @@ export default function NodesTab({ labels }: Props) {
               {items.length === 0 && !busy && (
                 <tr>
                   <td colSpan={4} className="px-3 py-6 text-center text-sm text-slate-500">
-                    No nodes match the filters.
+                    No hay nodos con estos filtros.
                   </td>
                 </tr>
               )}
@@ -149,11 +149,11 @@ export default function NodesTab({ labels }: Props) {
       <NodeForm open={showForm} onClose={() => setShowForm(false)} onCreated={refresh} />
       <ConfirmDialog
         open={!!pendingDelete}
-        title="Delete this node?"
-        description={`This will DETACH-DELETE the node (also removing any of its relationships).${
-          pendingDelete ? `\nLabels: ${pendingDelete.labels.join(":")}` : ""
+        title="¿Eliminar este nodo?"
+        description={`Se hará DETACH DELETE del nodo (y de sus relaciones).${
+          pendingDelete ? `\nEtiquetas: ${pendingDelete.labels.join(":")}` : ""
         }`}
-        confirmLabel="Delete"
+        confirmLabel="Eliminar"
         destructive
         onConfirm={() => pendingDelete && onDelete(pendingDelete)}
         onCancel={() => setPendingDelete(null)}
@@ -177,7 +177,7 @@ function PropertiesInline({ props }: { props: Record<string, unknown> }) {
         </span>
       ))}
       {entries.length > 6 && (
-        <span className="text-[11px] text-slate-500">+{entries.length - 6} more</span>
+        <span className="text-[11px] text-slate-500">+{entries.length - 6} más</span>
       )}
     </div>
   );
@@ -185,9 +185,9 @@ function PropertiesInline({ props }: { props: Record<string, unknown> }) {
 
 function format(v: unknown): string {
   if (v === null || v === undefined) return "—";
-  if (typeof v === "boolean") return v ? "true" : "false";
+  if (typeof v === "boolean") return v ? "sí" : "no";
   if (Array.isArray(v)) return `[${v.length}]`;
   if (typeof v === "object") return JSON.stringify(v);
   const s = String(v);
-  return s.length > 30 ? s.slice(0, 28) + "..." : s;
+  return s.length > 30 ? s.slice(0, 28) + "…" : s;
 }

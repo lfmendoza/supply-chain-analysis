@@ -9,9 +9,9 @@ import { SupplyChainApi } from "../api/client";
 type Tab = "nodes" | "relationships" | "csv";
 
 const TABS: { id: Tab; label: string; Icon: typeof Boxes }[] = [
-  { id: "nodes", label: "Nodes", Icon: Boxes },
-  { id: "relationships", label: "Relationships", Icon: GitFork },
-  { id: "csv", label: "CSV Upload", Icon: UploadCloud },
+  { id: "nodes", label: "Nodos", Icon: Boxes },
+  { id: "relationships", label: "Relaciones", Icon: GitFork },
+  { id: "csv", label: "CSV", Icon: UploadCloud },
 ];
 
 export default function OperationsLab() {
@@ -27,8 +27,8 @@ export default function OperationsLab() {
   return (
     <div>
       <PageHeader
-        title="Graph Operations Lab"
-        description="Hands-on demonstration of the rubric criteria 4, 9–19: create nodes (multi-label and any datatype), create relationships, update or remove properties, rewire edges, delete elements, and bulk-load through CSV."
+        title="Laboratorio de operaciones sobre el grafo"
+        description="CRUD de nodos y relaciones, reconexión de aristas e importación masiva CSV."
         badge={<span className="pill-info">CRUD + CSV</span>}
       />
 

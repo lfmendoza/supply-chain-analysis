@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function RelationshipForm({ open, onClose, onCreated }: Props) {
-  const [type, setType] = useState("SUPPLIES");
+  const [type, setType] = useState("SUMINISTRA");
   const [startId, setStartId] = useState("");
   const [endId, setEndId] = useState("");
   const [startLabel, setStartLabel] = useState("");
@@ -26,12 +26,12 @@ export default function RelationshipForm({ open, onClose, onCreated }: Props) {
 
   const submit = async () => {
     if (!startId.trim() || !endId.trim() || !type.trim()) {
-      toast.error("type, startId and endId are required");
+      toast.error("tipo, id inicio e id fin son obligatorios");
       return;
     }
     const { properties, errors } = buildTypedProperties(rows);
     if (errors.length > 0) {
-      toast.error(`Property errors: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
+      toast.error(`Propiedades: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
       return;
     }
     setBusy(true);
@@ -44,7 +44,7 @@ export default function RelationshipForm({ open, onClose, onCreated }: Props) {
         endLabel: endLabel.trim() || undefined,
         properties,
       });
-      toast.success(`Created (${startId})-[:${type}]->(${endId})`);
+      toast.success(`Creado (${startId})-[:${type}]->(${endId})`);
       onCreated();
       onClose();
     } catch (err) {
@@ -58,42 +58,42 @@ export default function RelationshipForm({ open, onClose, onCreated }: Props) {
     <div className="fixed inset-0 z-40 flex items-start justify-center bg-slate-900/40 p-6 overflow-y-auto" onClick={onClose}>
       <div className="w-full max-w-2xl card-pad mt-10" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-900">Create relationship</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Crear relación</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <X size={18} />
           </button>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-3">
-          <Field label="Type *">
+          <Field label="Tipo *">
             <input value={type} onChange={(e) => setType(e.target.value)} className="input w-full" />
           </Field>
           <div />
-          <Field label="Start node id *">
-            <input value={startId} onChange={(e) => setStartId(e.target.value)} className="input w-full" placeholder="e.g. S1" />
+          <Field label="Id nodo inicio *">
+            <input value={startId} onChange={(e) => setStartId(e.target.value)} className="input w-full" placeholder="p. ej. S1" />
           </Field>
-          <Field label="Start label (optional, for clarity)">
-            <input value={startLabel} onChange={(e) => setStartLabel(e.target.value)} className="input w-full" placeholder="Supplier" />
+          <Field label="Etiqueta inicio (opcional)">
+            <input value={startLabel} onChange={(e) => setStartLabel(e.target.value)} className="input w-full" placeholder="p. ej. Supplier" />
           </Field>
-          <Field label="End node id *">
-            <input value={endId} onChange={(e) => setEndId(e.target.value)} className="input w-full" placeholder="e.g. RM-A" />
+          <Field label="Id nodo fin *">
+            <input value={endId} onChange={(e) => setEndId(e.target.value)} className="input w-full" placeholder="p. ej. RM-A" />
           </Field>
-          <Field label="End label (optional)">
-            <input value={endLabel} onChange={(e) => setEndLabel(e.target.value)} className="input w-full" placeholder="RawMaterial" />
+          <Field label="Etiqueta fin (opcional)">
+            <input value={endLabel} onChange={(e) => setEndLabel(e.target.value)} className="input w-full" placeholder="p. ej. RawMaterial" />
           </Field>
         </div>
 
         <div className="mb-4">
-          <div className="label mb-1">Relationship properties (typed)</div>
+          <div className="label mb-1">Propiedades de la relación (tipadas)</div>
           <TypedPropertyEditor rows={rows} onChange={setRows} />
         </div>
 
         <div className="flex items-center justify-end gap-2">
           <button onClick={onClose} className="btn-secondary">
-            Cancel
+            Cancelar
           </button>
           <button onClick={submit} disabled={busy} className="btn-primary">
-            {busy ? "Creating..." : "Create relationship"}
+            {busy ? "Creando…" : "Crear relación"}
           </button>
         </div>
       </div>

@@ -1,8 +1,5 @@
 /**
- * 15 ready-made Cypher queries grouped in 5 categories. The Query Explorer
- * page lists them in the sidebar so the rubric criterion 5 (multiple Cypher
- * queries) can be demonstrated with one click. Each preset has a short
- * description that is also shown to the evaluator.
+ * Consultas Cypher predefinidas para el explorador (barra lateral).
  */
 
 export type CypherPreset = {
@@ -36,30 +33,29 @@ RETURN [n IN nodes(path) | n.id] AS path, length(path) AS hops
 `.trim();
 
 export const CYPHER_PRESETS: CypherPreset[] = [
-  // --- Discovery -------------------------------------------------------
   {
     id: "disc.labels",
-    title: "Q01 · Node label counts",
-    category: "Discovery",
+    title: "Q01 · Conteo por etiqueta de nodo",
+    category: "Descubrimiento",
     description:
-      "Count how many nodes exist per label. Useful to confirm the seed loaded everything correctly.",
+      "Cuenta nodos por etiqueta. Útil para comprobar que el seed cargó correctamente.",
     cypher:
       "MATCH (n)\nRETURN labels(n)[0] AS label, count(*) AS count\nORDER BY count DESC",
   },
   {
     id: "disc.reltypes",
-    title: "Q02 · Relationship type counts",
-    category: "Discovery",
-    description: "Count how many relationships exist per type. Sanity check after seed.",
+    title: "Q02 · Conteo por tipo de relación",
+    category: "Descubrimiento",
+    description: "Cuenta relaciones por tipo. Comprobación rápida tras el seed.",
     cypher:
       "MATCH ()-[r]->()\nRETURN type(r) AS type, count(*) AS count\nORDER BY count DESC",
   },
   {
     id: "disc.types",
-    title: "Q03 · Sample Supplier with native types",
-    category: "Discovery",
+    title: "Q03 · Proveedor de ejemplo con tipos nativos",
+    category: "Descubrimiento",
     description:
-      "Show one Supplier and the value/type of each of its 8 datatypes (rubric criterion 3).",
+      "Fila de Supplier con propiedades temporales, lista y booleano nativas.",
     cypher: `
 MATCH (s:Supplier {id: $supplierId})
 RETURN s.id AS id, s.name AS name, s.country AS country,
@@ -67,46 +63,45 @@ RETURN s.id AS id, s.name AS name, s.country AS country,
        s.isCertified AS isCertified, s.certifications AS certifications,
        s.registeredOn AS registeredOn, s.lastAuditAt AS lastAuditAt
 `.trim(),
-    parameters: [{ name: "supplierId", label: "Supplier id", defaultValue: "S1" }],
+    parameters: [{ name: "supplierId", label: "Id proveedor", defaultValue: "S1" }],
   },
 
-  // --- Traceability ----------------------------------------------------
   {
     id: "trace.product",
-    title: "Q04 · Suppliers and raw materials feeding a Product",
-    category: "Traceability",
-    description: "Multi-hop trace from any Product back to every Supplier that contributes to it.",
+    title: "Q04 · Proveedores y materias que alimentan un producto",
+    category: "Trazabilidad",
+    description: "Trazabilidad multi-salto desde un Product hasta sus Supplier.",
     cypher: TRACE_PRODUCT,
-    parameters: [{ name: "productId", label: "Product id", defaultValue: "P2" }],
+    parameters: [{ name: "productId", label: "Id producto", defaultValue: "P2" }],
   },
   {
     id: "trace.supplier",
-    title: "Q05 · Customers exposed to a Supplier",
-    category: "Traceability",
+    title: "Q05 · Clientes expuestos a un proveedor",
+    category: "Trazabilidad",
     description:
-      "Walk Supplier → RawMaterial → Product → CustomerOrder → Customer to see which customers depend on a supplier.",
+      "Recorre Supplier → RawMaterial → Product → CustomerOrder → Customer.",
     cypher: TRACE_SUPPLIER_CUSTOMERS,
-    parameters: [{ name: "supplierId", label: "Supplier id", defaultValue: "S3" }],
+    parameters: [{ name: "supplierId", label: "Id proveedor", defaultValue: "S3" }],
   },
   {
     id: "trace.path",
-    title: "Q06 · Shortest path between two Locations",
-    category: "Traceability",
+    title: "Q06 · Camino más corto entre dos ubicaciones",
+    category: "Trazabilidad",
     description:
-      "Use shortestPath() over CONNECTED_TO to demonstrate Cypher native shortest-path search.",
+      "shortestPath() sobre CONNECTED_TO entre dos Location (hasta 6 saltos).",
     cypher: TRACE_PATH_BETWEEN_LOCATIONS,
     parameters: [
-      { name: "fromLocation", label: "From location id", defaultValue: "LOC1" },
-      { name: "toLocation", label: "To location id", defaultValue: "LOC11" },
+      { name: "fromLocation", label: "Ubicación origen", defaultValue: "LOC1" },
+      { name: "toLocation", label: "Ubicación destino", defaultValue: "LOC11" },
     ],
   },
 
-  // --- Risk & criticality ---------------------------------------------
   {
     id: "risk.singlesource",
-    title: "Q07 · Single-source raw materials",
-    category: "Risk & criticality",
-    description: "RawMaterials whose only active Supplier is unique — single point of failure.",
+    title: "Q07 · Materias con un único proveedor activo",
+    category: "Riesgo y criticidad",
+    description:
+      "Materias primas abastecidas por un solo proveedor activo (punto único de fallo).",
     cypher: `
 MATCH (rm:RawMaterial)<-[:SUPPLIES]-(s:Supplier)
 WHERE s.status = 'active'
@@ -120,9 +115,9 @@ ORDER BY rawMaterialId
   },
   {
     id: "risk.top",
-    title: "Q08 · Top 5 suppliers by risk score",
-    category: "Risk & criticality",
-    description: "Sort suppliers by riskScore (computed by the ML model) — riskiest first.",
+    title: "Q08 · Top 5 proveedores por riesgo",
+    category: "Riesgo y criticidad",
+    description: "Proveedores ordenados por riskScore (mayor riesgo primero).",
     cypher: `
 MATCH (s:Supplier)
 RETURN s.id AS id, s.name AS name, s.country AS country,
@@ -133,9 +128,10 @@ LIMIT 5
   },
   {
     id: "risk.disconnected",
-    title: "Q09 · Suppliers without active SUPPLIES",
-    category: "Risk & criticality",
-    description: "Suppliers that are inactive or that have no SUPPLIES edges (would not appear in any plan).",
+    title: "Q09 · Proveedores sin SUPPLIES activo",
+    category: "Riesgo y criticidad",
+    description:
+      "Proveedores inactivos o sin aristas SUPPLIES (no aparecerían en un plan).",
     cypher: `
 MATCH (s:Supplier)
 OPTIONAL MATCH (s)-[r:SUPPLIES]->(rm:RawMaterial)
@@ -146,12 +142,12 @@ ORDER BY supplies, id
 `.trim(),
   },
 
-  // --- Inventory & demand ----------------------------------------------
   {
     id: "inv.below",
-    title: "Q10 · Inventory below safety stock",
-    category: "Inventory & demand",
-    description: "Find Inventory nodes with quantity below their safetyStock — restock candidates.",
+    title: "Q10 · Inventario bajo stock de seguridad",
+    category: "Inventario y demanda",
+    description:
+      "Nodos Inventory con quantity < safetyStock (candidatos a reabasto).",
     cypher: `
 MATCH (w:Warehouse)-[:HAS_INVENTORY]->(i:Inventory)-[:OF_PRODUCT]->(p:Product)
 WHERE i.quantity < i.safetyStock
@@ -163,9 +159,10 @@ ORDER BY shortfall DESC
   },
   {
     id: "inv.due",
-    title: "Q11 · Orders due in next N days",
-    category: "Inventory & demand",
-    description: "Customer orders whose dueDate is within the next N days — demand horizon.",
+    title: "Q11 · Pedidos con entrega en los próximos N días",
+    category: "Inventario y demanda",
+    description:
+      "CustomerOrder con dueDate en el horizonte indicado desde «hoy».",
     cypher: `
 WITH date($today) AS today, $days AS days
 MATCH (co:CustomerOrder)-[:FOR_PRODUCT]->(p:Product)
@@ -175,15 +172,15 @@ RETURN co.id AS orderId, p.id AS productId, co.quantity AS quantity,
 ORDER BY co.dueDate
 `.trim(),
     parameters: [
-      { name: "today", label: "Today (YYYY-MM-DD)", defaultValue: "2026-05-01" },
-      { name: "days", label: "Horizon (days)", defaultValue: "7" },
+      { name: "today", label: "Hoy (AAAA-MM-DD)", defaultValue: "2026-05-01" },
+      { name: "days", label: "Horizonte (días)", defaultValue: "7" },
     ],
   },
   {
     id: "inv.demand",
-    title: "Q12 · Total demand per Product",
-    category: "Inventory & demand",
-    description: "Aggregate quantity demanded across all CustomerOrder for each Product.",
+    title: "Q12 · Demanda total por producto",
+    category: "Inventario y demanda",
+    description: "Suma de cantidades pendientes por Product en CustomerOrder.",
     cypher: `
 MATCH (co:CustomerOrder)-[r:FOR_PRODUCT]->(p:Product)
 WHERE co.status = 'pending'
@@ -192,13 +189,12 @@ ORDER BY pendingDemand DESC
 `.trim(),
   },
 
-  // --- Meta & advanced -------------------------------------------------
   {
     id: "meta.scenarios",
-    title: "Q13 · Active disruption scenarios with impacts",
-    category: "Meta & advanced",
+    title: "Q13 · Escenarios de disrupción activos con impactos",
+    category: "Meta y avanzado",
     description:
-      "List every active DisruptionScenario along with the entities they currently impact.",
+      "Lista DisruptionScenario activos y entidades enlazadas por IMPACTS.",
     cypher: `
 MATCH (ds:DisruptionScenario)-[:IMPACTS]->(target)
 RETURN ds.id AS scenarioId, ds.type AS type, ds.status AS status,
@@ -208,9 +204,10 @@ ORDER BY scenarioId
   },
   {
     id: "meta.density",
-    title: "Q14 · Average degree per label",
-    category: "Meta & advanced",
-    description: "Compute the average node degree (in+out) per label — which entities are most connected.",
+    title: "Q14 · Grado medio por etiqueta",
+    category: "Meta y avanzado",
+    description:
+      "Grado medio (entrada+salida) por etiqueta de nodo.",
     cypher: `
 MATCH (n)
 WITH labels(n)[0] AS label, n
@@ -222,17 +219,17 @@ ORDER BY avgDegree DESC
   },
   {
     id: "meta.list",
-    title: "Q15 · Suppliers with at least N certifications (List<String>)",
-    category: "Meta & advanced",
+    title: "Q15 · Proveedores con al menos N certificaciones (lista)",
+    category: "Meta y avanzado",
     description:
-      "Demonstrates list-typed properties: filters Suppliers using size(s.certifications) and returns the list.",
+      "Filtra por propiedad tipo lista: size(s.certifications).",
     cypher: `
 MATCH (s:Supplier)
 WHERE s.certifications IS NOT NULL AND size(s.certifications) >= toInteger($minCount)
 RETURN s.id AS id, s.name AS name, s.certifications AS certifications, s.isCertified AS isCertified
 ORDER BY size(s.certifications) DESC, id
 `.trim(),
-    parameters: [{ name: "minCount", label: "Minimum certifications", defaultValue: "3" }],
+    parameters: [{ name: "minCount", label: "Certificaciones mínimas", defaultValue: "3" }],
   },
 ];
 

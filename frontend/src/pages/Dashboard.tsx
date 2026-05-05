@@ -55,16 +55,16 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Supply Chain Network Dashboard"
-        description="One-page overview of the Neo4j graph, the rubric coverage, and the most useful actions for the demo."
+        title="Panel de cadena de suministro"
+        description="Resumen del grafo, cobertura de tipos de datos y accesos rápidos."
         badge={
           connectivity.status === "ok" && connectivity.data.isConnected ? (
             <span className="pill-ok">
-              <CheckCircle2 size={12} /> Graph connected
+              <CheckCircle2 size={12} /> Grafo conexo
             </span>
           ) : connectivity.status === "ok" ? (
             <span className="pill-warn">
-              <AlertTriangle size={12} /> {connectivity.data.components} components
+              <AlertTriangle size={12} /> {connectivity.data.components} componentes
             </span>
           ) : null
         }
@@ -73,31 +73,31 @@ export default function Dashboard() {
       <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <BigKpi
           icon={<Layers size={18} />}
-          label="Total nodes"
+          label="Nodos totales"
           value={
             summary.status === "ok"
-              ? Object.values(summary.data.counts).reduce((a, b) => a + b, 0).toLocaleString()
+              ? Object.values(summary.data.counts).reduce((a, b) => a + b, 0).toLocaleString("es")
               : "—"
           }
         />
         <BigKpi
           icon={<Network size={18} />}
-          label="Relationships"
-          value={summary.status === "ok" ? summary.data.edges.length.toLocaleString() : "—"}
+          label="Relaciones"
+          value={summary.status === "ok" ? summary.data.edges.length.toLocaleString("es") : "—"}
         />
         <BigKpi
           icon={<Workflow size={18} />}
-          label="Components"
+          label="Componentes"
           value={connectivity.status === "ok" ? String(connectivity.data.components) : "—"}
           hint={
             connectivity.status === "ok"
-              ? `Largest covers ${(connectivity.data.largestComponentRatio * 100).toFixed(0)}% of nodes`
+              ? `El mayor cubre el ${(connectivity.data.largestComponentRatio * 100).toFixed(0)}% de los nodos`
               : undefined
           }
         />
         <BigKpi
           icon={<AlertTriangle size={18} />}
-          label="Active scenarios"
+          label="Escenarios activos"
           value={scenarios.status === "ok" ? String(scenarios.data.length) : "—"}
         />
       </section>
@@ -140,9 +140,9 @@ function NodeCountsCard({ summary }: { summary: LoadState<GraphSummary> }) {
   return (
     <div className="card-pad">
       <h2 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-        <Boxes size={14} /> Counts by label
+        <Boxes size={14} /> Conteos por etiqueta
       </h2>
-      {summary.status === "loading" && <p className="mt-3 text-sm text-slate-500">Loading...</p>}
+      {summary.status === "loading" && <p className="mt-3 text-sm text-slate-500">Cargando…</p>}
       {summary.status === "error" && <p className="mt-3 text-sm text-rose-600">{summary.error}</p>}
       {summary.status === "ok" && (
         <ul className="mt-3 space-y-1.5">
@@ -151,7 +151,7 @@ function NodeCountsCard({ summary }: { summary: LoadState<GraphSummary> }) {
             .map(([label, count]) => (
               <li key={label} className="flex items-center justify-between text-sm">
                 <span className="text-slate-700">{label}</span>
-                <span className="tabular-nums font-medium text-slate-900">{count.toLocaleString()}</span>
+                <span className="tabular-nums font-medium text-slate-900">{count.toLocaleString("es")}</span>
               </li>
             ))}
         </ul>
@@ -164,10 +164,10 @@ function DataTypesCard({ dataTypes }: { dataTypes: LoadState<DataTypeReport> }) 
   return (
     <div className="card-pad">
       <h2 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-        <Database size={14} /> Neo4j data type coverage
+        <Database size={14} /> Cobertura de tipos Neo4j
       </h2>
       <p className="mt-1 text-xs text-slate-500">
-        Rubric criterion 3: every native Neo4j datatype must appear in the graph.
+        Tipos de propiedad según el esquema de Neo4j (`db.schema.*`).
       </p>
       {dataTypes.status === "ok" && (
         <div className="mt-3 grid grid-cols-2 gap-1.5">
@@ -198,15 +198,15 @@ function DataTypesCard({ dataTypes }: { dataTypes: LoadState<DataTypeReport> }) 
 
 function ShortcutsCard() {
   const items = [
-    { to: "/topology", icon: <Network size={14} />, title: "Explore topology", desc: "Cytoscape-powered interactive graph." },
-    { to: "/operations", icon: <Boxes size={14} />, title: "Operations Lab", desc: "Create / update / delete nodes and CSV upload." },
-    { to: "/queries", icon: <Sparkles size={14} />, title: "Cypher Explorer", desc: "15 ready-made queries + free editor." },
-    { to: "/algorithms", icon: <TrendingUp size={14} />, title: "Run algorithms", desc: "PageRank, Betweenness, Communities, Dijkstra." },
-    { to: "/rubric", icon: <ListChecks size={14} />, title: "Rubric matrix", desc: "Track every criterion with evidence." },
+    { to: "/topology", icon: <Network size={14} />, title: "Explorar topología", desc: "Grafo interactivo con Cytoscape." },
+    { to: "/operations", icon: <Boxes size={14} />, title: "Laboratorio", desc: "CRUD de nodos y relaciones e importación CSV." },
+    { to: "/queries", icon: <Sparkles size={14} />, title: "Explorador Cypher", desc: "15 consultas predefinidas y editor libre." },
+    { to: "/algorithms", icon: <TrendingUp size={14} />, title: "Ejecutar algoritmos", desc: "PageRank, betweenness, comunidades, Dijkstra." },
+    { to: "/rubric", icon: <ListChecks size={14} />, title: "Matriz de rúbrica", desc: "Lista con enlaces dentro de la app." },
   ];
   return (
     <div className="card-pad">
-      <h2 className="text-sm font-semibold text-slate-700">Quick actions for the demo</h2>
+      <h2 className="text-sm font-semibold text-slate-700">Accesos rápidos</h2>
       <ul className="mt-3 space-y-1.5">
         {items.map((it) => (
           <li key={it.to}>
@@ -231,44 +231,48 @@ function ConnectivityCard({ connectivity }: { connectivity: LoadState<Connectivi
   return (
     <div className="card-pad">
       <h2 className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-        <Workflow size={14} /> Connectivity report
+        <Workflow size={14} /> Informe de conectividad
       </h2>
       {connectivity.status === "loading" && (
-        <p className="mt-2 text-sm text-slate-500">Computing weakly connected components...</p>
+        <p className="mt-2 text-sm text-slate-500">Calculando componentes débilmente conexas…</p>
       )}
       {connectivity.status === "error" && (
         <p className="mt-2 text-sm text-rose-600">{connectivity.error}</p>
       )}
-      {connectivity.status === "ok" && (
-        <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ul className="space-y-1 text-sm text-slate-700">
-            <li>
-              <strong>{connectivity.data.nodes}</strong> nodes /{" "}
-              <strong>{connectivity.data.relationships}</strong> relationships
-            </li>
-            <li>
-              <strong>{connectivity.data.components}</strong> connected components
-            </li>
-            <li>
-              Largest component: <strong>{connectivity.data.largestComponentSize}</strong> nodes (
-              {(connectivity.data.largestComponentRatio * 100).toFixed(1)}%)
-            </li>
-            <li>
-              Isolated nodes: <strong>{connectivity.data.isolatedNodes.length}</strong>
-            </li>
-          </ul>
-          {connectivity.data.componentSummary.length > 1 && (
-            <ul className="text-xs text-slate-600 space-y-1">
-              {connectivity.data.componentSummary.map((c, i) => (
-                <li key={i} className="flex items-center justify-between border-b border-slate-100 pb-1">
-                  <span>Component #{i + 1}</span>
-                  <span className="tabular-nums">{c.size} nodes</span>
-                </li>
-              ))}
+      {connectivity.status === "ok" && (() => {
+        const isolatedNodes = connectivity.data.isolatedNodes ?? [];
+        const componentSummary = connectivity.data.componentSummary ?? [];
+        return (
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <ul className="space-y-1 text-sm text-slate-700">
+              <li>
+                <strong>{connectivity.data.nodes}</strong> nodos /{" "}
+                <strong>{connectivity.data.relationships}</strong> relaciones
+              </li>
+              <li>
+                <strong>{connectivity.data.components}</strong> componentes conexas
+              </li>
+              <li>
+                Componente mayor: <strong>{connectivity.data.largestComponentSize}</strong> nodos (
+                {(connectivity.data.largestComponentRatio * 100).toFixed(1)}%)
+              </li>
+              <li>
+                Nodos aislados: <strong>{isolatedNodes.length}</strong>
+              </li>
             </ul>
-          )}
-        </div>
-      )}
+            {componentSummary.length > 1 && (
+              <ul className="text-xs text-slate-600 space-y-1">
+                {componentSummary.map((c, i) => (
+                  <li key={i} className="flex items-center justify-between border-b border-slate-100 pb-1">
+                    <span>Componente {i + 1}</span>
+                    <span className="tabular-nums">{c.size} nodos</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        );
+      })()}
     </div>
   );
 }

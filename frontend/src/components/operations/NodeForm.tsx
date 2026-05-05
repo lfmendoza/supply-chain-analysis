@@ -28,7 +28,7 @@ export default function NodeForm({ open, onClose, onCreated }: Props) {
     const trimmed = labelInput.trim();
     if (!trimmed) return;
     if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(trimmed)) {
-      toast.error("Label must match [A-Za-z_][A-Za-z0-9_]*");
+      toast.error("La etiqueta debe coincidir con [A-Za-z_][A-Za-z0-9_]*");
       return;
     }
     if (!labels.includes(trimmed)) setLabels([...labels, trimmed]);
@@ -43,17 +43,17 @@ export default function NodeForm({ open, onClose, onCreated }: Props) {
   const submit = async () => {
     const { properties, errors } = buildTypedProperties(rows);
     if (errors.length > 0) {
-      toast.error(`Property errors: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
+      toast.error(`Propiedades: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
       return;
     }
     if (!properties.find((p) => p.key === "id")) {
-      toast.error("Node needs an `id` property to be linkable later");
+      toast.error("El nodo necesita la propiedad `id` para enlazar relaciones");
       return;
     }
     setBusy(true);
     try {
       const created = await SupplyChainApi.createNode({ labels, properties });
-      toast.success(`Created ${created.labels.join(":")} ${(created.properties as Record<string, unknown>).id}`);
+      toast.success(`Creado ${created.labels.join(":")} ${(created.properties as Record<string, unknown>).id}`);
       onCreated();
       onClose();
     } catch (err) {
@@ -67,14 +67,14 @@ export default function NodeForm({ open, onClose, onCreated }: Props) {
     <div className="fixed inset-0 z-40 flex items-start justify-center bg-slate-900/40 p-6 overflow-y-auto" onClick={onClose}>
       <div className="w-full max-w-2xl card-pad mt-10" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-900">Create node</h2>
+          <h2 className="text-lg font-semibold text-slate-900">Crear nodo</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <X size={18} />
           </button>
         </div>
 
         <div className="mb-4">
-          <div className="label mb-1">Labels (1 or more)</div>
+          <div className="label mb-1">Etiquetas (una o más)</div>
           <div className="flex flex-wrap gap-1.5 mb-2">
             {labels.map((l) => (
               <span
@@ -95,31 +95,30 @@ export default function NodeForm({ open, onClose, onCreated }: Props) {
               value={labelInput}
               onChange={(e) => setLabelInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addLabel())}
-              placeholder="Add another label (e.g. Audited)"
+              placeholder="Añadir etiqueta (p. ej. Certified)"
               className="input flex-1"
             />
             <button onClick={addLabel} className="btn-secondary text-xs">
-              <Plus size={13} /> Add
+              <Plus size={13} /> Añadir
             </button>
           </div>
         </div>
 
         <div className="mb-4">
-          <div className="label mb-1">Properties</div>
+          <div className="label mb-1">Propiedades</div>
           <p className="text-[11px] text-slate-500 mb-2">
-            Provide an <code>id</code> string property — used to MATCH the node from relationships.
-            Choose the right type for each value (Boolean, Date, DateTime, List and Point all map to
-            native Neo4j types).
+            Incluye <code>id</code> (texto) para hacer MATCH desde relaciones.
+            Elige el tipo adecuado (Boolean, Date, DateTime, List y Point se mapean a tipos nativos Neo4j).
           </p>
           <TypedPropertyEditor rows={rows} onChange={setRows} />
         </div>
 
         <div className="flex items-center justify-end gap-2">
           <button onClick={onClose} className="btn-secondary">
-            Cancel
+            Cancelar
           </button>
           <button onClick={submit} disabled={busy} className="btn-primary">
-            {busy ? "Creating..." : "Create node"}
+            {busy ? "Creando…" : "Crear nodo"}
           </button>
         </div>
       </div>

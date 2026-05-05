@@ -1,13 +1,14 @@
 import { useState } from "react";
+import PageHeader from "../components/PageHeader";
 import { SupplyChainApi } from "../api/client";
 
 export default function Traceability() {
   const [productId, setProductId] = useState("P1");
   const [rmId, setRmId] = useState("RM-A");
-  const [traceability, setTraceability] = useState<any[] | null>(null);
-  const [alternatives, setAlternatives] = useState<any[] | null>(null);
-  const [critical, setCritical] = useState<any[] | null>(null);
-  const [unfulfillable, setUnfulfillable] = useState<any | null>(null);
+  const [traceability, setTraceability] = useState<Record<string, unknown>[] | null>(null);
+  const [alternatives, setAlternatives] = useState<Record<string, unknown>[] | null>(null);
+  const [critical, setCritical] = useState<Record<string, unknown>[] | null>(null);
+  const [unfulfillable, setUnfulfillable] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
 
   const runQueries = async () => {
@@ -19,58 +20,62 @@ export default function Traceability() {
         SupplyChainApi.criticalDependencies(),
         SupplyChainApi.unfulfillableOrders()
       ]);
-      setTraceability(t);
-      setAlternatives(a);
-      setCritical(c);
+      setTraceability(t as Record<string, unknown>[]);
+      setAlternatives(a as Record<string, unknown>[]);
+      setCritical(c as Record<string, unknown>[]);
       setUnfulfillable(u);
-    } catch (e: any) {
-      setError(e.message ?? "Query failed");
+    } catch (e: unknown) {
+      setError((e as Error).message ?? "Falló la consulta");
     }
   };
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        title="Trazabilidad"
+        description="Consultas multi-salto desde la API de trazabilidad y alternativas."
+      />
       <section className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
-        <h2 className="text-lg font-semibold mb-3">Multi-hop Cypher queries</h2>
+        <h2 className="text-lg font-semibold mb-3">Consultas Cypher multi-salto (vía API)</h2>
         <div className="flex flex-wrap gap-3 items-end">
           <label className="block text-sm">
-            <span className="text-slate-600">Product id</span>
+            <span className="text-slate-600">Id producto</span>
             <input value={productId} onChange={(e) => setProductId(e.target.value)} className="mt-1 border rounded px-2 py-1 w-32" />
           </label>
           <label className="block text-sm">
-            <span className="text-slate-600">Raw material id</span>
+            <span className="text-slate-600">Id materia prima</span>
             <input value={rmId} onChange={(e) => setRmId(e.target.value)} className="mt-1 border rounded px-2 py-1 w-32" />
           </label>
           <button
             onClick={runQueries}
             className="px-4 py-2 bg-brand-600 text-white rounded hover:bg-brand-500 transition"
           >
-            Run all
+            Ejecutar todas
           </button>
         </div>
         {error && <div className="mt-3 text-rose-600 text-sm">{error}</div>}
       </section>
 
       {traceability && (
-        <Card title={`Q01 · Traceability for ${productId}`}>
+        <Card title={`Q01 · Trazabilidad de ${productId}`}>
           <Table rows={traceability} cols={["supplierId", "supplierName", "rawMaterialId", "rawMaterialName"]} />
         </Card>
       )}
 
       {alternatives && (
-        <Card title={`Q05 · Alternative suppliers for ${rmId}`}>
+        <Card title={`Q05 · Proveedores alternativos para ${rmId}`}>
           <Table rows={alternatives} cols={["supplierId", "supplierName", "unitCost", "leadTimeDays", "riskScore", "rankingScore"]} />
         </Card>
       )}
 
       {critical && (
-        <Card title="Q07 · Critical (single-source) raw materials">
+        <Card title="Q07 · Materias críticas (un solo proveedor)">
           <Table rows={critical} cols={["rawMaterialId", "rawMaterialName", "activeSuppliers", "atRiskProductIds"]} />
         </Card>
       )}
 
-      {unfulfillable && (
-        <Card title="Q09 · Aggregate unfulfillable orders">
+      {unfulfillable !== null && (
+        <Card title="Q09 · Pedidos no cumplibles (agregado)">
           <pre className="text-sm bg-slate-50 p-3 rounded">{JSON.stringify(unfulfillable, null, 2)}</pre>
         </Card>
       )}
@@ -87,9 +92,9 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
   );
 }
 
-function Table({ rows, cols }: { rows: any[]; cols: string[] }) {
+function Table({ rows, cols }: { rows: Record<string, unknown>[]; cols: string[] }) {
   if (!rows || rows.length === 0) {
-    return <p className="text-sm text-slate-500">No rows.</p>;
+    return <p className="text-sm text-slate-500">Sin filas.</p>;
   }
   return (
     <div className="overflow-auto">
@@ -106,7 +111,7 @@ function Table({ rows, cols }: { rows: any[]; cols: string[] }) {
             <tr key={i} className="border-t">
               {cols.map((c) => (
                 <td key={c} className="px-2 py-1 text-slate-700">
-                  {Array.isArray(r[c]) ? r[c].join(", ") : String(r[c] ?? "")}
+                  {Array.isArray(r[c]) ? (r[c] as unknown[]).join(", ") : String(r[c] ?? "")}
                 </td>
               ))}
             </tr>

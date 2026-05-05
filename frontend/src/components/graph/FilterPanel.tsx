@@ -27,14 +27,14 @@ export default function FilterPanel({
   return (
     <div className="card-pad">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold text-slate-700">Filters</h3>
+        <h3 className="text-sm font-semibold text-slate-700">Filtros</h3>
         <div className="flex items-center gap-1 text-[11px]">
           <button onClick={onSelectAll} className="text-brand-600 hover:underline">
-            All
+            Todos
           </button>
           <span className="text-slate-300">|</span>
           <button onClick={onSelectNone} className="text-slate-500 hover:underline">
-            None
+            Ninguno
           </button>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default function FilterPanel({
           <input
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Search by id or name"
+            placeholder="Buscar por id o nombre"
             className="input pl-8 w-full"
           />
         </div>
@@ -84,7 +84,7 @@ export default function FilterPanel({
         className="mt-3 flex items-center gap-1.5 text-xs text-slate-600 hover:text-brand-600"
       >
         {showEdgeLabels ? <ToggleRight size={16} className="text-brand-600" /> : <ToggleLeft size={16} />}
-        Show relationship labels
+        Mostrar tipo de relación
       </button>
     </div>
   );

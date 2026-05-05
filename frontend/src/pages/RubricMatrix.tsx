@@ -59,11 +59,12 @@ export default function RubricMatrix() {
   return (
     <div>
       <PageHeader
-        title="Rubric Compliance Matrix"
-        description="22 criteria of the academic rubric (110 pts). Items marked auto-OK are validated by hitting the live API; the rest can be demonstrated end-to-end from the linked screen."
+        title="Matriz de rúbrica"
+        description="22 ítems (110 pts). Auto-OK: comprobado vía API. Resto: usar la pantalla enlazada."
         badge={
           <span className="pill-info">
-            {totals.automaticOk}/{totals.automatic} auto-checked OK · auto-credit {totals.obtained}/{RUBRIC_TOTAL_POINTS} pts
+            {totals.automaticOk}/{totals.automatic} comprobaciones OK · puntos automáticos {totals.obtained}/
+            {RUBRIC_TOTAL_POINTS}
           </span>
         }
       />
@@ -79,11 +80,11 @@ export default function RubricMatrix() {
           <thead className="bg-slate-50">
             <tr>
               <Th>#</Th>
-              <Th>Criterion</Th>
+              <Th>Cumplimiento</Th>
               <Th>Pts</Th>
-              <Th>Evidence in app</Th>
-              <Th>Status</Th>
-              <Th>Open</Th>
+              <Th>Evidencia en la app</Th>
+              <Th>Estado</Th>
+              <Th>Abrir</Th>
             </tr>
           </thead>
           <tbody>
@@ -105,12 +106,12 @@ export default function RubricMatrix() {
                     )}
                     {s === "warn" && (
                       <span className="pill-warn">
-                        <CheckCircle2 size={11} /> Needs attention
+                        <CheckCircle2 size={11} /> Revisar
                       </span>
                     )}
                     {s === "manual" && (
                       <span className="pill-info">
-                        <Circle size={11} /> Manual demo
+                        <Circle size={11} /> Manual
                       </span>
                     )}
                   </td>
@@ -119,7 +120,7 @@ export default function RubricMatrix() {
                       to={c.evidencePath}
                       className="inline-flex items-center gap-1 text-brand-600 hover:underline text-xs"
                     >
-                      Go <ArrowRight size={12} />
+                      Ir <ArrowRight size={12} />
                     </Link>
                   </td>
                 </tr>
@@ -130,11 +131,10 @@ export default function RubricMatrix() {
       </div>
 
       <p className="mt-3 text-xs text-slate-500">
-        Auto-OK items are verified live by calling{" "}
+        Las filas Auto-OK llaman en vivo a{" "}
         <code className="font-mono">/analysis/connectivity</code>,{" "}
-        <code className="font-mono">/analysis/data-types</code> and{" "}
-        <code className="font-mono">/graph/summary</code>. Manual-demo items are demonstrated by
-        opening the linked screen and performing the action live.
+        <code className="font-mono">/analysis/data-types</code> y{" "}
+        <code className="font-mono">/graph/summary</code>. El resto requiere comprobarlo en la pantalla enlazada.
       </p>
     </div>
   );

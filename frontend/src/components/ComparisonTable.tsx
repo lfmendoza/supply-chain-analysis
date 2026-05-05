@@ -2,28 +2,28 @@ import type { Comparison } from "../api/client";
 
 type Props = { comparison: Comparison };
 
-const columns = ["Metric", "Base", "Disrupted", "Optimized", "Δ vs Disrupted"];
+const columns = ["Métrica", "Base", "Con disrupción", "Optimizado", "Δ vs disrupción"];
 
 const fmtCurrency = (n: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("es-MX", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
 const fmtPct = (n: number) => `${n.toFixed(1)}%`;
 const fmtDays = (n: number) => `${n.toFixed(1)} d`;
-const fmtNum = (n: number) => n.toLocaleString();
+const fmtNum = (n: number) => n.toLocaleString("es");
 
 export default function ComparisonTable({ comparison }: Props) {
   const { base, disrupted, optimized, deltas } = comparison;
 
   const rows = [
     {
-      metric: "Total cost",
+      metric: "Coste total",
       base: fmtCurrency(base.totalCost),
       disrupted: fmtCurrency(disrupted.totalCost),
       optimized: fmtCurrency(optimized.totalCost),
-      delta: deltas.costRecovered >= 0 ? `+${fmtCurrency(deltas.costRecovered)} saved` : `-${fmtCurrency(-deltas.costRecovered)}`,
+      delta: deltas.costRecovered >= 0 ? `+${fmtCurrency(deltas.costRecovered)} ahorrado` : `-${fmtCurrency(-deltas.costRecovered)}`,
       good: deltas.costRecovered >= 0
     },
     {
-      metric: "Avg lead time",
+      metric: "Plazo medio",
       base: fmtDays(base.avgLeadTime),
       disrupted: fmtDays(disrupted.avgLeadTime),
       optimized: fmtDays(optimized.avgLeadTime),
@@ -31,7 +31,7 @@ export default function ComparisonTable({ comparison }: Props) {
       good: deltas.leadTimeImprovement >= 0
     },
     {
-      metric: "Fulfillment %",
+      metric: "Cumplimiento %",
       base: fmtPct(base.fulfillmentPct),
       disrupted: fmtPct(disrupted.fulfillmentPct),
       optimized: fmtPct(optimized.fulfillmentPct),
@@ -39,23 +39,23 @@ export default function ComparisonTable({ comparison }: Props) {
       good: deltas.fulfillmentImprovement >= 0
     },
     {
-      metric: "Orders affected",
+      metric: "Pedidos afectados",
       base: fmtNum(base.ordersAffected),
       disrupted: fmtNum(disrupted.ordersAffected),
       optimized: fmtNum(optimized.ordersAffected),
-      delta: `${deltas.ordersRecovered >= 0 ? "-" : "+"}${Math.abs(deltas.ordersRecovered)} recovered`,
+      delta: `${deltas.ordersRecovered >= 0 ? "-" : "+"}${Math.abs(deltas.ordersRecovered)} recuperados`,
       good: deltas.ordersRecovered >= 0
     },
     {
-      metric: "Revenue at risk",
+      metric: "Ingreso en riesgo",
       base: fmtCurrency(base.revenueAtRisk),
       disrupted: fmtCurrency(disrupted.revenueAtRisk),
       optimized: fmtCurrency(optimized.revenueAtRisk),
-      delta: deltas.revenueRecovered >= 0 ? `+${fmtCurrency(deltas.revenueRecovered)} recovered` : `-${fmtCurrency(-deltas.revenueRecovered)}`,
+      delta: deltas.revenueRecovered >= 0 ? `+${fmtCurrency(deltas.revenueRecovered)} recuperado` : `-${fmtCurrency(-deltas.revenueRecovered)}`,
       good: deltas.revenueRecovered >= 0
     },
     {
-      metric: "Avg risk",
+      metric: "Riesgo medio",
       base: base.avgRisk.toFixed(3),
       disrupted: disrupted.avgRisk.toFixed(3),
       optimized: optimized.avgRisk.toFixed(3),

@@ -247,7 +247,7 @@ function Legend() {
   return (
     <div className="absolute bottom-3 left-3 bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-2.5 shadow-sm max-w-[260px]">
       <div className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1.5">
-        Node labels
+        Etiquetas de nodo
       </div>
       <div className="grid grid-cols-2 gap-x-3 gap-y-0.5">
         {entries.map(([label, color]) => (

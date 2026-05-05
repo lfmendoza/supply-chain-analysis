@@ -34,7 +34,7 @@ export default function Topology() {
     SupplyChainApi.graphSummary()
       .then(setSummary)
       .catch((e) => {
-        const msg = asErrorMessage(e, "Failed to load topology");
+        const msg = asErrorMessage(e, "No se pudo cargar la topología");
         setError(msg);
         toast.error(msg);
       });
@@ -56,12 +56,12 @@ export default function Topology() {
   return (
     <div>
       <PageHeader
-        title="Graph Topology"
-        description="Interactive Cytoscape view of the entire Neo4j graph. Filter by label, search, and click any node or edge to inspect its properties."
+        title="Topología del grafo"
+        description="Vista Cytoscape del grafo Neo4j. Filtra por etiqueta, busca y haz clic en nodos o relaciones para ver propiedades."
         badge={
           summary ? (
             <span className="pill-info">
-              {totalNodes.toLocaleString()} nodes · {totalEdges.toLocaleString()} edges
+              {totalNodes.toLocaleString("es")} nodos · {totalEdges.toLocaleString("es")} relaciones
             </span>
           ) : null
         }
@@ -69,7 +69,7 @@ export default function Topology() {
 
       {error && (
         <div className="card-pad mb-4 border border-rose-200 bg-rose-50 text-rose-700 text-sm">
-          Failed to load graph: {error}. Check that the backend is running and Neo4j is reachable.
+          No se pudo cargar el grafo: {error}. Comprueba que el backend está en marcha y Neo4j es accesible.
         </div>
       )}
 
@@ -95,7 +95,7 @@ export default function Topology() {
 
         {!summary ? (
           <div className="card flex items-center justify-center text-slate-500 text-sm" style={{ height: 620 }}>
-            Loading topology...
+            Cargando topología…
           </div>
         ) : (
           <GraphCytoscape

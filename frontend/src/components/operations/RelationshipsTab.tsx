@@ -42,7 +42,7 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
     setPendingDelete(null);
     try {
       await SupplyChainApi.deleteRelationship(rel.elementId);
-      toast.success("Relationship deleted");
+      toast.success("Relación eliminada");
       refresh();
     } catch (err) {
       toast.error(asErrorMessage(err));
@@ -54,7 +54,7 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
       <div className="card-pad">
         <div className="flex flex-wrap items-center gap-2">
           <select value={type} onChange={(e) => setType(e.target.value)} className="input">
-            <option value="">All relationship types</option>
+            <option value="">Todos los tipos</option>
             {relationshipTypes.map((t) => (
               <option key={t} value={t}>
                 {t}
@@ -62,10 +62,10 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
             ))}
           </select>
           <button onClick={refresh} className="btn-secondary text-xs" disabled={busy}>
-            <RefreshCw size={13} /> Refresh
+            <RefreshCw size={13} /> Actualizar
           </button>
           <button onClick={() => setShowForm(true)} className="btn-primary text-xs ml-auto">
-            <Plus size={13} /> Create relationship
+            <Plus size={13} /> Crear relación
           </button>
         </div>
         {error && (
@@ -77,16 +77,16 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
 
       <div className="card overflow-hidden">
         <div className="px-4 py-2 bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-600">
-          {busy ? "Loading..." : `${items.length} relationships`}
+          {busy ? "Cargando…" : `${items.length} relaciones`}
         </div>
         <div className="max-h-[520px] overflow-auto">
           <table className="min-w-full text-sm">
             <thead className="bg-white sticky top-0 z-10">
               <tr className="border-b border-slate-200">
-                <Th>Type</Th>
-                <Th>Path</Th>
-                <Th>Properties</Th>
-                <Th>Actions</Th>
+                <Th>Tipo</Th>
+                <Th>Camino</Th>
+                <Th>Propiedades</Th>
+                <Th>Acciones</Th>
               </tr>
             </thead>
             <tbody>
@@ -113,14 +113,14 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
                       <button
                         onClick={() => setRewireOpen(r)}
                         className="text-amber-600 hover:text-amber-700"
-                        title="Rewire"
+                        title="Reconectar"
                       >
                         <Shuffle size={14} />
                       </button>
                       <button
                         onClick={() => setPendingDelete(r)}
                         className="text-rose-600 hover:text-rose-700"
-                        title="Delete"
+                        title="Eliminar"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -131,7 +131,7 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
               {items.length === 0 && !busy && (
                 <tr>
                   <td colSpan={4} className="px-3 py-6 text-center text-sm text-slate-500">
-                    No relationships of this type.
+                    No hay relaciones de este tipo.
                   </td>
                 </tr>
               )}
@@ -143,13 +143,13 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
       <RelationshipForm open={showForm} onClose={() => setShowForm(false)} onCreated={refresh} />
       <ConfirmDialog
         open={!!pendingDelete}
-        title="Delete relationship?"
+        title="¿Eliminar la relación?"
         description={
           pendingDelete
-            ? `Delete the (${pendingDelete.startId ?? "?"})-[:${pendingDelete.type}]->(${pendingDelete.endId ?? "?"}) edge?`
+            ? `¿Eliminar (${pendingDelete.startId ?? "?"})-[:${pendingDelete.type}]->(${pendingDelete.endId ?? "?"})?`
             : undefined
         }
-        confirmLabel="Delete"
+        confirmLabel="Eliminar"
         destructive
         onConfirm={() => pendingDelete && onDelete(pendingDelete)}
         onCancel={() => setPendingDelete(null)}
@@ -181,7 +181,7 @@ function PropertiesInline({ props }: { props: Record<string, unknown> }) {
         </span>
       ))}
       {entries.length > 4 && (
-        <span className="text-[11px] text-slate-500">+{entries.length - 4} more</span>
+        <span className="text-[11px] text-slate-500">+{entries.length - 4} más</span>
       )}
     </div>
   );
@@ -213,7 +213,7 @@ function RewireDialog({
         newEndId: newEndId.trim() || undefined,
         flipDirection: flip,
       });
-      toast.success("Relationship rewired");
+      toast.success("Relación reconectada");
       onDone();
     } catch (err) {
       toast.error(asErrorMessage(err));
@@ -225,36 +225,35 @@ function RewireDialog({
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/40 p-6" onClick={onClose}>
       <div className="card-pad w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-base font-semibold text-slate-900 mb-1">Rewire relationship</h3>
+        <h3 className="text-base font-semibold text-slate-900 mb-1">Reconectar relación</h3>
         <p className="text-xs text-slate-500 mb-4">
-          Neo4j cannot mutate the type, direction or endpoints of an existing edge. The backend
-          re-creates a copy with the new wiring (preserving properties) and deletes the original
-          atomically.
+          Neo4j no permite cambiar in situ el tipo, la dirección ni los extremos. El backend recrea la arista con el nuevo cableado
+          (conservando propiedades) y borra la original en la misma operación.
         </p>
         <div className="space-y-2 text-xs">
           <Field label={`Original: (${rel.startId})-[:${rel.type}]->(${rel.endId})`}>
-            <span className="text-slate-400">read-only</span>
+            <span className="text-slate-400">solo lectura</span>
           </Field>
-          <Field label="New type (blank to keep)">
+          <Field label="Nuevo tipo (vacío = mantener)">
             <input value={newType} onChange={(e) => setNewType(e.target.value)} className="input w-full" placeholder={rel.type} />
           </Field>
-          <Field label="New start id (blank to keep)">
+          <Field label="Nuevo id inicio (vacío = mantener)">
             <input value={newStartId} onChange={(e) => setNewStartId(e.target.value)} className="input w-full" placeholder={rel.startId} />
           </Field>
-          <Field label="New end id (blank to keep)">
+          <Field label="Nuevo id fin (vacío = mantener)">
             <input value={newEndId} onChange={(e) => setNewEndId(e.target.value)} className="input w-full" placeholder={rel.endId} />
           </Field>
           <label className="inline-flex items-center gap-1.5 mt-2">
             <input type="checkbox" checked={flip} onChange={(e) => setFlip(e.target.checked)} className="accent-brand-600" />
-            Flip direction
+            Invertir dirección
           </label>
         </div>
         <div className="mt-4 flex items-center justify-end gap-2">
           <button onClick={onClose} className="btn-secondary">
-            Cancel
+            Cancelar
           </button>
           <button onClick={submit} disabled={busy} className="btn-primary">
-            {busy ? "Rewiring..." : "Rewire"}
+            {busy ? "Reconectando…" : "Reconectar"}
           </button>
         </div>
       </div>

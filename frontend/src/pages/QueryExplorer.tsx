@@ -22,7 +22,7 @@ import ConfirmDialog from "../components/ConfirmDialog";
 
 function formatCellValue(v: unknown): string {
   if (v === null || v === undefined) return "—";
-  if (typeof v === "boolean") return v ? "true" : "false";
+  if (typeof v === "boolean") return v ? "sí" : "no";
   if (Array.isArray(v)) return v.map((x) => (typeof x === "object" ? JSON.stringify(x) : String(x))).join(", ");
   if (typeof v === "object") return JSON.stringify(v);
   return String(v);
@@ -76,7 +76,8 @@ export default function QueryExplorer() {
         mode,
       });
       setResult(res);
-      toast.success(`Cypher executed (${res.mode}, ${res.rowCount} rows)`);
+      const modeEtiqueta = res.mode === "read" ? "lectura" : "escritura";
+      toast.success(`Cypher ejecutado (${modeEtiqueta}, ${res.rowCount} filas)`);
     } catch (err) {
       const msg = asErrorMessage(err);
       setError(msg);
@@ -93,12 +94,12 @@ export default function QueryExplorer() {
   return (
     <div>
       <PageHeader
-        title="Cypher Query Explorer"
-        description="15 ready-made queries (5 categories) plus a free-form Cypher editor with explicit read/write mode. Executes against the Neo4j AuraDB instance."
+        title="Explorador de consultas Cypher"
+        description="15 consultas en 5 categorías y editor Cypher libre con modo lectura o escritura explícito. Se ejecuta contra la instancia Neo4j AuraDB."
         badge={
           <span className={mode === "read" ? "pill-info" : "pill-warn"}>
             {mode === "read" ? <Lock size={12} /> : <Unlock size={12} />}
-            {mode.toUpperCase()} mode
+            Modo {mode === "read" ? "LECTURA" : "ESCRITURA"}
           </span>
         }
       />
@@ -144,13 +145,13 @@ export default function QueryExplorer() {
                   onClick={reset}
                   disabled={!selectedPreset}
                   className="btn-secondary text-xs"
-                  title="Reset to preset"
+                  title="Restaurar la plantilla"
                 >
-                  <RotateCcw size={13} /> Reset
+                  <RotateCcw size={13} /> Restablecer
                 </button>
                 <button onClick={run} disabled={busy || !cypher.trim()} className="btn-primary text-xs">
                   <Play size={13} />
-                  {busy ? "Running..." : "Run"}
+                  {busy ? "Ejecutando…" : "Ejecutar"}
                 </button>
               </div>
             </div>
@@ -164,7 +165,7 @@ export default function QueryExplorer() {
 
             {selectedPreset?.parameters && selectedPreset.parameters.length > 0 && (
               <div className="mt-3">
-                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1.5">Parameters</div>
+                <div className="text-xs uppercase tracking-wider text-slate-400 mb-1.5">Parámetros</div>
                 <div className="grid grid-cols-2 gap-2">
                   {selectedPreset.parameters.map((p) => (
                     <label key={p.name} className="text-xs">
@@ -197,10 +198,10 @@ export default function QueryExplorer() {
 
       <ConfirmDialog
         open={pendingMode === "write"}
-        title="Enable WRITE mode?"
-        description="Running queries in write mode can mutate the database (CREATE, MERGE, DELETE, SET). The session will use a write transaction. Continue?"
-        confirmLabel="Enable write mode"
-        cancelLabel="Stay in read-only"
+        title="¿Activar modo ESCRITURA?"
+        description="En modo escritura las consultas pueden modificar la base de datos (CREATE, MERGE, DELETE, SET). La sesión usará una transacción de escritura. ¿Continuar?"
+        confirmLabel="Activar escritura"
+        cancelLabel="Permanecer en solo lectura"
         destructive
         onConfirm={() => {
           setMode("write");
@@ -226,7 +227,7 @@ function ModeSwitch({
         className={`px-2.5 py-1 rounded ${mode === "read" ? "bg-white text-brand-600 shadow-sm" : "text-slate-600"}`}
       >
         <span className="inline-flex items-center gap-1">
-          <Lock size={11} /> Read
+          <Lock size={11} /> Lectura
         </span>
       </button>
       <button
@@ -234,7 +235,7 @@ function ModeSwitch({
         className={`px-2.5 py-1 rounded ${mode === "write" ? "bg-white text-rose-600 shadow-sm" : "text-slate-600"}`}
       >
         <span className="inline-flex items-center gap-1">
-          <Unlock size={11} /> Write
+          <Unlock size={11} /> Escritura
         </span>
       </button>
     </div>
@@ -255,9 +256,9 @@ function PresetSidebar({
   return (
     <div className="card overflow-hidden">
       <div className="px-4 py-3 border-b border-slate-200 bg-slate-50">
-        <h3 className="text-sm font-semibold text-slate-700">Pre-built queries</h3>
+        <h3 className="text-sm font-semibold text-slate-700">Consultas predefinidas</h3>
         <p className="text-[11px] text-slate-500 mt-0.5">
-          15 examples · 5 categories
+          15 ejemplos · 5 categorías
         </p>
       </div>
       <ul className="max-h-[640px] overflow-y-auto">
@@ -306,11 +307,11 @@ function ResultsCard({ result }: { result: CypherResult }) {
   return (
     <div className="card-pad">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-sm font-semibold text-slate-700">Result</h3>
+        <h3 className="text-sm font-semibold text-slate-700">Resultado</h3>
         <div className="flex items-center gap-2 text-xs">
-          <span className="pill-info">{result.rowCount} rows</span>
+          <span className="pill-info">{result.rowCount} filas</span>
           <span className={result.mode === "read" ? "pill-info" : "pill-warn"}>
-            {result.mode.toUpperCase()}
+            {result.mode === "read" ? "LECTURA" : "ESCRITURA"}
           </span>
         </div>
       </div>
@@ -324,7 +325,7 @@ function ResultsCard({ result }: { result: CypherResult }) {
         </div>
       )}
       {result.rows.length === 0 ? (
-        <p className="text-sm text-slate-500">Query executed successfully but returned no rows.</p>
+        <p className="text-sm text-slate-500">Consulta ejecutada correctamente; no devolvió filas.</p>
       ) : (
         <div className="overflow-auto max-h-[480px] border border-slate-200 rounded-md">
           <table className="min-w-full text-sm">

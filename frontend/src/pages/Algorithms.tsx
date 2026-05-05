@@ -30,25 +30,25 @@ const TABS: { id: Tab; label: string; Icon: typeof Activity; description: string
     id: "pagerank",
     label: "PageRank",
     Icon: Activity,
-    description: "Identifies hubs whose disruption propagates the most.",
+    description: "Identifica focos cuya disrupción más se propaga.",
   },
   {
     id: "betweenness",
-    label: "Betweenness",
+    label: "Intermediación",
     Icon: Workflow,
-    description: "Bottlenecks: nodes that sit on most shortest paths.",
+    description: "Cuellos de botella en los caminos más cortos.",
   },
   {
     id: "communities",
-    label: "Communities (Louvain)",
+    label: "Comunidades (Louvain)",
     Icon: Award,
-    description: "Natural clusters in the supply chain.",
+    description: "Agrupaciones naturales en la cadena.",
   },
   {
     id: "shortest",
-    label: "Shortest path (Dijkstra)",
+    label: "Camino mínimo (Dijkstra)",
     Icon: Compass,
-    description: "Cheapest physical route under cost or lead-time weight.",
+    description: "Ruta física de menor coste o plazo.",
   },
 ];
 
@@ -77,7 +77,7 @@ export default function Algorithms() {
     setBusy(true);
     try {
       setPr(await SupplyChainApi.pagerank(20));
-      toast.success("PageRank computed");
+      toast.success("PageRank calculado");
     } catch (e) {
       toast.error(asErrorMessage(e));
     } finally {
@@ -89,7 +89,7 @@ export default function Algorithms() {
     setBusy(true);
     try {
       setBt(await SupplyChainApi.betweenness(20));
-      toast.success("Betweenness computed");
+      toast.success("Intermediación calculada");
     } catch (e) {
       toast.error(asErrorMessage(e));
     } finally {
@@ -101,7 +101,7 @@ export default function Algorithms() {
     setBusy(true);
     try {
       setComm(await SupplyChainApi.communities());
-      toast.success("Louvain communities computed");
+      toast.success("Comunidades Louvain calculadas");
     } catch (e) {
       toast.error(asErrorMessage(e));
     } finally {
@@ -114,8 +114,8 @@ export default function Algorithms() {
     try {
       const r = await SupplyChainApi.shortestPath(spSource.trim(), spTarget.trim(), spWeight);
       setSp(r);
-      if (r.found) toast.success(`Path found · ${r.hops} hops · cost ${r.totalWeight ?? "?"}`);
-      else toast(`No path: ${r.reason ?? "?"}`, { icon: "ℹ" });
+      if (r.found) toast.success(`Camino encontrado · ${r.hops} saltos · coste ${r.totalWeight ?? "?"}`);
+      else toast(`Sin camino: ${r.reason ?? "?"}`, { icon: "ℹ" });
     } catch (e) {
       toast.error(asErrorMessage(e));
     } finally {
@@ -127,7 +127,7 @@ export default function Algorithms() {
     setBusy(true);
     try {
       const r = await SupplyChainApi.persistCentrality(20);
-      toast.success(`Persisted centrality on ${r.updated} nodes`);
+      toast.success(`Centralidad guardada en ${r.updated} nodos`);
     } catch (e) {
       toast.error(asErrorMessage(e));
     } finally {
@@ -151,11 +151,11 @@ export default function Algorithms() {
   return (
     <div>
       <PageHeader
-        title="Graph Algorithms"
-        description="PageRank, Betweenness Centrality, Louvain Communities and Dijkstra Shortest Path computed in-process with NetworkX (Aura Free has no GDS). Top nodes highlight on the graph."
+        title="Algoritmos sobre el grafo"
+        description="PageRank, centralidad de intermediación, comunidades Louvain y Dijkstra en NetworkX (Aura Free no incluye GDS). Los nodos destacados se resaltan en el grafo."
         actions={
           <button onClick={persist} className="btn-secondary text-xs" disabled={busy}>
-            <Save size={13} /> Persist centrality
+            <Save size={13} /> Guardar centralidad
           </button>
         }
       />
@@ -181,8 +181,8 @@ export default function Algorithms() {
         <div className="space-y-3">
           {tab === "pagerank" && (
             <CentralityCard
-              title="PageRank · top nodes"
-              subtitle="Hubs whose disruption propagates the most."
+              title="PageRank · nodos principales"
+              subtitle="Focos cuya disrupción más se propaga."
               result={pr}
               onRun={runPageRank}
               busy={busy}
@@ -190,8 +190,8 @@ export default function Algorithms() {
           )}
           {tab === "betweenness" && (
             <CentralityCard
-              title="Betweenness · top nodes"
-              subtitle="Bottlenecks that sit on the most shortest paths."
+              title="Intermediación · nodos principales"
+              subtitle="Cuellos de botella en los caminos más cortos."
               result={bt}
               onRun={runBetweenness}
               busy={busy}
@@ -225,7 +225,7 @@ export default function Algorithms() {
             />
           ) : (
             <div className="card flex items-center justify-center text-sm text-slate-500" style={{ height: 620 }}>
-              Loading graph...
+              Cargando grafo…
             </div>
           )}
         </div>
@@ -255,7 +255,7 @@ function CentralityCard({
           <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>
         </div>
         <button onClick={onRun} disabled={busy} className="btn-primary text-xs">
-          <Sparkles size={13} /> {busy ? "Computing..." : "Run"}
+          <Sparkles size={13} /> {busy ? "Calculando…" : "Ejecutar"}
         </button>
       </div>
       {result ? (
@@ -286,7 +286,7 @@ function CentralityCard({
           </ol>
         </>
       ) : (
-        <div className="text-sm text-slate-500">Click Run to compute.</div>
+        <div className="text-sm text-slate-500">Pulsa Ejecutar para calcular.</div>
       )}
     </div>
   );
@@ -305,21 +305,21 @@ function CommunitiesCard({
     <div className="card-pad">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <h3 className="text-sm font-semibold text-slate-700">Louvain communities</h3>
+          <h3 className="text-sm font-semibold text-slate-700">Comunidades Louvain</h3>
           <p className="text-xs text-slate-500 mt-0.5">
-            Greedy modularity optimisation on the undirected core graph.
+            Optimización greedy de modularidad sobre el núcleo del grafo sin dirección.
           </p>
         </div>
         <button onClick={onRun} disabled={busy} className="btn-primary text-xs">
-          <Network size={13} /> {busy ? "Computing..." : "Run"}
+          <Network size={13} /> {busy ? "Calculando…" : "Ejecutar"}
         </button>
       </div>
       {result ? (
         <>
           <p className="text-[11px] text-slate-500 italic mb-2">{result.interpretation}</p>
           <div className="text-xs mb-2 flex gap-2 flex-wrap">
-            <span className="pill-info">Modularity: {result.modularity.toFixed(3)}</span>
-            <span className="pill-info">Communities: {result.totalCommunities}</span>
+            <span className="pill-info">Modularidad: {result.modularity.toFixed(3)}</span>
+            <span className="pill-info">Comunidades: {result.totalCommunities}</span>
           </div>
           <ul className="space-y-2">
             {result.communities.map((c) => (
@@ -328,7 +328,7 @@ function CommunitiesCard({
                   <span className="text-xs font-semibold text-slate-700">
                     Community #{c.communityId}
                   </span>
-                  <span className="pill-info">{c.size} nodes</span>
+                  <span className="pill-info">{c.size} nodos</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {Object.entries(c.byLabel).map(([label, count]) => (
@@ -350,10 +350,15 @@ function CommunitiesCard({
           </ul>
         </>
       ) : (
-        <div className="text-sm text-slate-500">Click Run to detect communities.</div>
+        <div className="text-sm text-slate-500">Pulsa Ejecutar para detectar comunidades.</div>
       )}
     </div>
   );
+}
+
+function edgeWeightLabel(w: "baseCost" | "leadTimeDays"): string {
+  if (w === "baseCost") return "Coste base (USD)";
+  return "Días de plazo";
 }
 
 function ShortestCard({
@@ -379,32 +384,32 @@ function ShortestCard({
 }) {
   return (
     <div className="card-pad">
-      <h3 className="text-sm font-semibold text-slate-700 mb-1">Dijkstra shortest path</h3>
+      <h3 className="text-sm font-semibold text-slate-700 mb-1">Camino mínimo Dijkstra</h3>
       <p className="text-xs text-slate-500 mb-3">
-        Computed undirected over the supply chain core graph. Try{" "}
-        <code className="font-mono text-[11px]">S1 → LOC4</code> or{" "}
+        Calculado como no dirigido sobre el núcleo de la cadena. Prueba{" "}
+        <code className="font-mono text-[11px]">S1 → LOC4</code> o{" "}
         <code className="font-mono text-[11px]">LOC1 → LOC11</code>.
       </p>
       <div className="grid grid-cols-2 gap-2 mb-2">
-        <Field label="Source id">
+        <Field label="Id origen">
           <input value={source} onChange={(e) => onSource(e.target.value)} className="input w-full" />
         </Field>
-        <Field label="Target id">
+        <Field label="Id destino">
           <input value={target} onChange={(e) => onTarget(e.target.value)} className="input w-full" />
         </Field>
-        <Field label="Edge weight">
+        <Field label="Peso de arista">
           <select
             value={weight}
             onChange={(e) => onWeight(e.target.value as "baseCost" | "leadTimeDays")}
             className="input w-full"
           >
-            <option value="baseCost">baseCost (USD)</option>
-            <option value="leadTimeDays">leadTimeDays</option>
+            <option value="baseCost">Coste base (propiedad baseCost, USD)</option>
+            <option value="leadTimeDays">Días de plazo (propiedad leadTimeDays)</option>
           </select>
         </Field>
         <div className="self-end">
           <button onClick={onRun} disabled={busy} className="btn-primary text-xs w-full">
-            <Compass size={13} /> {busy ? "Computing..." : "Find path"}
+            <Compass size={13} /> {busy ? "Calculando…" : "Buscar camino"}
           </button>
         </div>
       </div>
@@ -414,11 +419,11 @@ function ShortestCard({
           {result.found ? (
             <>
               <div className="flex flex-wrap gap-2 mb-2 text-xs">
-                <span className="pill-info">Hops: {result.hops}</span>
+                <span className="pill-info">Saltos: {result.hops}</span>
                 <span className="pill-info">
-                  Total {result.weight}: {result.totalWeight}
+                  Total {edgeWeightLabel(result.weight)}: {result.totalWeight}
                 </span>
-                <span className="pill-info">Undirected</span>
+                <span className="pill-info">No dirigido</span>
               </div>
               <div className="text-xs leading-relaxed text-slate-700">
                 {result.path.map((id, i) => (
@@ -432,7 +437,7 @@ function ShortestCard({
             </>
           ) : (
             <div className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
-              No path: {result.reason}
+              Sin camino: {result.reason}
             </div>
           )}
         </div>
