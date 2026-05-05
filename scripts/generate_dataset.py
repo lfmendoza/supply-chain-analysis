@@ -38,18 +38,29 @@ fake = Faker(["en_US", "es_MX"])
 # ---------------------------------------------------------------------------
 
 LOCATIONS: list[dict[str, Any]] = [
-    {"id": "LOC1",  "name": "Tokyo Hub",        "country": "JP", "type": "hub",  "latitude": 35.68, "longitude": 139.69},
-    {"id": "LOC2",  "name": "Yokohama Port",    "country": "JP", "type": "port", "latitude": 35.44, "longitude": 139.64},
-    {"id": "LOC3",  "name": "Shanghai Port",    "country": "CN", "type": "port", "latitude": 31.23, "longitude": 121.47},
-    {"id": "LOC4",  "name": "Long Beach Port",  "country": "US", "type": "port", "latitude": 33.77, "longitude": -118.19},
-    {"id": "LOC5",  "name": "Los Angeles Hub",  "country": "US", "type": "hub",  "latitude": 34.05, "longitude": -118.24},
-    {"id": "LOC6",  "name": "Dallas Hub",       "country": "US", "type": "hub",  "latitude": 32.78, "longitude": -96.80},
-    {"id": "LOC7",  "name": "Mexico City Hub",  "country": "MX", "type": "hub",  "latitude": 19.43, "longitude": -99.13},
-    {"id": "LOC8",  "name": "Veracruz Port",    "country": "MX", "type": "port", "latitude": 19.20, "longitude": -96.14},
-    {"id": "LOC9",  "name": "Santiago Hub",     "country": "CL", "type": "hub",  "latitude": -33.45, "longitude": -70.66},
-    {"id": "LOC10", "name": "Valparaiso Port",  "country": "CL", "type": "port", "latitude": -33.05, "longitude": -71.62},
-    {"id": "LOC11", "name": "Sao Paulo Hub",    "country": "BR", "type": "hub",  "latitude": -23.55, "longitude": -46.63},
-    {"id": "LOC12", "name": "Houston Hub",      "country": "US", "type": "hub",  "latitude": 29.76, "longitude": -95.37},
+    {"id": "LOC1",  "name": "Tokyo Hub",         "country": "JP", "type": "hub",  "latitude": 35.68, "longitude": 139.69},
+    {"id": "LOC2",  "name": "Yokohama Port",     "country": "JP", "type": "port", "latitude": 35.44, "longitude": 139.64},
+    {"id": "LOC3",  "name": "Shanghai Port",     "country": "CN", "type": "port", "latitude": 31.23, "longitude": 121.47},
+    {"id": "LOC4",  "name": "Long Beach Port",   "country": "US", "type": "port", "latitude": 33.77, "longitude": -118.19},
+    {"id": "LOC5",  "name": "Los Angeles Hub",   "country": "US", "type": "hub",  "latitude": 34.05, "longitude": -118.24},
+    {"id": "LOC6",  "name": "Dallas Hub",        "country": "US", "type": "hub",  "latitude": 32.78, "longitude": -96.80},
+    {"id": "LOC7",  "name": "Mexico City Hub",   "country": "MX", "type": "hub",  "latitude": 19.43, "longitude": -99.13},
+    {"id": "LOC8",  "name": "Veracruz Port",     "country": "MX", "type": "port", "latitude": 19.20, "longitude": -96.14},
+    {"id": "LOC9",  "name": "Santiago Hub",      "country": "CL", "type": "hub",  "latitude": -33.45, "longitude": -70.66},
+    {"id": "LOC10", "name": "Valparaiso Port",   "country": "CL", "type": "port", "latitude": -33.05, "longitude": -71.62},
+    {"id": "LOC11", "name": "Sao Paulo Hub",     "country": "BR", "type": "hub",  "latitude": -23.55, "longitude": -46.63},
+    {"id": "LOC12", "name": "Houston Hub",       "country": "US", "type": "hub",  "latitude": 29.76, "longitude": -95.37},
+    # Extra hubs/ports to give the graph variety and keep it connected at higher node counts.
+    {"id": "LOC13", "name": "Singapore Port",    "country": "SG", "type": "port", "latitude":  1.29, "longitude": 103.85},
+    {"id": "LOC14", "name": "Hong Kong Hub",     "country": "HK", "type": "hub",  "latitude": 22.30, "longitude": 114.17},
+    {"id": "LOC15", "name": "Busan Port",        "country": "KR", "type": "port", "latitude": 35.18, "longitude": 129.08},
+    {"id": "LOC16", "name": "Seattle Port",      "country": "US", "type": "port", "latitude": 47.61, "longitude": -122.33},
+    {"id": "LOC17", "name": "New York Hub",      "country": "US", "type": "hub",  "latitude": 40.71, "longitude":  -74.01},
+    {"id": "LOC18", "name": "Miami Port",        "country": "US", "type": "port", "latitude": 25.77, "longitude":  -80.19},
+    {"id": "LOC19", "name": "Vancouver Port",    "country": "CA", "type": "port", "latitude": 49.28, "longitude": -123.12},
+    {"id": "LOC20", "name": "Buenos Aires Hub",  "country": "AR", "type": "hub",  "latitude": -34.61,"longitude":  -58.38},
+    {"id": "LOC21", "name": "Callao Port",       "country": "PE", "type": "port", "latitude": -12.05,"longitude":  -77.12},
+    {"id": "LOC22", "name": "Bogota Hub",        "country": "CO", "type": "hub",  "latitude":  4.71, "longitude":  -74.07},
 ]
 
 CARRIERS: list[dict[str, Any]] = [
@@ -201,6 +212,28 @@ ROUTES: list[dict[str, Any]] = [
     {"id": "R26",    "from": "LOC3",  "to": "LOC8",  "mode": "sea",  "distanceKm": 13800,"baseCost": 2480, "leadTimeDays": 25, "carrierId": "CAR1"},
     {"id": "R27",    "from": "LOC6",  "to": "LOC5",  "mode": "air",  "distanceKm": 2000, "baseCost": 1900, "leadTimeDays": 1,  "carrierId": "CAR2"},
     {"id": "R28",    "from": "LOC7",  "to": "LOC11", "mode": "air",  "distanceKm": 7400, "baseCost": 4100, "leadTimeDays": 2,  "carrierId": "CAR2"},
+    # Extra routes to integrate the additional locations and keep the graph connected.
+    {"id": "R29",    "from": "LOC13", "to": "LOC4",  "mode": "sea",  "distanceKm": 14400,"baseCost": 2550, "leadTimeDays": 26, "carrierId": "CAR1"},
+    {"id": "R30",    "from": "LOC14", "to": "LOC4",  "mode": "sea",  "distanceKm": 11600,"baseCost": 2200, "leadTimeDays": 22, "carrierId": "CAR1"},
+    {"id": "R31",    "from": "LOC15", "to": "LOC4",  "mode": "sea",  "distanceKm": 9600, "baseCost": 1900, "leadTimeDays": 19, "carrierId": "CAR1"},
+    {"id": "R32",    "from": "LOC13", "to": "LOC14", "mode": "sea",  "distanceKm": 2600, "baseCost": 750,  "leadTimeDays": 6,  "carrierId": "CAR1"},
+    {"id": "R33",    "from": "LOC15", "to": "LOC1",  "mode": "sea",  "distanceKm": 1100, "baseCost": 380,  "leadTimeDays": 3,  "carrierId": "CAR1"},
+    {"id": "R34",    "from": "LOC16", "to": "LOC5",  "mode": "road", "distanceKm": 1830, "baseCost": 820,  "leadTimeDays": 3,  "carrierId": "CAR3"},
+    {"id": "R35",    "from": "LOC19", "to": "LOC16", "mode": "road", "distanceKm": 230,  "baseCost": 160,  "leadTimeDays": 1,  "carrierId": "CAR3"},
+    {"id": "R36",    "from": "LOC17", "to": "LOC18", "mode": "road", "distanceKm": 2090, "baseCost": 990,  "leadTimeDays": 4,  "carrierId": "CAR3"},
+    {"id": "R37",    "from": "LOC18", "to": "LOC8",  "mode": "sea",  "distanceKm": 1700, "baseCost": 540,  "leadTimeDays": 5,  "carrierId": "CAR1"},
+    {"id": "R38",    "from": "LOC17", "to": "LOC4",  "mode": "road", "distanceKm": 4500, "baseCost": 1900, "leadTimeDays": 7,  "carrierId": "CAR3"},
+    {"id": "R39",    "from": "LOC22", "to": "LOC11", "mode": "air",  "distanceKm": 4400, "baseCost": 2900, "leadTimeDays": 1,  "carrierId": "CAR2"},
+    {"id": "R40",    "from": "LOC21", "to": "LOC10", "mode": "sea",  "distanceKm": 2800, "baseCost": 940,  "leadTimeDays": 7,  "carrierId": "CAR1"},
+    {"id": "R41",    "from": "LOC20", "to": "LOC11", "mode": "road", "distanceKm": 2400, "baseCost": 1100, "leadTimeDays": 5,  "carrierId": "CAR4"},
+    {"id": "R42",    "from": "LOC20", "to": "LOC9",  "mode": "road", "distanceKm": 1400, "baseCost": 740,  "leadTimeDays": 3,  "carrierId": "CAR4"},
+    {"id": "R43",    "from": "LOC22", "to": "LOC18", "mode": "air",  "distanceKm": 2400, "baseCost": 1900, "leadTimeDays": 1,  "carrierId": "CAR2"},
+    {"id": "R44",    "from": "LOC18", "to": "LOC4",  "mode": "road", "distanceKm": 4400, "baseCost": 1850, "leadTimeDays": 6,  "carrierId": "CAR3"},
+    {"id": "R45",    "from": "LOC16", "to": "LOC1",  "mode": "sea",  "distanceKm": 7700, "baseCost": 1650, "leadTimeDays": 16, "carrierId": "CAR1"},
+    {"id": "R46",    "from": "LOC14", "to": "LOC2",  "mode": "sea",  "distanceKm": 2900, "baseCost": 820,  "leadTimeDays": 7,  "carrierId": "CAR1"},
+    {"id": "R47",    "from": "LOC22", "to": "LOC7",  "mode": "air",  "distanceKm": 2900, "baseCost": 2100, "leadTimeDays": 1,  "carrierId": "CAR2"},
+    {"id": "R48",    "from": "LOC19", "to": "LOC4",  "mode": "sea",  "distanceKm": 2000, "baseCost": 720,  "leadTimeDays": 4,  "carrierId": "CAR1"},
+    {"id": "R49",    "from": "LOC17", "to": "LOC5",  "mode": "air",  "distanceKm": 3950, "baseCost": 2200, "leadTimeDays": 1,  "carrierId": "CAR2"},
 ]
 
 
@@ -216,41 +249,53 @@ def _ts_iso(d: datetime) -> str:
     return d.replace(microsecond=0).isoformat() + "Z"
 
 
-def generate_customers(n: int = 18) -> list[dict[str, Any]]:
+def generate_customers(n: int = 600) -> list[dict[str, Any]]:
+    """Generate ~600 customers spread across 11 regions with deterministic ids.
+
+    The region -> location map keeps customers anchored to a real Location node so
+    relationship `LOCATED_AT` always resolves and the graph stays connected.
+    """
     customers: list[dict[str, Any]] = []
-    regions = ["US-West", "US-East", "US-South", "MX", "BR", "CL"]
-    location_by_region = {
-        "US-West": "LOC5",
-        "US-East": "LOC4",
-        "US-South": "LOC6",
-        "MX": "LOC7",
-        "BR": "LOC11",
-        "CL": "LOC9",
-    }
+    region_locations = [
+        ("US-West",   "LOC5"),
+        ("US-East",   "LOC17"),
+        ("US-South",  "LOC6"),
+        ("US-North",  "LOC16"),
+        ("US-FL",     "LOC18"),
+        ("MX",        "LOC7"),
+        ("BR",        "LOC11"),
+        ("CL",        "LOC9"),
+        ("AR",        "LOC20"),
+        ("CO",        "LOC22"),
+        ("PE",        "LOC21"),
+    ]
     tiers = ["gold", "silver", "bronze"]
     tier_weights = [0.2, 0.4, 0.4]
     for i in range(1, n + 1):
-        region = random.choice(regions)
+        region, location_id = random.choice(region_locations)
         customers.append({
             "id": f"CUST{i}",
             "name": fake["en_US"].company(),
             "region": region,
             "tier": random.choices(tiers, weights=tier_weights, k=1)[0],
-            "locationId": location_by_region[region],
+            "locationId": location_id,
         })
     return customers
 
 
 def generate_inventory() -> list[dict[str, Any]]:
-    """Inventory entries (Warehouse, Product) — covers ~half the catalog per warehouse."""
+    """Inventory entries (Warehouse, Product). Covers the full product catalog per warehouse.
+
+    Warehouse x Product matrix = 5 x 15 = 75 entries. Quantities are distributed
+    so a meaningful subset sits below `safetyStock` (relevant for the
+    `inv.below` Cypher preset and the optimization input).
+    """
     inventory: list[dict[str, Any]] = []
     inv_idx = 1
     for w in WAREHOUSES:
-        # Pick 6-8 distinct products per warehouse.
-        products_subset = random.sample(PRODUCTS, k=random.randint(6, 8))
-        for p in products_subset:
-            safety = random.randint(50, 200)
-            qty = max(0, int(safety * random.uniform(0.4, 2.4)))
+        for p in PRODUCTS:
+            safety = random.randint(50, 250)
+            qty = max(0, int(safety * random.uniform(0.3, 2.6)))
             inventory.append({
                 "id": f"INV{inv_idx}",
                 "warehouseId": w["id"],
@@ -263,11 +308,12 @@ def generate_inventory() -> list[dict[str, Any]]:
     return inventory
 
 
-def generate_customer_orders(customers: list[dict[str, Any]], n: int = 50) -> list[dict[str, Any]]:
+def generate_customer_orders(customers: list[dict[str, Any]], n: int = 2400) -> list[dict[str, Any]]:
     today = date(2026, 5, 1)
     orders: list[dict[str, Any]] = []
     priorities = [1, 2, 3]
     priority_weights = [0.25, 0.45, 0.30]
+    statuses = ["pending", "pending", "pending", "fulfilled", "cancelled"]
     for i in range(1, n + 1):
         cust = random.choice(customers)
         prod = random.choice(PRODUCTS)
@@ -282,20 +328,20 @@ def generate_customer_orders(customers: list[dict[str, Any]], n: int = 50) -> li
             "quantity": qty,
             "dueDate": _date_iso(today + timedelta(days=due_offset)),
             "priority": priority,
-            "status": "pending",
+            "status": random.choice(statuses),
             "revenue": revenue,
         })
     return orders
 
 
-def generate_purchase_orders(n: int = 30) -> list[dict[str, Any]]:
+def generate_purchase_orders(n: int = 900) -> list[dict[str, Any]]:
     today = date(2026, 5, 1)
     statuses = ["pending", "fulfilled", "in_transit"]
     pos: list[dict[str, Any]] = []
     for i in range(1, n + 1):
         rel = random.choice(SUPPLIES_MAP)
         qty = max(rel["minOrderQty"], random.randint(rel["minOrderQty"], rel["minOrderQty"] * 4))
-        placed = today - timedelta(days=random.randint(1, 25))
+        placed = today - timedelta(days=random.randint(1, 60))
         expected = placed + timedelta(days=rel["leadTimeDays"])
         pos.append({
             "id": f"PO{i}",
@@ -309,7 +355,7 @@ def generate_purchase_orders(n: int = 30) -> list[dict[str, Any]]:
     return pos
 
 
-def generate_shipments(orders: list[dict[str, Any]], n: int = 40) -> list[dict[str, Any]]:
+def generate_shipments(orders: list[dict[str, Any]], n: int = 1500) -> list[dict[str, Any]]:
     today = datetime(2026, 5, 1, 9, 0, 0)
     shipments: list[dict[str, Any]] = []
     chosen_orders = random.sample(orders, k=min(n, len(orders)))
@@ -325,7 +371,7 @@ def generate_shipments(orders: list[dict[str, Any]], n: int = 40) -> list[dict[s
             "customerId": co["customerId"],
             "warehouseId": warehouse["id"],
             "routeId": route["id"],
-            "dispatchedAt": _ts_iso(today - timedelta(days=random.randint(0, 12))),
+            "dispatchedAt": _ts_iso(today - timedelta(days=random.randint(0, 30))),
             "status": status,
             "delayDays": delay,
             "actualLeadTime": route["leadTimeDays"] + delay,
