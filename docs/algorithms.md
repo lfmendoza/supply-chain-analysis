@@ -1,15 +1,8 @@
-# Graph algorithms used in the project
+# Graph algorithms
 
-This document explains the four Data Science algorithms exposed by the
-**Algorithms** page and the `/algorithms/*` REST endpoints. Together they
-cover criterion 21 of the rubric (10 pts).
+Four algorithms exposed by the **Algorithms** page and `/algorithms/*`.
 
-> **Why NetworkX and not Neo4j GDS?** Neo4j AuraDB **Free** does not include
-> the GDS plugin, and we want a setup any student can reproduce. NetworkX is
-> the academic reference Python library, runs in-process, and is fast enough
-> for graphs of this size (~250 nodes / ~550 edges). Backend code:
-> [`backend/app/analysis/algorithms.py`](../backend/app/analysis/algorithms.py).
-
+> **NetworkX vs GDS:** AuraDB Free does not include GDS. NetworkX runs in-process; graph size here is ~250 nodes / ~550 edges. Code: [`backend/app/analysis/algorithms.py`](../backend/app/analysis/algorithms.py).
 The graph fed to the algorithms is the **core supply-chain subgraph**:
 auxiliary labels like `DisruptionScenario` and `OptimizedAssignment` are
 filtered out so the algorithms reason about the physical network only. See
@@ -66,18 +59,6 @@ filtered out so the algorithms reason about the physical network only. See
 
 ## Persisting centrality scores
 
-`POST /algorithms/persist-centrality` runs PageRank + Betweenness once and
-writes the scores back onto the matched nodes (`n.pageRank`,
-`n.betweenness`). This:
+`POST /algorithms/persist-centrality` runs PageRank and betweenness once and stores `pageRank` / `betweenness` on nodes so the property panel and topology can read them without recomputing.
 
-- closes the loop with Neo4j (the property panel shows centrality on
-  selection);
-- demonstrates write-back from a Python analytical pipeline into Neo4j;
-- gives the optimizer cheaper access to centrality without re-running NetworkX.
-
-## How they map to the rubric
-
-The Algorithms page in the frontend renders one card per algorithm, each
-showing top-N results, a textual *interpretation* and a "Highlight in
-graph" action that adds the right CSS class to the Cytoscape topology so
-the evaluator sees the pattern visually.
+The UI shows one card per algorithm (top N, short interpretation, highlight on the graph).

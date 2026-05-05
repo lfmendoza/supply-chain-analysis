@@ -1,20 +1,7 @@
-"""CSV upload endpoints used by the Operations Lab UI.
+"""CSV bulk upload: `POST /csv/upload/nodes`, `POST /csv/upload/relationships`, `GET /csv/templates`.
 
-The frontend lets the student upload a CSV (e.g. a list of new suppliers, or a
-new batch of `SUPPLIES` relationships) and ingest it into Neo4j without having
-to write Cypher. We support all eight Neo4j datatypes that the rubric calls
-out so the same upload form demonstrates criteria 4 (CSV ingestion) and 3
-(typed values) at the same time.
-
-Two endpoints are exposed:
-
-  - `POST /csv/upload/nodes`
-  - `POST /csv/upload/relationships`
-
-Both accept `multipart/form-data` with a `file` field and a few JSON-encoded
-sidecar fields (`columnTypes`, `pointColumns`...). A third endpoint
-(`GET /csv/templates`) returns the metadata of the example CSVs shipped under
-`data/csv/` so the frontend can pre-populate the form.
+Multipart form: `file` plus JSON-ish form fields (`columnTypes`, `pointColumns`, …).
+Templates describe the files under `data/csv/`.
 """
 
 from __future__ import annotations
@@ -55,7 +42,7 @@ class CsvUploadResult(BaseModel):
 
 
 class CsvTemplate(BaseModel):
-    """Self-describing metadata for one of the demo CSV files."""
+    """Self-describing metadata for one bundled CSV."""
 
     name: str
     kind: Literal["nodes", "relationships"]
@@ -363,7 +350,7 @@ _NODE_TEMPLATES: list[CsvTemplate] = [
         kind="nodes",
         label="Supplier",
         idColumn="id",
-        description="Supplier nodes including all 8 Neo4j datatypes (Boolean, List, Date, DateTime).",
+        description="Supplier nodes (Boolean, list, Date, DateTime among others).",
         columns=[
             {"name": "id", "type": "string"},
             {"name": "name", "type": "string"},
@@ -501,11 +488,7 @@ _REL_TEMPLATES: list[CsvTemplate] = [
 
 @router.get("/templates")
 def list_templates() -> dict[str, Any]:
-    """List the example CSV files shipped under `data/csv/`.
-
-    The frontend uses this to populate the upload form with pre-filled column
-    types and Point hints, so the rubric criterion 4 demo is one click away.
-    """
+    """List example CSVs under `data/csv/` for the upload form."""
     available_files = (
         {p.name for p in _TEMPLATES_DIR.iterdir()} if _TEMPLATES_DIR.exists() else set()
     )

@@ -38,8 +38,7 @@ from app.db.neo4j_client import Neo4jClient  # noqa: E402
 # ---------------------------------------------------------------------------
 
 NODE_CYPHERS: dict[str, str] = {
-    # Location: turn raw lat/lon into a native Neo4j Point (WGS-84) so the
-    # graph exercises the spatial datatype required by the rubric.
+    # Location: native Point (WGS-84) from lat/lon.
     "Location": """
         UNWIND $rows AS row
         MERGE (n:Location {id: row.id})

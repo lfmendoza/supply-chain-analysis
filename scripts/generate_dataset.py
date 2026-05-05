@@ -1,14 +1,14 @@
-"""Generate a deterministic synthetic dataset for the supply-chain MVP.
+"""Generate a deterministic synthetic supply-chain dataset (JSON under `data/`).
 
 Outputs three JSON files under `data/`:
   - nodes.json          : every node grouped by label
   - relationships.json  : every relationship grouped by type
-  - disruption_seeds.json : suggested disruption scenarios for the demo
+  - disruption_seeds.json : preset disruption scenarios
 
-The dataset is intentionally crafted so that:
-  * one RawMaterial (RM-A) is single-sourced (single-point-of-failure demo).
-  * one route (R-MAIN) is critical (rerouting demo).
-  * a handful of high-priority CustomerOrders depend on tight inventory.
+The dataset is shaped so that:
+  * one RawMaterial (RM-A) is single-sourced.
+  * one route (R-MAIN) is critical for rerouting cases.
+  * several high-priority CustomerOrders sit on tight inventory.
 
 Re-running the script produces identical files (seeded RNG).
 """
@@ -374,13 +374,7 @@ def build_disruption_seeds() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 
 def _enrich_supplier(s: dict[str, Any]) -> dict[str, Any]:
-    """Add typed properties to a supplier so the rubric criterion "all data
-    types" is covered:
-      - certifications  : List<String>
-      - isCertified     : Boolean
-      - registeredOn    : Date         (ISO string, converted in seed)
-      - lastAuditAt     : DateTime     (ISO string, converted in seed)
-    """
+    """Attach list/boolean/date/datetime fields for supplier nodes."""
     risk = s["riskScore"]
     # Lower risk -> more certifications. We sample deterministically.
     cert_count = max(1, int(round((1.0 - risk) * 4)))

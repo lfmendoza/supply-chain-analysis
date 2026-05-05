@@ -38,4 +38,4 @@ uvicorn app.main:app --reload
 
 ## Tests
 
-(Empty for the MVP. Pytest harness ready under `tests/`.)
+(Pytest layout under `tests/`; add tests as needed.)

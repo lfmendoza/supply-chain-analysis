@@ -1,15 +1,7 @@
-"""Graph algorithms used by the Algorithms page (rubric criterion 21).
+"""Graph algorithms for `/algorithms/*` (NetworkX / python-louvain; no Neo4j GDS on Aura Free).
 
-Aura Free does not ship Neo4j GDS, so we materialise the core supply-chain
-subgraph in NetworkX and run reference Python implementations:
-
-- PageRank (weighted by `baseCost` inverse, defaulting to plain).
-- Betweenness centrality (weighted by `baseCost`).
-- Weakly connected components (used for the Dashboard "graph connected" badge).
-- Dijkstra shortest path (used to back the "find route" UI).
-- Louvain community detection (via `python-louvain` on the undirected view).
-
-Each function returns plain dicts/lists ready for JSON serialisation.
+Includes PageRank, betweenness, weakly connected components, Dijkstra, Louvain.
+Returns JSON-serialisable dicts.
 """
 
 from __future__ import annotations
@@ -63,9 +55,9 @@ def pagerank(
         "topN": top_n,
         "results": items[:top_n],
         "interpretation": (
-            "PageRank ranks nodes by how often a random walker reaches them. "
-            "In a supply chain a high score signals critical hubs (warehouses, "
-            "key suppliers, central locations) whose disruption propagates the most."
+            "PageRank ordena nodos según la frecuencia con la que un paseo aleatorio los visita. "
+            "En una cadena de suministro, una puntuación alta indica focos críticos (almacenes, "
+            "proveedores clave, ubicaciones centrales) cuya disrupción se propaga más."
         ),
     }
 
@@ -87,10 +79,9 @@ def betweenness(
         "topN": top_n,
         "results": items[:top_n],
         "interpretation": (
-            "Betweenness centrality counts how often each node sits on the "
-            "shortest path between every pair of other nodes. High scores flag "
-            "bottlenecks: removing them splits the supply chain or forces "
-            "much longer alternative paths."
+            "La centralidad de intermediación cuenta cuántas veces cada nodo aparece en el camino "
+            "más corto entre pares de nodos. Valores altos marcan cuellos de botella: al eliminarlos "
+            "se parte la cadena o se obligan rutas alternativas mucho más largas."
         ),
     }
 
@@ -115,7 +106,7 @@ def shortest_path(
             "weight": weight,
             "directed": directed,
             "found": False,
-            "reason": f"Unknown node id: {source if source not in g.nodes else target}",
+            "reason": f"Id de nodo desconocido: {source if source not in g.nodes else target}",
             "path": [],
             "totalWeight": None,
         }
@@ -128,7 +119,7 @@ def shortest_path(
             "weight": weight,
             "directed": directed,
             "found": False,
-            "reason": "No path between the two nodes under the current graph.",
+            "reason": "No hay camino entre los dos nodos en el grafo actual.",
             "path": [],
             "totalWeight": None,
         }
@@ -157,9 +148,8 @@ def shortest_path(
         "hops": len(path) - 1,
         "totalWeight": round(float(total), 4),
         "interpretation": (
-            f"Dijkstra finds the cheapest path under the chosen weight ({weight}). "
-            "It is the algorithmic backbone of route planning under cost or "
-            "lead-time minimisation."
+            f"Dijkstra obtiene el camino de menor coste según el peso elegido ({weight}). "
+            "Es la base algorítmica de la planificación de rutas por coste o plazo."
         ),
     }
 
@@ -200,10 +190,9 @@ def communities(snapshot: GraphSnapshot | None = None) -> dict[str, Any]:
         "communities": summary,
         "membership": partition,
         "interpretation": (
-            "Louvain greedily groups nodes into communities that maximise "
-            "modularity. In a supply chain, communities tend to surface "
-            "natural clusters: a region with its warehouses and customers, "
-            "or a product family with the suppliers and materials it depends on."
+            "Louvain agrupa nodos en comunidades que maximizan la modularidad. "
+            "En una cadena de suministro suelen aparecer agrupaciones naturales: una región con "
+            "sus almacenes y clientes, o una familia de producto con sus proveedores y materiales."
         ),
     }
 
@@ -212,12 +201,7 @@ def persist_pagerank_betweenness(
     pagerank_results: list[dict[str, Any]],
     betweenness_results: list[dict[str, Any]],
 ) -> dict[str, int]:
-    """Write `pageRank` and `betweenness` properties back onto Supplier nodes.
-
-    Only Suppliers (the most rubric-relevant node type for centrality) so the
-    UI can render the score in the property panel and Topology can colour-code
-    nodes by score.
-    """
+    """Write PageRank and betweenness onto Supplier nodes (matched by `id`)."""
     cli = get_neo4j_client()
     rows = []
     pr_lookup = {r["id"]: r["score"] for r in pagerank_results}

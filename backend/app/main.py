@@ -56,9 +56,7 @@ def create_app() -> FastAPI:
         title="Supply Chain Network Analysis & Optimization",
         version="0.1.0",
         description=(
-            "Backend that combines Neo4j (graph topology and analysis), "
-            "OR-Tools (combinatorial optimization), and a small ML model "
-            "(supplier risk scoring) for an academic MVP."
+            "Neo4j graph API, OR-Tools optimization, and supplier risk ML helpers."
         ),
         lifespan=lifespan,
     )

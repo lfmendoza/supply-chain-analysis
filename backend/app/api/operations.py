@@ -1,15 +1,4 @@
-"""Generic graph CRUD endpoints used by the Operations Lab UI.
-
-Every endpoint here is intentionally schema-agnostic so the frontend can
-demonstrate the rubric criteria 9-19 (create/update/delete nodes and
-relationships, including multi-label nodes, typed properties and relationship
-rewiring) without us having to add a domain endpoint per case.
-
-Property values are taken via a typed payload (`TypedProperty`) so the API can
-materialise Neo4j-native values: `String`, `Integer`, `Float`, `Boolean`,
-`Date`, `DateTime`, `List`, `Point`. This is what lets us cover criterion 3
-("implementación de todos los tipos de datos").
-"""
+"""Graph CRUD for the Operations Lab: generic labels/rel types, `TypedProperty` → Neo4j native types."""
 
 from __future__ import annotations
 
@@ -157,10 +146,7 @@ def _props_dict(props: list[TypedProperty]) -> dict[str, Any]:
 
 @router.post("/graph/nodes")
 def create_node(body: CreateNodeBody) -> dict:
-    """Create a node with one or more labels and typed properties.
-
-    Covers rubric criteria 9, 10, 11.
-    """
+    """Create a node with one or more labels and typed properties."""
     labels = [_validate_identifier(label, "label") for label in body.labels]
     props = _props_dict(body.properties)
     label_clause = ":".join(f"`{label}`" for label in labels)
@@ -189,10 +175,7 @@ def update_node(
     body: UpdateNodeBody,
     by: Literal["id", "elementId"] = Query("id"),
 ) -> dict:
-    """Set and/or remove typed properties on a node.
-
-    Covers rubric criterion 13.
-    """
+    """Set and/or remove typed properties on a node."""
     set_props = _props_dict(body.set)
     remove_keys = [_validate_identifier(k, "property") for k in body.remove]
     parts = [_match_node_clause(by)]
@@ -222,10 +205,7 @@ def delete_node(
     detach: bool = Query(True),
     by: Literal["id", "elementId"] = Query("id"),
 ) -> dict:
-    """Delete a node. With `detach=true` (default) drops its relationships first.
-
-    Covers rubric criterion 16.
-    """
+    """Delete a node. With `detach=true` (default) drops its relationships first."""
     cypher = _match_node_clause(by) + (
         " WITH n, properties(n) AS props, labels(n) AS labels DETACH DELETE n RETURN labels, props"
         if detach
@@ -247,10 +227,7 @@ def delete_node_property(
     prop: str,
     by: Literal["id", "elementId"] = Query("id"),
 ) -> dict:
-    """Remove a single property from a node.
-
-    Covers rubric criterion 18.
-    """
+    """Remove a single property from a node."""
     _validate_identifier(prop, "property")
     cypher = (
         _match_node_clause(by)
@@ -283,10 +260,7 @@ def _node_match_for_create(var: str, label: str | None) -> str:
 
 @router.post("/graph/relationships")
 def create_relationship(body: CreateRelationshipBody) -> dict:
-    """Create a relationship between two existing nodes (matched by `id`).
-
-    Covers rubric criterion 14.
-    """
+    """Create a relationship between two existing nodes (matched by `id`)."""
     rel_type = _validate_identifier(body.type, "relationship type")
     props = _props_dict(body.properties)
     cypher = (
@@ -317,10 +291,7 @@ def create_relationship(body: CreateRelationshipBody) -> dict:
 
 @router.patch("/graph/relationships/{rel_id:path}")
 def update_relationship(rel_id: str, body: UpdateRelationshipBody) -> dict:
-    """Set and/or remove properties of a relationship.
-
-    Covers part of rubric criterion 15 (property update).
-    """
+    """Set and/or remove properties of a relationship."""
     set_props = _props_dict(body.set)
     remove_keys = [_validate_identifier(k, "property") for k in body.remove]
     parts = [_match_rel_clause()]
@@ -350,7 +321,7 @@ def rewire_relationship(rel_id: str, body: RewireRelationshipBody) -> dict:
 
     Neo4j cannot mutate the type, direction or endpoints of an existing
     relationship; we copy properties to a new relationship and delete the old
-    one in the same transaction. Covers the rest of rubric criterion 15.
+    one in the same transaction.
     """
     new_type = body.newType
     if new_type is not None:
@@ -443,10 +414,7 @@ def rewire_relationship(rel_id: str, body: RewireRelationshipBody) -> dict:
 
 @router.delete("/graph/relationships/{rel_id:path}")
 def delete_relationship(rel_id: str) -> dict:
-    """Delete a relationship by element id.
-
-    Covers rubric criterion 17.
-    """
+    """Delete a relationship by element id."""
     cypher = (
         _match_rel_clause()
         + " WITH r, type(r) AS t, properties(r) AS p DELETE r RETURN t AS type, p AS properties"
@@ -462,10 +430,7 @@ def delete_relationship(rel_id: str) -> dict:
 
 @router.delete("/graph/relationships/{rel_id:path}/properties/{prop}")
 def delete_relationship_property(rel_id: str, prop: str) -> dict:
-    """Remove a single property from a relationship.
-
-    Covers rubric criterion 19.
-    """
+    """Remove a single property from a relationship."""
     _validate_identifier(prop, "property")
     cypher = (
         _match_rel_clause()

@@ -45,8 +45,7 @@ class Settings(BaseSettings):
     ALLOW_CYPHER_WRITE: bool = Field(
         default=True,
         description=(
-            "Whether the public /cypher/execute endpoint accepts mode='write'. "
-            "Leave true for the academic demo; set false for shared deployments."
+            "If true, /cypher/execute accepts mode='write'. Set false in shared environments."
         ),
     )
 

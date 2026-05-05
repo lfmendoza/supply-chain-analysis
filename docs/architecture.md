@@ -70,6 +70,4 @@ sequenceDiagram
 - Anything **predictive** ("how risky is this supplier given history") lives
   in **scikit-learn**.
 
-This separation is the academic spine of the project. Mixing them into a
-single layer would defeat the rationale for using a graph database in the
-first place.
+Keeping these concerns separate matches why the graph holds descriptive state and the solver holds decisions.

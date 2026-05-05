@@ -1,11 +1,9 @@
 """Export the synthetic dataset as ready-to-use CSV files.
 
-Generates `data/csv/*.csv` from the JSON dataset produced by
-`generate_dataset.py`. The CSVs are committed so that the Operations Lab
-demo (criterion 4 of the rubric) can upload them through the UI without
-having to run a generator first.
+Generates `data/csv/*.csv` from the JSON dataset (`generate_dataset.py`).
+Files are tracked so the Operations Lab can import them without regenerating.
 
-Conventions for typed columns expected by the CSV upload endpoint:
+Conventions for typed columns (CSV upload):
   - List<String>  -> values joined with `;` (semicolon).
   - Date          -> ISO `YYYY-MM-DD`.
   - DateTime      -> ISO `YYYY-MM-DDTHH:MM:SSZ`.

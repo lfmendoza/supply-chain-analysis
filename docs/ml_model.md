@@ -2,8 +2,7 @@
 
 ## Goal
 
-Replace the hand-tuned `Supplier.riskScore` (0..1) with a value predicted by a
-small `RandomForestClassifier` so the academic story closes a loop:
+Replace hand-tuned `Supplier.riskScore` (0..1) with a `RandomForestClassifier` so the pipeline can refresh scores from the graph:
 
 > Graph → features → ML model → updated `riskScore` → optimizer → graph.
 

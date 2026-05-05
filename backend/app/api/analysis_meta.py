@@ -1,18 +1,4 @@
-"""Metadata endpoints used by the Dashboard and the Rubric Matrix:
-
-- `GET /analysis/connectivity`  -> rubric criterion 7 ("Grafo conexo").
-- `GET /analysis/data-types`    -> rubric criterion 3 ("Implementación de
-   todos los tipos de datos").
-
-Connectivity uses NetworkX to compute weakly-connected components on the
-core supply-chain subgraph (we deliberately exclude `DisruptionScenario` and
-`OptimizedAssignment` because those are auxiliary and only appear after a
-demo run).
-
-Data types lean on Neo4j's built-in `db.schema.nodeTypeProperties()` and
-`db.schema.relTypeProperties()` procedures, which already report property
-types per label/relationship without any APOC dependency.
-"""
+"""Dashboard helpers: connectivity (NetworkX WCC) and data-type inventory (Neo4j schema)."""
 
 from __future__ import annotations
 
@@ -67,7 +53,7 @@ RETURN elementId(a) AS source, elementId(b) AS target, type(r) AS relType
 
 @router.get("/connectivity")
 def connectivity() -> dict:
-    """Compute weakly-connected components on the core supply-chain subgraph."""
+    """Weakly-connected components on `CORE_LABELS`; payload aligned with the frontend type."""
     try:
         nodes = get_neo4j_client().run(_CONNECTIVITY_NODES)
         edges = get_neo4j_client().run(_CONNECTIVITY_EDGES)
@@ -84,13 +70,13 @@ def connectivity() -> dict:
     if g.number_of_nodes() == 0:
         return {
             "isConnected": False,
-            "totalNodes": 0,
-            "totalRelationships": 0,
-            "componentCount": 0,
+            "nodes": 0,
+            "relationships": 0,
+            "components": 0,
             "largestComponentSize": 0,
             "largestComponentRatio": 0.0,
             "isolatedNodes": [],
-            "components": [],
+            "componentSummary": [],
         }
 
     components = sorted(
@@ -99,34 +85,44 @@ def connectivity() -> dict:
         reverse=True,
     )
     largest = components[0]
-    isolated_ids: list[str] = []
+    isolated_nodes: list[dict[str, str]] = []
     for n_id, data in g.nodes(data=True):
         if g.in_degree(n_id) == 0 and g.out_degree(n_id) == 0:
-            isolated_ids.append(data.get("domainId") or n_id)
+            isolated_nodes.append(
+                {
+                    "id": data.get("domainId") or n_id,
+                    "label": data.get("label", "?"),
+                }
+            )
 
-    summarized = []
+    component_summary: list[dict[str, Any]] = []
     for idx, comp in enumerate(components[:5]):
         labels: dict[str, int] = defaultdict(int)
+        sample_nodes: list[str] = []
         for nid in comp:
-            labels[g.nodes[nid].get("label", "?")] += 1
-        summarized.append(
+            data = g.nodes[nid]
+            labels[data.get("label", "?")] += 1
+            if len(sample_nodes) < 5:
+                sample_nodes.append(data.get("domainId") or nid)
+        component_summary.append(
             {
                 "rank": idx + 1,
                 "size": len(comp),
                 "byLabel": dict(labels),
+                "sampleNodes": sample_nodes,
             }
         )
 
     total = g.number_of_nodes()
     return {
         "isConnected": len(components) == 1,
-        "totalNodes": total,
-        "totalRelationships": g.number_of_edges(),
-        "componentCount": len(components),
+        "nodes": total,
+        "relationships": g.number_of_edges(),
+        "components": len(components),
         "largestComponentSize": len(largest),
         "largestComponentRatio": round(len(largest) / total, 4),
-        "isolatedNodes": isolated_ids,
-        "components": summarized,
+        "isolatedNodes": isolated_nodes,
+        "componentSummary": component_summary,
     }
 
 
@@ -145,8 +141,7 @@ ORDER BY relType, propertyName
 """
 
 
-# Neo4j storage type names returned by db.schema.* procedures, mapped to the
-# logical Neo4j types the rubric expects to see.
+# Map db.schema.* storage types to coarse logical buckets (String, Integer, …).
 TYPE_BUCKETS = {
     "String": "String",
     "Long": "Integer",
@@ -191,10 +186,7 @@ def _bucket(types_list: list[str] | None) -> list[str]:
 
 @router.get("/data-types")
 def data_types() -> dict:
-    """Inventory of property data types per node label and relationship type.
-
-    Used to evidence rubric criterion 3 (all Neo4j data types implemented).
-    """
+    """Property types from `db.schema.nodeTypeProperties` / `relTypeProperties`."""
     try:
         node_rows = get_neo4j_client().run(_NODE_TYPES)
         rel_rows = get_neo4j_client().run(_REL_TYPES)

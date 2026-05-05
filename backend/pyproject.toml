@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "supply-chain-neo4j-backend"
 version = "0.1.0"
-description = "Backend for the supply-chain network analysis & optimization MVP"
+description = "FastAPI backend for supply-chain graph analysis and optimization"
 requires-python = ">=3.11"
 authors = [{ name = "Supply Chain Project Team" }]
 readme = "README.md"

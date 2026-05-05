@@ -1,13 +1,4 @@
-"""Public Cypher executor used by the Cypher Query Explorer (free editor).
-
-The endpoint takes a `mode` flag (`read` or `write`). In `read` mode it opens
-a Neo4j read session, so any mutating clause is rejected by the database
-itself, not by us. We do not parse or rewrite the query.
-
-For demo defence, the response also includes per-statement execution stats
-(nodes created, properties set, etc.) so the rubric criterion "Consultas
-Cypher" can be evidenced visually.
-"""
+"""Public Cypher executor (read/write `mode`). Mutations are rejected in read mode at the DB."""
 
 from __future__ import annotations
 
