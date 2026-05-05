@@ -133,6 +133,23 @@ export type GraphRelationship = {
   properties: Record<string, unknown>;
 };
 
+export type BulkUpdateResult = {
+  matched: number;
+  updated: number;
+  set: string[];
+  removed: string[];
+  sampleElementIds: string[];
+  sampleIds?: string[];
+  sampleTypes?: string[];
+};
+
+export type BulkDeleteResult = {
+  deleted: number;
+  sampleElementIds: string[];
+  sampleIds?: string[];
+  sampleTypes?: string[];
+};
+
 export type CypherStats = Record<string, number>;
 
 export type CypherResult = {
@@ -326,6 +343,48 @@ export const SupplyChainApi = {
       .delete<GraphRelationship>(
         `/graph/relationships/${encodeURIComponent(relId)}/properties/${encodeURIComponent(prop)}`
       )
+      .then((r) => r.data),
+
+  // bulk operations (multiple nodes / relationships at a time)
+  bulkUpdateNodes: (payload: {
+    filter: { label?: string; where?: TypedProperty[]; ids?: string[] };
+    set?: TypedProperty[];
+    remove?: string[];
+    limit?: number;
+  }) => api.post<BulkUpdateResult>("/graph/nodes/bulk-update", payload).then((r) => r.data),
+  bulkDeleteNodes: (payload: {
+    filter: { label?: string; where?: TypedProperty[]; ids?: string[] };
+    confirm: boolean;
+    limit?: number;
+  }) => api.post<BulkDeleteResult>("/graph/nodes/bulk-delete", payload).then((r) => r.data),
+  bulkUpdateRelationships: (payload: {
+    filter: {
+      type?: string;
+      where?: TypedProperty[];
+      elementIds?: string[];
+      startLabel?: string;
+      endLabel?: string;
+    };
+    set?: TypedProperty[];
+    remove?: string[];
+    limit?: number;
+  }) =>
+    api
+      .post<BulkUpdateResult>("/graph/relationships/bulk-update", payload)
+      .then((r) => r.data),
+  bulkDeleteRelationships: (payload: {
+    filter: {
+      type?: string;
+      where?: TypedProperty[];
+      elementIds?: string[];
+      startLabel?: string;
+      endLabel?: string;
+    };
+    confirm: boolean;
+    limit?: number;
+  }) =>
+    api
+      .post<BulkDeleteResult>("/graph/relationships/bulk-delete", payload)
       .then((r) => r.data),
 
   // free-form Cypher

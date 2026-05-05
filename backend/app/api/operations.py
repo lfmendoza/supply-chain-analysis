@@ -83,6 +83,50 @@ class RewireRelationshipBody(BaseModel):
     flipDirection: bool = False
 
 
+# Bulk operation models. The filter is intentionally simple (label/type + equality
+# WHERE + optional id list) to keep the executed Cypher predictable and auditable
+# from the rubric validation snapshots.
+
+class NodeFilter(BaseModel):
+    label: str | None = None
+    where: list[TypedProperty] = Field(default_factory=list)
+    ids: list[str] | None = None
+
+
+class RelationshipFilter(BaseModel):
+    type: str | None = None
+    where: list[TypedProperty] = Field(default_factory=list)
+    elementIds: list[str] | None = None
+    startLabel: str | None = None
+    endLabel: str | None = None
+
+
+class BulkUpdateNodesBody(BaseModel):
+    filter: NodeFilter
+    set: list[TypedProperty] = Field(default_factory=list)
+    remove: list[str] = Field(default_factory=list)
+    limit: int = Field(2000, ge=1, le=10000)
+
+
+class BulkUpdateRelationshipsBody(BaseModel):
+    filter: RelationshipFilter
+    set: list[TypedProperty] = Field(default_factory=list)
+    remove: list[str] = Field(default_factory=list)
+    limit: int = Field(2000, ge=1, le=10000)
+
+
+class BulkDeleteNodesBody(BaseModel):
+    filter: NodeFilter
+    confirm: bool = False
+    limit: int = Field(2000, ge=1, le=10000)
+
+
+class BulkDeleteRelationshipsBody(BaseModel):
+    filter: RelationshipFilter
+    confirm: bool = False
+    limit: int = Field(2000, ge=1, le=10000)
+
+
 def _convert_value(prop: TypedProperty) -> Any:
     """Convert a typed property to a Neo4j-driver-friendly Python value."""
     t, v = prop.type, prop.value
@@ -443,6 +487,223 @@ def delete_relationship_property(rel_id: str, prop: str) -> dict:
     if not rows:
         raise HTTPException(status_code=404, detail=f"Relationship not found: {rel_id}")
     return rows[0]
+
+
+# ---------------------------------------------------------------------------
+# Bulk operations on nodes / relationships
+# ---------------------------------------------------------------------------
+
+
+def _build_node_filter(filt: NodeFilter, limit: int) -> tuple[str, dict[str, Any]]:
+    """Build the Cypher MATCH + WHERE for a NodeFilter, return (cypher, params)."""
+    if filt.label:
+        _validate_identifier(filt.label, "label")
+        match = f"MATCH (n:`{filt.label}`)"
+    else:
+        match = "MATCH (n)"
+
+    params: dict[str, Any] = {"_limit": int(limit)}
+    where: list[str] = []
+
+    if filt.ids:
+        params["_ids"] = list(filt.ids)
+        where.append("n.id IN $_ids")
+
+    for i, prop in enumerate(filt.where):
+        _validate_identifier(prop.key, "property")
+        param_key = f"_w{i}"
+        try:
+            params[param_key] = _convert_value(prop)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Invalid filter value for '{prop.key}' (type={prop.type}): {exc}",
+            ) from exc
+        where.append(f"n.{prop.key} = ${param_key}")
+
+    where_clause = ("WHERE " + " AND ".join(where)) if where else ""
+    return f"{match} {where_clause} WITH n LIMIT $_limit", params
+
+
+def _build_relationship_filter(
+    filt: RelationshipFilter, limit: int
+) -> tuple[str, dict[str, Any]]:
+    """Build the Cypher MATCH + WHERE for a RelationshipFilter."""
+    start_pat = "(s)"
+    if filt.startLabel:
+        _validate_identifier(filt.startLabel, "label")
+        start_pat = f"(s:`{filt.startLabel}`)"
+    end_pat = "(t)"
+    if filt.endLabel:
+        _validate_identifier(filt.endLabel, "label")
+        end_pat = f"(t:`{filt.endLabel}`)"
+    if filt.type:
+        _validate_identifier(filt.type, "relationship type")
+        match = f"MATCH {start_pat}-[r:`{filt.type}`]->{end_pat}"
+    else:
+        match = f"MATCH {start_pat}-[r]->{end_pat}"
+
+    params: dict[str, Any] = {"_limit": int(limit)}
+    where: list[str] = []
+
+    if filt.elementIds:
+        params["_eids"] = list(filt.elementIds)
+        where.append("elementId(r) IN $_eids")
+
+    for i, prop in enumerate(filt.where):
+        _validate_identifier(prop.key, "property")
+        param_key = f"_w{i}"
+        try:
+            params[param_key] = _convert_value(prop)
+        except ValueError as exc:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Invalid filter value for '{prop.key}' (type={prop.type}): {exc}",
+            ) from exc
+        where.append(f"r.{prop.key} = ${param_key}")
+
+    where_clause = ("WHERE " + " AND ".join(where)) if where else ""
+    return f"{match} {where_clause} WITH r LIMIT $_limit", params
+
+
+@router.post("/graph/nodes/bulk-update")
+def bulk_update_nodes(body: BulkUpdateNodesBody) -> dict:
+    """Add / update / remove properties on every node matching the filter.
+
+    Filter is `label` + AND-equality WHERE on properties + optional id whitelist.
+    `set` adds or overwrites properties; `remove` drops them. Both can be
+    combined in a single call.
+    """
+    if not body.set and not body.remove:
+        raise HTTPException(
+            status_code=422,
+            detail="bulk-update requires at least one of `set` or `remove`.",
+        )
+
+    set_props = _props_dict(body.set)
+    remove_keys = [_validate_identifier(k, "property") for k in body.remove]
+
+    match_clause, params = _build_node_filter(body.filter, body.limit)
+    parts: list[str] = [match_clause]
+    if set_props:
+        parts.append("SET n += $_set")
+        params["_set"] = set_props
+    if remove_keys:
+        parts.append("REMOVE " + ", ".join(f"n.{k}" for k in remove_keys))
+    parts.append(
+        "RETURN count(n) AS matched, "
+        "collect(elementId(n))[..20] AS sampleElementIds, "
+        "collect(coalesce(n.id, ''))[..20] AS sampleIds"
+    )
+    cypher = "\n".join(parts)
+    try:
+        rows = get_neo4j_client().run_jsonable(cypher, params, write=True)
+    except Neo4jClientError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    row = rows[0] if rows else {"matched": 0, "sampleElementIds": [], "sampleIds": []}
+    return {
+        "matched": row.get("matched", 0),
+        "updated": row.get("matched", 0),
+        "set": list(set_props.keys()),
+        "removed": remove_keys,
+        "sampleElementIds": row.get("sampleElementIds", []),
+        "sampleIds": row.get("sampleIds", []),
+    }
+
+
+@router.post("/graph/nodes/bulk-delete")
+def bulk_delete_nodes(body: BulkDeleteNodesBody) -> dict:
+    """DETACH DELETE every node matching the filter. Requires `confirm=true`."""
+    if not body.confirm:
+        raise HTTPException(
+            status_code=400,
+            detail="bulk-delete requires `confirm: true` to proceed.",
+        )
+    match_clause, params = _build_node_filter(body.filter, body.limit)
+    cypher = (
+        match_clause
+        + "\nWITH n, properties(n) AS p, labels(n) AS l, elementId(n) AS eid"
+        " DETACH DELETE n"
+        " RETURN count(*) AS deleted, collect(eid)[..20] AS sampleElementIds,"
+        " collect(coalesce(p.id, ''))[..20] AS sampleIds"
+    )
+    try:
+        rows = get_neo4j_client().run_jsonable(cypher, params, write=True)
+    except Neo4jClientError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    row = rows[0] if rows else {"deleted": 0, "sampleElementIds": [], "sampleIds": []}
+    return {
+        "deleted": row.get("deleted", 0),
+        "sampleElementIds": row.get("sampleElementIds", []),
+        "sampleIds": row.get("sampleIds", []),
+    }
+
+
+@router.post("/graph/relationships/bulk-update")
+def bulk_update_relationships(body: BulkUpdateRelationshipsBody) -> dict:
+    """Add / update / remove properties on every relationship matching the filter."""
+    if not body.set and not body.remove:
+        raise HTTPException(
+            status_code=422,
+            detail="bulk-update requires at least one of `set` or `remove`.",
+        )
+
+    set_props = _props_dict(body.set)
+    remove_keys = [_validate_identifier(k, "property") for k in body.remove]
+
+    match_clause, params = _build_relationship_filter(body.filter, body.limit)
+    parts: list[str] = [match_clause]
+    if set_props:
+        parts.append("SET r += $_set")
+        params["_set"] = set_props
+    if remove_keys:
+        parts.append("REMOVE " + ", ".join(f"r.{k}" for k in remove_keys))
+    parts.append(
+        "RETURN count(r) AS matched, "
+        "collect(elementId(r))[..20] AS sampleElementIds, "
+        "collect(type(r))[..20] AS sampleTypes"
+    )
+    cypher = "\n".join(parts)
+    try:
+        rows = get_neo4j_client().run_jsonable(cypher, params, write=True)
+    except Neo4jClientError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    row = rows[0] if rows else {"matched": 0, "sampleElementIds": [], "sampleTypes": []}
+    return {
+        "matched": row.get("matched", 0),
+        "updated": row.get("matched", 0),
+        "set": list(set_props.keys()),
+        "removed": remove_keys,
+        "sampleElementIds": row.get("sampleElementIds", []),
+        "sampleTypes": row.get("sampleTypes", []),
+    }
+
+
+@router.post("/graph/relationships/bulk-delete")
+def bulk_delete_relationships(body: BulkDeleteRelationshipsBody) -> dict:
+    """Delete every relationship matching the filter. Requires `confirm=true`."""
+    if not body.confirm:
+        raise HTTPException(
+            status_code=400,
+            detail="bulk-delete requires `confirm: true` to proceed.",
+        )
+    match_clause, params = _build_relationship_filter(body.filter, body.limit)
+    cypher = (
+        match_clause
+        + "\nWITH r, type(r) AS rt, elementId(r) AS eid DELETE r"
+        " RETURN count(*) AS deleted, collect(eid)[..20] AS sampleElementIds,"
+        " collect(rt)[..20] AS sampleTypes"
+    )
+    try:
+        rows = get_neo4j_client().run_jsonable(cypher, params, write=True)
+    except Neo4jClientError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    row = rows[0] if rows else {"deleted": 0, "sampleElementIds": [], "sampleTypes": []}
+    return {
+        "deleted": row.get("deleted", 0),
+        "sampleElementIds": row.get("sampleElementIds", []),
+        "sampleTypes": row.get("sampleTypes", []),
+    }
 
 
 # ---------------------------------------------------------------------------
