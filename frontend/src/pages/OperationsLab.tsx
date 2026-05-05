@@ -11,7 +11,7 @@ type Tab = "nodes" | "relationships" | "csv";
 const TABS: { id: Tab; label: string; Icon: typeof Boxes }[] = [
   { id: "nodes", label: "Nodos", Icon: Boxes },
   { id: "relationships", label: "Relaciones", Icon: GitFork },
-  { id: "csv", label: "CSV", Icon: UploadCloud },
+  { id: "csv", label: "Importar CSV", Icon: UploadCloud },
 ];
 
 export default function OperationsLab() {
@@ -22,13 +22,13 @@ export default function OperationsLab() {
   useEffect(() => {
     SupplyChainApi.listLabels().then(setLabels).catch(() => {});
     SupplyChainApi.listRelationshipTypes().then(setRelTypes).catch(() => {});
-  }, [tab]);
+  }, []);
 
   return (
     <div>
       <PageHeader
         title="Laboratorio de operaciones sobre el grafo"
-        description="CRUD de nodos y relaciones, reconexión de aristas e importación masiva CSV."
+        description="Crea, edita y elimina nodos y relaciones de forma individual o masiva. Importa datos en bloque con CSV."
         badge={<span className="pill-info">CRUD + CSV</span>}
       />
 
@@ -49,8 +49,19 @@ export default function OperationsLab() {
         ))}
       </div>
 
-      {tab === "nodes" && <NodesTab labels={labels} />}
-      {tab === "relationships" && <RelationshipsTab relationshipTypes={relTypes} />}
+      {tab === "nodes" && (
+        <NodesTab
+          labels={labels}
+          onNavigateToCsv={() => setTab("csv")}
+        />
+      )}
+      {tab === "relationships" && (
+        <RelationshipsTab
+          relationshipTypes={relTypes}
+          nodeLabels={labels}
+          onNavigateToCsv={() => setTab("csv")}
+        />
+      )}
       {tab === "csv" && <CsvUploadTab />}
     </div>
   );

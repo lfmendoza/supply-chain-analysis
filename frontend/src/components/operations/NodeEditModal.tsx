@@ -8,9 +8,10 @@ type Props = {
   node: GraphNode | null;
   onClose: () => void;
   onUpdated: () => void;
+  suggestedKeys?: string[];
 };
 
-export default function NodeEditModal({ node, onClose, onUpdated }: Props) {
+export default function NodeEditModal({ node, onClose, onUpdated, suggestedKeys = [] }: Props) {
   const [setRows, setSetRows] = useState<EditableProperty[]>([]);
   const [removeKeys, setRemoveKeys] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
@@ -95,7 +96,7 @@ export default function NodeEditModal({ node, onClose, onUpdated }: Props) {
           <p className="text-[11px] text-slate-500 mb-2">
             Las claves existentes se sobreescribirán; las nuevas se añadirán.
           </p>
-          <TypedPropertyEditor rows={setRows} onChange={setSetRows} />
+          <TypedPropertyEditor rows={setRows} onChange={setSetRows} suggestedKeys={[...existingKeys, ...suggestedKeys].filter((v, i, a) => a.indexOf(v) === i)} />
         </div>
 
         {existingKeys.length > 0 && (

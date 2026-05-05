@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ChevronLeft, ChevronRight, Layers, List, Pencil, Plus, RefreshCw, Shuffle, Trash2 } from "lucide-react";
 import { GraphRelationship, SupplyChainApi, asErrorMessage } from "../../api/client";
@@ -12,9 +12,11 @@ const PAGE_SIZES = [20, 50, 100, 200];
 
 type Props = {
   relationshipTypes: string[];
+  nodeLabels?: string[];
+  onNavigateToCsv?: () => void;
 };
 
-export default function RelationshipsTab({ relationshipTypes }: Props) {
+export default function RelationshipsTab({ relationshipTypes, nodeLabels = [], onNavigateToCsv }: Props) {
   const [mode, setMode] = useState<Mode>("individual");
   const [type, setType] = useState("");
   const [limit, setLimit] = useState(50);
@@ -27,6 +29,12 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
   const [pendingDelete, setPendingDelete] = useState<GraphRelationship | null>(null);
   const [editing, setEditing] = useState<GraphRelationship | null>(null);
   const [rewireOpen, setRewireOpen] = useState<GraphRelationship | null>(null);
+
+  // Derive known property keys from currently loaded relationships
+  const suggestedKeys = useMemo(
+    () => [...new Set(items.flatMap((r) => Object.keys(r.properties)))].sort(),
+    [items]
+  );
 
   const refresh = useCallback(async () => {
     setBusy(true);
@@ -235,13 +243,13 @@ export default function RelationshipsTab({ relationshipTypes }: Props) {
             </div>
           </div>
 
-          <RelEditModal rel={editing} onClose={() => setEditing(null)} onUpdated={refresh} />
+          <RelEditModal rel={editing} onClose={() => setEditing(null)} onUpdated={refresh} suggestedKeys={suggestedKeys} />
         </>
       ) : (
-        <BulkRelsPanel relationshipTypes={relationshipTypes} />
+        <BulkRelsPanel relationshipTypes={relationshipTypes} suggestedKeys={suggestedKeys} onNavigateToCsv={onNavigateToCsv} />
       )}
 
-      <RelationshipForm open={showForm} onClose={() => setShowForm(false)} onCreated={refresh} />
+      <RelationshipForm open={showForm} onClose={() => setShowForm(false)} onCreated={refresh} suggestedTypes={relationshipTypes} suggestedLabels={nodeLabels} />
       <ConfirmDialog
         open={!!pendingDelete}
         title="¿Eliminar la relación?"

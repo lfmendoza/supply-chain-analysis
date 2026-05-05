@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { ChevronLeft, ChevronRight, Layers, List, Pencil, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
 import { GraphNode, SupplyChainApi, asErrorMessage } from "../../api/client";
@@ -12,9 +12,10 @@ const PAGE_SIZES = [20, 50, 100, 200];
 
 type Props = {
   labels: string[];
+  onNavigateToCsv?: () => void;
 };
 
-export default function NodesTab({ labels }: Props) {
+export default function NodesTab({ labels, onNavigateToCsv }: Props) {
   const [mode, setMode] = useState<Mode>("individual");
   const [label, setLabel] = useState("");
   const [search, setSearch] = useState("");
@@ -27,6 +28,12 @@ export default function NodesTab({ labels }: Props) {
   const [showCreate, setShowCreate] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<GraphNode | null>(null);
   const [editing, setEditing] = useState<GraphNode | null>(null);
+
+  // Derive known property keys from currently loaded nodes (for typeahead)
+  const suggestedKeys = useMemo(
+    () => [...new Set(items.flatMap((n) => Object.keys(n.properties)))].sort(),
+    [items]
+  );
 
   const refresh = useCallback(async () => {
     setBusy(true);
@@ -247,13 +254,13 @@ export default function NodesTab({ labels }: Props) {
             </div>
           </div>
 
-          <NodeEditModal node={editing} onClose={() => setEditing(null)} onUpdated={refresh} />
+          <NodeEditModal node={editing} onClose={() => setEditing(null)} onUpdated={refresh} suggestedKeys={suggestedKeys} />
         </>
       ) : (
-        <BulkNodesPanel labels={labels} />
+        <BulkNodesPanel labels={labels} suggestedKeys={suggestedKeys} onNavigateToCsv={onNavigateToCsv} />
       )}
 
-      <NodeForm open={showCreate} onClose={() => setShowCreate(false)} onCreated={refresh} />
+      <NodeForm open={showCreate} onClose={() => setShowCreate(false)} onCreated={refresh} suggestedLabels={labels} suggestedKeys={suggestedKeys} />
       <ConfirmDialog
         open={!!pendingDelete}
         title="¿Eliminar este nodo?"

@@ -1,5 +1,6 @@
 import { Plus, Trash2 } from "lucide-react";
 import type { PropertyType, TypedProperty } from "../../api/client";
+import Combobox from "./Combobox";
 
 const TYPES: PropertyType[] = [
   "string",
@@ -84,13 +85,14 @@ function parseRaw(raw: string, t: PropertyType): unknown {
   }
 }
 
-export default function TypedPropertyEditor({
-  rows,
-  onChange,
-}: {
+type Props = {
   rows: EditableProperty[];
   onChange: (rows: EditableProperty[]) => void;
-}) {
+  /** Optional list of known property key names for typeahead autocomplete */
+  suggestedKeys?: string[];
+};
+
+export default function TypedPropertyEditor({ rows, onChange, suggestedKeys = [] }: Props) {
   const update = (idx: number, patch: Partial<EditableProperty>) => {
     const next = rows.slice();
     next[idx] = { ...next[idx], ...patch };
@@ -107,14 +109,32 @@ export default function TypedPropertyEditor({
 
   return (
     <div className="space-y-1.5">
+      {rows.length > 0 && (
+        <div className="grid grid-cols-[1fr_120px_1fr_28px] gap-2 px-0.5 mb-0.5">
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Clave</span>
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Tipo</span>
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Valor</span>
+          <span />
+        </div>
+      )}
       {rows.map((row, idx) => (
         <div key={idx} className="grid grid-cols-[1fr_120px_1fr_28px] gap-2 items-center">
-          <input
-            value={row.key}
-            onChange={(e) => update(idx, { key: e.target.value })}
-            className="input"
-            placeholder="clave"
-          />
+          {suggestedKeys.length > 0 ? (
+            <Combobox
+              value={row.key}
+              onChange={(v) => update(idx, { key: v })}
+              suggestions={suggestedKeys}
+              placeholder="nombre clave"
+              className="input w-full"
+            />
+          ) : (
+            <input
+              value={row.key}
+              onChange={(e) => update(idx, { key: e.target.value })}
+              className="input"
+              placeholder="nombre clave"
+            />
+          )}
           <select
             value={row.type}
             onChange={(e) => update(idx, { type: e.target.value as PropertyType })}
@@ -134,8 +154,8 @@ export default function TypedPropertyEditor({
           />
           <button
             onClick={() => remove(idx)}
-            className="text-slate-400 hover:text-rose-600"
-            title="Quitar"
+            className="text-slate-400 hover:text-rose-600 transition"
+            title="Quitar esta propiedad"
           >
             <Trash2 size={14} />
           </button>
@@ -150,21 +170,13 @@ export default function TypedPropertyEditor({
 
 function typeHint(t: PropertyType): string {
   switch (t) {
-    case "string":
-      return "texto";
-    case "integer":
-      return "42";
-    case "float":
-      return "3,14 o 3.14";
-    case "boolean":
-      return "verdadero / falso";
-    case "date":
-      return "AAAA-MM-DD";
-    case "datetime":
-      return "AAAA-MM-DDTHH:MM:SSZ";
-    case "list":
-      return "v1; v2; v3";
-    case "point":
-      return "lat, lon";
+    case "string":    return "texto libre";
+    case "integer":   return "42";
+    case "float":     return "3.14";
+    case "boolean":   return "verdadero / falso";
+    case "date":      return "AAAA-MM-DD";
+    case "datetime":  return "AAAA-MM-DDTHH:MM:SSZ";
+    case "list":      return "val1; val2; val3";
+    case "point":     return "lat, lon";
   }
 }

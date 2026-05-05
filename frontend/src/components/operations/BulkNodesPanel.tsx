@@ -1,37 +1,56 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { AlertTriangle, CheckCircle, Layers, Trash2, Wrench } from "lucide-react";
-import { BulkDeleteResult, BulkUpdateResult, SupplyChainApi, TypedProperty, asErrorMessage } from "../../api/client";
+import {
+  ArrowRight,
+  CheckCircle,
+  FileSpreadsheet,
+  Pencil,
+  Trash2,
+  XCircle,
+} from "lucide-react";
+import {
+  BulkDeleteResult,
+  BulkUpdateResult,
+  SupplyChainApi,
+  asErrorMessage,
+} from "../../api/client";
 import TypedPropertyEditor, { EditableProperty, buildTypedProperties } from "./TypedPropertyEditor";
+import TagInput from "./TagInput";
+import Combobox from "./Combobox";
 import ConfirmDialog from "../ConfirmDialog";
 
-type Action = "update" | "delete";
+type Action = "editProps" | "deleteNodes" | "createMultiple" | null;
 
 type Props = {
   labels: string[];
+  suggestedKeys?: string[];
+  onNavigateToCsv?: () => void;
 };
 
-export default function BulkNodesPanel({ labels }: Props) {
+export default function BulkNodesPanel({ labels, suggestedKeys = [], onNavigateToCsv }: Props) {
+  /* ── Step 1: filter ─────────────────────────────── */
   const [filterLabel, setFilterLabel] = useState("");
   const [whereRows, setWhereRows] = useState<EditableProperty[]>([]);
   const [limit, setLimit] = useState(100);
-  const [action, setAction] = useState<Action>("update");
 
-  // update-specific
+  /* ── Step 2: action ─────────────────────────────── */
+  const [action, setAction] = useState<Action>(null);
+
+  /* ── Step 3: edit-props fields ──────────────────── */
   const [setRows, setSetRows] = useState<EditableProperty[]>([]);
-  const [removeInput, setRemoveInput] = useState("");
+  const [removeTags, setRemoveTags] = useState<string[]>([]);
 
-  // delete confirm
+  /* ── Execution state ────────────────────────────── */
   const [confirmOpen, setConfirmOpen] = useState(false);
-
   const [busy, setBusy] = useState(false);
   const [updateResult, setUpdateResult] = useState<BulkUpdateResult | null>(null);
   const [deleteResult, setDeleteResult] = useState<BulkDeleteResult | null>(null);
 
+  // ── helpers ─────────────────────────────────────────
   const buildFilter = () => {
     const { properties: whereProps, errors } = buildTypedProperties(whereRows);
     if (errors.length > 0) {
-      toast.error(`Filtro WHERE: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
+      toast.error(`Condición: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
       return null;
     }
     return {
@@ -43,17 +62,13 @@ export default function BulkNodesPanel({ labels }: Props) {
   const executeUpdate = async () => {
     const filter = buildFilter();
     if (!filter) return;
-    const { properties: setProps, errors: setErrors } = buildTypedProperties(setRows);
-    if (setErrors.length > 0) {
-      toast.error(`SET: ${setErrors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
+    const { properties: setProps, errors } = buildTypedProperties(setRows);
+    if (errors.length > 0) {
+      toast.error(`Valores: ${errors.map((e) => `${e.key}: ${e.error}`).join("; ")}`);
       return;
     }
-    const removeKeys = removeInput
-      .split(",")
-      .map((k) => k.trim())
-      .filter(Boolean);
-    if (setProps.length === 0 && removeKeys.length === 0) {
-      toast.error("Define propiedades a actualizar/agregar (SET) o a eliminar (REMOVE)");
+    if (setProps.length === 0 && removeTags.length === 0) {
+      toast.error("Agrega al menos una propiedad a cambiar o una clave a quitar");
       return;
     }
     setBusy(true);
@@ -63,11 +78,11 @@ export default function BulkNodesPanel({ labels }: Props) {
       const r = await SupplyChainApi.bulkUpdateNodes({
         filter,
         set: setProps.length > 0 ? setProps : undefined,
-        remove: removeKeys.length > 0 ? removeKeys : undefined,
+        remove: removeTags.length > 0 ? removeTags : undefined,
         limit,
       });
       setUpdateResult(r);
-      toast.success(`Actualizados ${r.updated} de ${r.matched} nodos`);
+      toast.success(`${r.updated} nodo${r.updated !== 1 ? "s" : ""} actualizado${r.updated !== 1 ? "s" : ""}`);
     } catch (err) {
       toast.error(asErrorMessage(err));
     } finally {
@@ -85,7 +100,7 @@ export default function BulkNodesPanel({ labels }: Props) {
     try {
       const r = await SupplyChainApi.bulkDeleteNodes({ filter, confirm: true, limit });
       setDeleteResult(r);
-      toast.success(`Eliminados ${r.deleted} nodos`);
+      toast.success(`${r.deleted} nodo${r.deleted !== 1 ? "s" : ""} eliminado${r.deleted !== 1 ? "s" : ""}`);
     } catch (err) {
       toast.error(asErrorMessage(err));
     } finally {
@@ -93,126 +108,185 @@ export default function BulkNodesPanel({ labels }: Props) {
     }
   };
 
+  // Cypher preview (read-only, for understanding / AuraDB verification)
+  const cypherPreview = buildCypherPreview({ filterLabel, whereRows, action, setRows, removeTags, limit });
+
   return (
     <div className="space-y-4">
-      <div className="card-pad">
-        <div className="flex items-center gap-2 mb-3">
-          <Layers size={14} className="text-brand-600" />
-          <h3 className="text-sm font-semibold text-slate-700">Operaciones masivas · Nodos</h3>
-        </div>
-        <p className="text-xs text-slate-500 mb-4">
-          Filtra nodos por etiqueta y/o propiedades (WHERE), luego elige si actualizar/agregar/eliminar propiedades o
-          borrar los nodos que coincidan. El campo <em>Límite</em> protege contra cambios accidentales masivos.
-        </p>
-
-        {/* Filter */}
-        <fieldset className="border border-slate-200 rounded p-3 mb-4">
-          <legend className="text-xs font-semibold text-slate-600 px-1">Filtro (¿qué nodos afectar?)</legend>
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <div>
-              <div className="label mb-1">Etiqueta</div>
-              <select value={filterLabel} onChange={(e) => setFilterLabel(e.target.value)} className="input w-full">
-                <option value="">Cualquier etiqueta</option>
-                {labels.map((l) => (
-                  <option key={l} value={l}>
-                    {l}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <div className="label mb-1">Límite de nodos a afectar</div>
-              <input
-                type="number"
-                value={limit}
-                min={1}
-                max={5000}
-                onChange={(e) => setLimit(Math.max(1, Math.min(5000, Number(e.target.value))))}
-                className="input w-full"
-              />
-            </div>
+      {/* ── Step 1 ─────────────────────────────────── */}
+      <StepCard step={1} title="¿Qué nodos quieres afectar?">
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div>
+            <div className="label mb-1">Etiqueta</div>
+            <Combobox
+              value={filterLabel}
+              onChange={setFilterLabel}
+              suggestions={labels}
+              placeholder="Cualquier etiqueta…"
+              className="input w-full"
+            />
           </div>
-          <div className="label mb-1">Condiciones adicionales (WHERE) — opcional</div>
-          <TypedPropertyEditor rows={whereRows} onChange={setWhereRows} />
-        </fieldset>
-
-        {/* Action selector */}
-        <div className="flex items-center gap-3 mb-4">
-          <div className="text-xs font-semibold text-slate-600">Acción:</div>
-          <button
-            onClick={() => setAction("update")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium border transition ${
-              action === "update"
-                ? "border-brand-400 bg-brand-50 text-brand-700"
-                : "border-slate-200 bg-white text-slate-600 hover:border-brand-300"
-            }`}
-          >
-            <Wrench size={12} /> Actualizar propiedades
-          </button>
-          <button
-            onClick={() => setAction("delete")}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium border transition ${
-              action === "delete"
-                ? "border-rose-400 bg-rose-50 text-rose-700"
-                : "border-slate-200 bg-white text-slate-600 hover:border-rose-300"
-            }`}
-          >
-            <Trash2 size={12} /> Eliminar nodos
-          </button>
+          <div>
+            <div className="label mb-1">Máximo de nodos a afectar</div>
+            <input
+              type="number"
+              value={limit}
+              min={1}
+              max={5000}
+              onChange={(e) => setLimit(Math.max(1, Math.min(5000, Number(e.target.value))))}
+              className="input w-full"
+            />
+          </div>
         </div>
 
-        {action === "update" && (
+        <div>
+          <div className="label mb-1">
+            Condición adicional{" "}
+            <span className="text-slate-400 font-normal">(opcional — filtra por valor de propiedad)</span>
+          </div>
+          <TypedPropertyEditor
+            rows={whereRows}
+            onChange={setWhereRows}
+            suggestedKeys={suggestedKeys}
+          />
+        </div>
+
+        {/* Filter summary pill */}
+        {(filterLabel || whereRows.length > 0) && (
+          <div className="mt-3 flex items-center gap-1.5 flex-wrap">
+            <span className="text-[11px] text-slate-500">Se afectarán:</span>
+            {filterLabel && (
+              <span className="rounded-full bg-brand-50 border border-brand-200 text-brand-700 px-2 py-0.5 text-[11px] font-medium">
+                :{filterLabel}
+              </span>
+            )}
+            {whereRows.filter((r) => r.key && r.raw).map((r, i) => (
+              <span key={i} className="rounded-full bg-slate-100 border border-slate-200 text-slate-700 px-2 py-0.5 text-[11px]">
+                {r.key} = {r.raw}
+              </span>
+            ))}
+            <span className="text-[11px] text-slate-400">· hasta {limit} nodos</span>
+          </div>
+        )}
+      </StepCard>
+
+      {/* ── Step 2 ─────────────────────────────────── */}
+      <StepCard step={2} title="¿Qué quieres hacer?">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <ActionCard
+            icon={<Pencil size={20} />}
+            title="Editar propiedades"
+            description="Agrega, cambia o quita propiedades en todos los nodos del filtro."
+            selected={action === "editProps"}
+            onClick={() => setAction("editProps")}
+            color="brand"
+          />
+          <ActionCard
+            icon={<Trash2 size={20} />}
+            title="Eliminar nodos"
+            description="Borra permanentemente los nodos y todas sus relaciones."
+            selected={action === "deleteNodes"}
+            onClick={() => setAction("deleteNodes")}
+            color="rose"
+          />
+          <ActionCard
+            icon={<FileSpreadsheet size={20} />}
+            title="Crear múltiples nodos"
+            description="Importa cientos de nodos nuevos desde un archivo CSV."
+            selected={action === "createMultiple"}
+            onClick={() => { setAction("createMultiple"); onNavigateToCsv?.(); }}
+            color="emerald"
+          />
+        </div>
+      </StepCard>
+
+      {/* ── Step 3 ─────────────────────────────────── */}
+      {action === "editProps" && (
+        <StepCard step={3} title="Cambios a aplicar">
           <div className="space-y-4">
-            <fieldset className="border border-slate-200 rounded p-3">
-              <legend className="text-xs font-semibold text-slate-600 px-1">SET — agregar / actualizar propiedades</legend>
-              <TypedPropertyEditor rows={setRows} onChange={setSetRows} />
-            </fieldset>
-            <fieldset className="border border-slate-200 rounded p-3">
-              <legend className="text-xs font-semibold text-slate-600 px-1">REMOVE — eliminar propiedades (claves separadas por coma)</legend>
-              <input
-                value={removeInput}
-                onChange={(e) => setRemoveInput(e.target.value)}
-                placeholder="p. ej. tempFlag, legacyCode"
-                className="input w-full"
+            <div>
+              <div className="label mb-1">Agregar o cambiar valores</div>
+              <p className="text-[11px] text-slate-500 mb-2">
+                Las claves que ya existan se sobreescribirán; las nuevas se añadirán.
+              </p>
+              <TypedPropertyEditor
+                rows={setRows}
+                onChange={setSetRows}
+                suggestedKeys={suggestedKeys}
               />
-            </fieldset>
-            <div className="flex justify-end">
-              <button onClick={executeUpdate} disabled={busy} className="btn-primary text-sm">
-                {busy ? "Ejecutando…" : "Ejecutar actualización masiva"}
+            </div>
+
+            <div>
+              <div className="label mb-1">Quitar claves</div>
+              <p className="text-[11px] text-slate-500 mb-2">
+                Escribe el nombre de la clave y presiona <kbd className="text-[10px] bg-slate-100 px-1 rounded">Enter</kbd> para agregarla.
+              </p>
+              <TagInput
+                value={removeTags}
+                onChange={setRemoveTags}
+                suggestions={suggestedKeys}
+                placeholder="Escribe un nombre de clave y presiona Enter…"
+              />
+            </div>
+
+            {cypherPreview && (
+              <CypherPreview cypher={cypherPreview} />
+            )}
+
+            <div className="flex justify-end pt-2 border-t border-slate-100">
+              <button
+                onClick={executeUpdate}
+                disabled={busy}
+                className="btn-primary"
+              >
+                {busy ? "Ejecutando…" : (
+                  <span className="flex items-center gap-1.5">
+                    <ArrowRight size={14} />
+                    Aplicar cambios a los nodos
+                  </span>
+                )}
               </button>
             </div>
           </div>
-        )}
+        </StepCard>
+      )}
 
-        {action === "delete" && (
+      {action === "deleteNodes" && (
+        <StepCard step={3} title="Confirmar eliminación">
           <div className="space-y-3">
-            <div className="flex items-start gap-2 p-3 rounded bg-rose-50 border border-rose-200 text-xs text-rose-800">
-              <AlertTriangle size={14} className="shrink-0 mt-0.5" />
-              <span>
-                Se ejecutará <code className="font-mono">DETACH DELETE</code> en todos los nodos que coincidan con el
-                filtro (hasta el límite configurado). Esta operación <strong>no se puede deshacer</strong>.
-              </span>
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-rose-50 border border-rose-200 text-sm text-rose-800">
+              <XCircle size={18} className="shrink-0 mt-0.5 text-rose-500" />
+              <div>
+                <p className="font-semibold mb-0.5">Esta acción no se puede deshacer.</p>
+                <p className="text-xs">
+                  Se ejecutará <code className="font-mono bg-rose-100 px-1 rounded">DETACH DELETE</code> en todos
+                  los nodos del filtro (hasta {limit}). Sus relaciones también serán eliminadas.
+                </p>
+              </div>
             </div>
-            <div className="flex justify-end">
+            {cypherPreview && <CypherPreview cypher={cypherPreview} />}
+            <div className="flex justify-end pt-2 border-t border-slate-100">
               <button
                 onClick={() => setConfirmOpen(true)}
                 disabled={busy}
-                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded text-sm font-medium bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-50 transition"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium bg-rose-600 text-white hover:bg-rose-700 disabled:opacity-50 transition"
               >
-                <Trash2 size={14} /> Eliminar nodos masivamente
+                <Trash2 size={14} />
+                {busy ? "Eliminando…" : "Eliminar nodos"}
               </button>
             </div>
           </div>
-        )}
-      </div>
+        </StepCard>
+      )}
 
-      {updateResult && <UpdateResultCard result={updateResult} />}
-      {deleteResult && <DeleteResultCard result={deleteResult} />}
+      {/* Results */}
+      {updateResult && <ResultCard type="update" result={updateResult} />}
+      {deleteResult && <ResultCard type="delete" deleteResult={deleteResult} />}
 
       <ConfirmDialog
         open={confirmOpen}
         title="¿Eliminar nodos masivamente?"
-        description={`Se hará DETACH DELETE de hasta ${limit} nodos que coincidan con el filtro. Esto no se puede deshacer.`}
+        description={`Se borrará${filterLabel ? ` cada nodo :${filterLabel}` : "n nodos"} que cumpla el filtro, hasta un máximo de ${limit}. Esta operación no se puede deshacer.`}
         confirmLabel="Sí, eliminar"
         destructive
         onConfirm={executeDelete}
@@ -222,52 +296,199 @@ export default function BulkNodesPanel({ labels }: Props) {
   );
 }
 
-function UpdateResultCard({ result }: { result: BulkUpdateResult }) {
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function StepCard({
+  step,
+  title,
+  children,
+}: {
+  step: number;
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="card-pad">
-      <div className="flex items-center gap-2 mb-2">
-        <CheckCircle size={14} className="text-emerald-600" />
-        <h3 className="text-sm font-semibold text-slate-700">Resultado de la actualización masiva</h3>
+      <div className="flex items-center gap-2.5 mb-4">
+        <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-brand-600 text-white text-xs font-bold shrink-0">
+          {step}
+        </span>
+        <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm mb-3">
-        <Stat label="Encontrados" value={result.matched} />
-        <Stat label="Actualizados" value={result.updated} />
-        <Stat label="Propiedades SET" value={result.set.join(", ") || "—"} />
-        <Stat label="Propiedades REMOVE" value={result.removed.join(", ") || "—"} />
-      </div>
-      {result.sampleIds && result.sampleIds.length > 0 && (
-        <p className="text-[11px] text-slate-500">
-          Muestra de IDs afectados: {result.sampleIds.slice(0, 10).join(", ")}
-          {result.sampleIds.length > 10 ? "…" : ""}
-        </p>
-      )}
+      {children}
     </div>
   );
 }
 
-function DeleteResultCard({ result }: { result: BulkDeleteResult }) {
+function ActionCard({
+  icon,
+  title,
+  description,
+  selected,
+  onClick,
+  color,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  selected: boolean;
+  onClick: () => void;
+  color: "brand" | "rose" | "emerald";
+}) {
+  const colors = {
+    brand: {
+      base: "border-slate-200 hover:border-brand-300 hover:bg-brand-50/40",
+      selected: "border-brand-400 bg-brand-50 ring-2 ring-brand-200",
+      icon: "text-brand-600",
+    },
+    rose: {
+      base: "border-slate-200 hover:border-rose-300 hover:bg-rose-50/40",
+      selected: "border-rose-400 bg-rose-50 ring-2 ring-rose-200",
+      icon: "text-rose-600",
+    },
+    emerald: {
+      base: "border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/40",
+      selected: "border-emerald-400 bg-emerald-50 ring-2 ring-emerald-200",
+      icon: "text-emerald-600",
+    },
+  };
+
+  const c = colors[color];
+
   return (
-    <div className="card-pad">
-      <div className="flex items-center gap-2 mb-2">
-        <Trash2 size={14} className="text-rose-600" />
-        <h3 className="text-sm font-semibold text-slate-700">Resultado de la eliminación masiva</h3>
+    <button
+      onClick={onClick}
+      className={`text-left p-3.5 rounded-lg border transition ${selected ? c.selected : c.base}`}
+    >
+      <div className={`mb-2 ${c.icon}`}>{icon}</div>
+      <div className="text-sm font-semibold text-slate-800 mb-0.5">{title}</div>
+      <div className="text-[11px] text-slate-500 leading-relaxed">{description}</div>
+    </button>
+  );
+}
+
+function CypherPreview({ cypher }: { cypher: string }) {
+  return (
+    <div className="rounded-lg bg-slate-900 border border-slate-700 p-3">
+      <div className="text-[10px] uppercase tracking-wider text-slate-400 mb-1.5 font-semibold">
+        Vista previa Cypher (para verificar en AuraDB)
       </div>
-      <Stat label="Nodos eliminados" value={result.deleted} />
-      {result.sampleIds && result.sampleIds.length > 0 && (
-        <p className="text-[11px] text-slate-500 mt-2">
-          Muestra de IDs eliminados: {result.sampleIds.slice(0, 10).join(", ")}
-          {result.sampleIds.length > 10 ? "…" : ""}
-        </p>
-      )}
+      <pre className="text-[11px] text-emerald-300 leading-relaxed overflow-x-auto whitespace-pre-wrap">
+        {cypher}
+      </pre>
     </div>
   );
 }
 
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="rounded-md bg-slate-50 border border-slate-200 p-2.5">
-      <div className="text-[11px] uppercase tracking-wider text-slate-500">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold text-slate-900 tabular-nums truncate">{value}</div>
-    </div>
-  );
+function ResultCard({
+  type,
+  result,
+  deleteResult,
+}: {
+  type: "update" | "delete";
+  result?: BulkUpdateResult;
+  deleteResult?: BulkDeleteResult;
+}) {
+  if (type === "update" && result) {
+    return (
+      <div className="card-pad border-l-4 border-l-emerald-500">
+        <div className="flex items-center gap-2 mb-3">
+          <CheckCircle size={15} className="text-emerald-600" />
+          <span className="text-sm font-semibold text-slate-700">
+            {result.updated} de {result.matched} nodos actualizados
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-4 text-xs text-slate-600">
+          {result.set.length > 0 && (
+            <div>
+              <span className="font-medium text-slate-500">Claves modificadas:</span>{" "}
+              <code>{result.set.join(", ")}</code>
+            </div>
+          )}
+          {result.removed.length > 0 && (
+            <div>
+              <span className="font-medium text-slate-500">Claves eliminadas:</span>{" "}
+              <code>{result.removed.join(", ")}</code>
+            </div>
+          )}
+        </div>
+        {result.sampleIds && result.sampleIds.length > 0 && (
+          <p className="text-[11px] text-slate-400 mt-2">
+            IDs afectados (muestra): {result.sampleIds.slice(0, 8).join(", ")}
+            {result.sampleIds.length > 8 ? "…" : ""}
+          </p>
+        )}
+      </div>
+    );
+  }
+  if (type === "delete" && deleteResult) {
+    return (
+      <div className="card-pad border-l-4 border-l-rose-500">
+        <div className="flex items-center gap-2">
+          <Trash2 size={15} className="text-rose-600" />
+          <span className="text-sm font-semibold text-slate-700">
+            {deleteResult.deleted} nodo{deleteResult.deleted !== 1 ? "s" : ""} eliminado{deleteResult.deleted !== 1 ? "s" : ""}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+}
+
+// ── Cypher builder (for preview only) ────────────────────────────────────────
+
+function buildCypherPreview({
+  filterLabel,
+  whereRows,
+  action,
+  setRows,
+  removeTags,
+  limit,
+}: {
+  filterLabel: string;
+  whereRows: EditableProperty[];
+  action: Action;
+  setRows: EditableProperty[];
+  removeTags: string[];
+  limit: number;
+}): string | null {
+  if (!action || action === "createMultiple") return null;
+
+  const matchLabel = filterLabel ? `:${filterLabel}` : "";
+  const whereClauses = whereRows
+    .filter((r) => r.key && r.raw)
+    .map((r) => `n.${r.key} = ${r.type === "string" ? `'${r.raw}'` : r.raw}`);
+  const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(" AND ")}` : "";
+
+  if (action === "deleteNodes") {
+    return [
+      `MATCH (n${matchLabel})`,
+      whereClause,
+      `WITH n LIMIT ${limit}`,
+      `DETACH DELETE n`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+  }
+
+  if (action === "editProps") {
+    const lines: string[] = [
+      `MATCH (n${matchLabel})`,
+      whereClause,
+      `WITH n LIMIT ${limit}`,
+    ].filter(Boolean);
+
+    const setLines = setRows
+      .filter((r) => r.key && r.raw)
+      .map((r) => `  n.${r.key} = ${r.type === "string" ? `'${r.raw}'` : r.raw}`);
+    if (setLines.length > 0) lines.push(`SET\n${setLines.join(",\n")}`);
+
+    const removeLines = removeTags.map((k) => `n.${k}`);
+    if (removeLines.length > 0) lines.push(`REMOVE ${removeLines.join(", ")}`);
+
+    return lines.join("\n");
+  }
+
+  return null;
 }
